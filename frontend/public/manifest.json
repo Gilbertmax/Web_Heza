@@ -1,0 +1,20 @@
+{
+  "short_name": "HEZA",
+  "name": "HEZA Consultoría",
+  "icons": [
+    {
+      "src": "img/img-icono-explorador1.png",
+      "type": "image/png",
+      "sizes": "192x192"
+    },
+    {
+      "src": "img/img-icono-explorador1.png",
+      "type": "image/png",
+      "sizes": "512x512"
+    }
+  ],
+  "start_url": ".",
+  "display": "standalone",
+  "theme_color": "#0d47a1",
+  "background_color": "#ffffff"
+}
