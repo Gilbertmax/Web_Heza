@@ -3,9 +3,9 @@ import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import Header from './components/Header';
 import Footer from './components/Footer';
 import ScrollToTop from './components/ScrollToTop';
+import Loading from './components/Loading/Loading';
 
-
-// Componentes estáticos (siempre presentes)
+// Componentes públicos
 const Home = lazy(() => import('./pages/public/Home'));
 const About = lazy(() => import('./pages/public/About'));
 const Services = lazy(() => import('./pages/public/Services'));
@@ -13,8 +13,7 @@ const Contact = lazy(() => import('./pages/public/Contact'));
 const Team = lazy(() => import('./pages/public/Team'));
 const Encuesta = lazy(() => import('./pages/public/Encuesta'));
 
-
-// Componentes de servicios (carga bajo demanda)
+// Servicios
 const DiagnosticoEmpresarial = lazy(() => import('./pages/public/Diagnostico_empresarial'));
 const AsesoriaFiscal = lazy(() => import('./pages/public/Asesoria_fiscal'));
 const Contabilidad = lazy(() => import('./pages/public/Contabilidad'));
@@ -25,22 +24,33 @@ const ConsultoriaYConsejosConsultivos = lazy(() => import('./pages/public/Consul
 const ProteccionPatrimonial = lazy(() => import('./pages/public/Proteccion_Patrimonial'));
 const Devoluciones = lazy(() => import('./pages/public/devoluciones'));
 
+// Dashboard Cliente
+const ClienteLayout = lazy(() => import('./pages/adminClientes/Cliente'));
+const DocumentosCliente = lazy(() => import('./pages/adminClientes/DocumentosCliente'));
+const DetalleDocumento = lazy(() => import('./pages/adminClientes/DetalleDocumento'));
+const PerfilCliente = lazy(() => import('./pages/adminClientes/PerfilCliente'));
+const ConfiguracionCliente = lazy(() => import('./pages/adminClientes/ConfiguracionCliente'));
+
+// Admin
+const DashboardAdmin = lazy(() => import('./pages/admin/Dashboard'));
+const NoticiasAdmin = lazy(() => import('./pages/admin/NoticiasAdmin'));
+const EventosAdmin = lazy(() => import('./pages/admin/EventosAdmin'));
+
 function App() {
   return (
     <Router>
       <ScrollToTop />
       <Header />
-      <Suspense fallback={<div className="text-center py-5">Cargando...</div>}>
+      <Suspense fallback={<Loading fullScreen message="Cargando..." />}>
         <Routes>
+          {/* Rutas públicas */}
           <Route path="/" element={<Home />} />
           <Route path="/nosotros" element={<About />} />
           <Route path="/servicios" element={<Services />} />
           <Route path="/contacto" element={<Contact />} />
           <Route path="/equipo" element={<Team />} />
-          {/* Rutas de Administracion*/}
           <Route path="/encuesta" element={<Encuesta />} />
 
-          
           {/* Rutas de servicios */}
           <Route path="/servicios/diagnostico-empresarial" element={<DiagnosticoEmpresarial />} />
           <Route path="/servicios/asesoria-fiscal" element={<AsesoriaFiscal />} />
@@ -51,7 +61,23 @@ function App() {
           <Route path="/servicios/consultoria-y-consejos-consultivos" element={<ConsultoriaYConsejosConsultivos />} />
           <Route path="/servicios/proteccion-patrimonial" element={<ProteccionPatrimonial />} />
           <Route path="/devoluciones" element={<Devoluciones />} />
-          <Route path="/servicios/diagnostico-empresarial" element={<DiagnosticoEmpresarial />} />
+
+          {/* Dashboard Cliente */}
+          <Route path="/clientes/dashboard" element={<ClienteLayout />}>
+            <Route index element={<DocumentosCliente />} />
+            <Route path="documentos" element={<DocumentosCliente />} />
+            <Route path="documentos/:id" element={<DetalleDocumento />} />
+            <Route path="perfil" element={<PerfilCliente />} />
+            <Route path="configuracion" element={<ConfiguracionCliente />} />
+          </Route>
+
+          {/* Administración */}
+          <Route path="/admin/dashboard" element={<DashboardAdmin isAdmin={true} />} />
+          <Route path="/admin/noticias" element={<NoticiasAdmin />} />
+          <Route path="/admin/eventos" element={<EventosAdmin />} /> 
+          
+          {/* Autenticación */}
+          <Route path="/acceso" element={<Loading showLogin fullScreen />} />
         </Routes>
       </Suspense>
       <Footer />
