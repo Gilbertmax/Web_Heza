@@ -24,9 +24,9 @@ const Clientes = () => {
           </p>
         </div>
 
-        <div className="client-grid">
+        <div className="client-grid ">
           {clientes.map((cliente, index) => (
-            <div className="client-card" key={index}>
+            <div className="client-card specialty-card" key={index}>
               <img 
                 src={cliente} 
                 alt={`Cliente ${index + 1}`} 
