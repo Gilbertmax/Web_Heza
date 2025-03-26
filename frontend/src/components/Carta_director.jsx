@@ -14,7 +14,7 @@ const CartaDirector = () => {
                 <span className="text-gradient-primary">Director</span>
               </h2>
               
-              <blockquote className="blockquote-2 mb-5">
+              <blockquote className="blockquote-2 mb-5 specialty-card">
                 <p className="lead text-dark font-italic">
                   "Nuestra empresa es reconocida por su integridad, confiabilidad y conducta ética."
                 </p>
@@ -27,12 +27,13 @@ const CartaDirector = () => {
                 </p>
               </div>
 
-              <div className="d-flex align-items-center">
-                <div className="mr-4">
-                  <h3 className="text-dark mb-1">Ángel Hernández</h3>
+              <div className="d-flex align-items-center specialty-card py-2 px-4 mb-6 w-50">
+                <div className="mr-2">
+                  <h3 className="text-dark mb-2">Ángel Hernández</h3>
                   <p className="text-primary mb-0">Director General</p>
                 </div>
               </div>
+
             </div>
           </div>
 
