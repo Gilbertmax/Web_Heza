@@ -48,7 +48,7 @@ const About = () => {
                   <span className="text-gradient-primary"> Excelencia</span>
                 </h1>
                 
-                <div className="directors-letter bg-white rounded-4 p-4 shadow-sm mb-5">
+                <div className="directors-letter bg-white rounded-4 p-4 shadow-sm mb-5 specialty-card">
                   <div className="quote-icon text-primary mb-3">
                     <i className="fas fa-quote-left fa-2x"></i>
                   </div>
@@ -59,9 +59,9 @@ const About = () => {
                 </div>
 
                 <div className="row g-4">
-                  <div className="col-md-6">
-                    <div className="mission-card bg-white rounded-4 p-4 shadow-hover">
-                      <i className="fas fa-bullseye fa-3x text-gradient-primary mb-3"></i>
+                  <div className="col-md-6 specialty-card">
+                    <div className="mission-card bg-white rounded-4 p-4 shadow-hover ">
+                      <i className="fas fa-bullseye fa-3x text-gradient-primary mb-3 "></i>
                       <h3 className="h4 mb-3">Misión</h3>
                       <p className="mb-0">
                         Asesorar integralmente a las PyMEs con soluciones innovadoras que generen valor sostenible.
@@ -69,7 +69,7 @@ const About = () => {
                     </div>
                   </div>
                   
-                  <div className="col-md-6">
+                  <div className="col-md-6 specialty-card">
                     <div className="vision-card bg-white rounded-4 p-4 shadow-hover">
                       <i className="fas fa-eye fa-3x text-gradient-secondary mb-3"></i>
                       <h3 className="h4 mb-3">Visión</h3>
@@ -144,7 +144,7 @@ const About = () => {
                     acertadas y con menor riesgo.
                   </p>
                   
-                  <div className="director-signature text-end mt-5">
+                  <div className="director-signature text-end mt-5 ">
                     <p className="mb-1 fw-bold">Ángel Hernández</p>
                     <p className="text-muted">Director General</p>
                   </div>
