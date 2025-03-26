@@ -1,9 +1,16 @@
 import React from 'react';
 import { Carousel } from 'react-bootstrap';
+import { useNavigate } from 'react-router-dom';
 import carousel1 from '../assets/img/carousel-1.jpg';
 import carousel2 from '../assets/img/carousel-2.jpg';
 
 const HeroCarousel = () => {
+  const navigate = useNavigate();
+
+  const handleWhatsApp = () => {
+    window.open('https://wa.me/523333305376', '_blank');
+  };
+
   return (
     <Carousel fade interval={5000} className="hero-carousel">
       <Carousel.Item style={{ height: "100vh", minHeight: "400px" }}>
@@ -22,7 +29,10 @@ const HeroCarousel = () => {
             <h4 className="display-5 text-capitalize text-white mb-4 animate__fadeInUp">
               En Heza nos encargamos de la salud fiscal de tu empresa, cuidando siempre el patrimonio de tus socios y colaboradores.
             </h4>
-            <button className="btn btn-primary py-3 px-5 mt-3 animate__zoomIn">
+            <button 
+              className="btn btn-primary py-3 px-5 mt-3 animate__zoomIn"
+              onClick={() => navigate('/contacto')}
+            >
               Obten una sesión
               <i className="fas fa-chevron-right ml-2"></i>
             </button>
@@ -46,7 +56,10 @@ const HeroCarousel = () => {
             <h4 className="display-5 text-capitalize text-white mb-4 animate__fadeInUp">
               Te diseñamos una estrategia fiscal especializada para tu empresa, minimizando los riesgos y protegiendo tu patrimonio.
             </h4>
-            <button className="btn btn-primary py-3 px-5 mt-3 animate__zoomIn">
+            <button 
+              className="btn btn-primary py-3 px-5 mt-3 animate__zoomIn"
+              onClick={handleWhatsApp}
+            >
               Llamanos
               <i className="fas fa-phone ml-2"></i>
             </button>
