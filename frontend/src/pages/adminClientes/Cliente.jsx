@@ -12,7 +12,7 @@ const Cliente = () => {
 
   return (
     <div className="container py-5">
-      <h1 className="display-3 text-dark mb-4">
+      <h1 className="display-2 text-dark mb-4">
               <span className="text-gradient-primary">Bienvenido</span> 
               <span className="text-gradient-secondary"> {empresaInfo.nombre}</span>
       </h1>
