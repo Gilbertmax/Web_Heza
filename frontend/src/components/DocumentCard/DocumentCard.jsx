@@ -13,9 +13,9 @@ const DocumentCard = ({ documento }) => {
 
   return (
     <div className="col">
-      <div className="card h-100 shadow-sm">
+      <div className="card h-90 shadow-sm">
         <div className="card-body">
-          <div className="d-flex align-items-center gap-3">
+          <div className="d-flex align-items-center gap-3 ">
             <i className={`${getIcon(documento.tipo)} fa-2x`}></i>
             <div>
               <h5 className="card-title mb-1">{documento.nombre}</h5>
@@ -25,7 +25,7 @@ const DocumentCard = ({ documento }) => {
         </div>
         <div className="card-footer bg-transparent">
           <div className="d-flex justify-content-between align-items-center">
-            <span className="badge bg-secondary">{documento.tipo}</span>
+            <span className="badge bg-secondary specialty-card">{documento.tipo}</span>
             <Link 
               to={`/clientes/dashboard/documentos/${documento.id}`}
               className="btn btn-sm btn-outline-primary"
