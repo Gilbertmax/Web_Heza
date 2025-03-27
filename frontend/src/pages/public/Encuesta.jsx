@@ -8,15 +8,12 @@ const Encuesta = () => {
   const location = useLocation();
   const currentYear = new Date().getFullYear();
   const [showSuccess, setShowSuccess] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
+  
   const { register, handleSubmit, formState: { errors } } = useForm({
     defaultValues: location.state?.contactData || {}
   });
-
-  const onSubmit = (data) => {
-    console.log('Datos enviados:', data);
-    setShowSuccess(true);
-    setTimeout(() => navigate('/'), 3000);
-  };
 
   const SeccionEncuesta = ({ titulo, children }) => (
     <div className="bg-white rounded-4 shadow-sm p-5 mb-5">
@@ -24,6 +21,40 @@ const Encuesta = () => {
       {children}
     </div>
   );
+
+  const onSubmit = async (data) => {
+    setLoading(true);
+    setError(null);
+    
+    try {
+      const response = await fetch('http://localhost:5000/api/enviar-diagnostico', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(data),
+        credentials: 'include',
+      });
+
+      const responseData = await response.json();
+
+      if (!response.ok) {
+        throw new Error(responseData.error || 'Error desconocido del servidor');
+      }
+
+      setShowSuccess(true);
+      setTimeout(() => navigate('/'), 3000);
+    } catch (error) {
+      const errorMessage = error.message.startsWith('Failed to fetch') 
+        ? 'Error de conexión con el servidor'
+        : error.message;
+  
+      setError(`Error: ${errorMessage}`);
+      console.error('Detalles del error:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   return (
     <div className="container py-5" style={{ maxWidth: '800px' }}>
@@ -72,25 +103,27 @@ const Encuesta = () => {
           <div className="mb-4">
             <select
               {...register("trabajadores", { required: true })}
-              className="form-control form-control-lg"
+              className={`form-control form-control-lg ${errors.trabajadores ? 'is-invalid' : ''}`}
             >
               <option value="">Número de trabajadores*</option>
               <option value="1-50">1 a 50</option>
               <option value="51-250">51 a 250</option>
               <option value="250-500">250 a 500</option>
             </select>
+            {errors.trabajadores && <div className="invalid-feedback">Seleccione una opción</div>}
           </div>
 
           <div className="mb-4">
             <select
               {...register("ventas", { required: true })}
-              className="form-control form-control-lg"
+              className={`form-control form-control-lg ${errors.ventas ? 'is-invalid' : ''}`}
             >
               <option value="">Ventas en {currentYear - 1}*</option>
               <option value="0-30M">0 - 30 millones</option>
               <option value="30-70M">30 - 70 millones</option>
               <option value="70M+">Más de 70 millones</option>
             </select>
+            {errors.ventas && <div className="invalid-feedback">Seleccione una opción</div>}
           </div>
 
           <div>
@@ -109,7 +142,7 @@ const Encuesta = () => {
               ¿Utiliza la contabilidad para la toma de decisiones?*
               <select
                 {...register("uso_contabilidad", { required: true })}
-                className="form-control form-control-lg mt-2"
+                className={`form-control form-control-lg mt-2 ${errors.uso_contabilidad ? 'is-invalid' : ''}`}
               >
                 <option value="">Seleccione una opción</option>
                 {[...Array(11).keys()].map(n => (
@@ -117,6 +150,7 @@ const Encuesta = () => {
                 ))}
               </select>
             </label>
+            {errors.uso_contabilidad && <div className="invalid-feedback">Seleccione una opción</div>}
           </div>
 
           <div className="row g-4">
@@ -138,13 +172,14 @@ const Encuesta = () => {
                   ][index]}
                   <select
                     {...register(field, { required: true })}
-                    className="form-control form-control-lg mt-2"
+                    className={`form-control form-control-lg mt-2 ${errors[field] ? 'is-invalid' : ''}`}
                   >
                     <option value="">Seleccione...</option>
                     <option value="si">Sí</option>
                     <option value="no">No</option>
                   </select>
                 </label>
+                {errors[field] && <div className="invalid-feedback">Seleccione una opción</div>}
               </div>
             ))}
           </div>
@@ -154,10 +189,26 @@ const Encuesta = () => {
           <button
             type="submit"
             className="btn btn-primary btn-lg px-5 py-3 rounded-pill shadow-hover"
+            disabled={loading}
           >
-            Enviar evaluación
-            <i className="fas fa-arrow-right ms-2"></i>
+            {loading ? (
+              <>
+                <span className="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
+                Enviando...
+              </>
+            ) : (
+              <>
+                Enviar evaluación
+                <i className="fas fa-arrow-right ms-2"></i>
+              </>
+            )}
           </button>
+          
+          {error && (
+            <div className="alert alert-danger mt-3">
+              {error}
+            </div>
+          )}
         </div>
       </form>
 
