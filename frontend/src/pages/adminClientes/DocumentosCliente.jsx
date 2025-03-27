@@ -34,15 +34,16 @@ const categoriasDocumentos = [
 const DocumentosCliente = () => {
   return (
     <div className="documentos-container">
-      <h2 className="mb-4">Documentos Disponibles</h2>
-      
-      {categoriasDocumentos.map((categoria, index) => (
+      <h2 className="display-7 text-dark mb-4">
+           <span className="text-gradient-primary">Documentos Disponibles</span>
+      </h2>
+       {categoriasDocumentos.map((categoria, index) => (
         <div key={index} className="card mb-4 shadow-sm">
           <div className="card-header bg-primary text-white">
             <h5>{categoria.nombre}</h5>
           </div>
-          <div className="card-body">
-            <div className="row row-cols-1 row-cols-md-2 g-4">
+          <div className="card-body ">
+            <div className="row row-cols-1 row-cols-md-2 g-1 ">
               {categoria.documentos.map(documento => (
                 <DocumentCard key={documento.id} documento={documento} />
               ))}

@@ -18,8 +18,11 @@ const DetalleDocumento = () => {
     <div className="container py-4">
       <div className="card shadow">
         <div className="card-body">
-          <div className="d-flex justify-content-between align-items-center mb-4">
-            <h2>{documento.nombre}</h2>
+          <div className="d-flex justify-content-between align-items-center mb-4 ">
+          <h2 className="display- text-dark mb-2">
+             <span className="text-gradient-secondary"> {documento.nombre}</span>
+          </h2>
+            
             <Link 
               to="/clientes/dashboard/documentos" 
               className="btn btn-outline-primary"
@@ -28,7 +31,7 @@ const DetalleDocumento = () => {
             </Link>
           </div>
           
-          <dl className="row">
+          <dl className="row ">
             <dt className="col-sm-3">Tipo de Archivo:</dt>
             <dd className="col-sm-9">{documento.tipo}</dd>
 
