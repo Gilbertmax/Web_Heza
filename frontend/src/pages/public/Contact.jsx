@@ -7,8 +7,11 @@ const Contact = () => {
       <div className="container py-5">
         <div className="text-center pb-4">
           <h6 className="text-uppercase text-primary">Contáctanos</h6>
-          <h1 className="mb-4 display-4">Estamos aquí para ayudarte</h1>
-        </div>
+          <h1 className="display-4 text-dark mb-4">
+            <span className="text-gradient-primary">Estamos aquí</span>
+            <span className="text-gradient-secondary"> para ayudarte</span>
+          </h1>
+         </div>
         
         <div className="row g-5">
           <div className="col-lg-6">
