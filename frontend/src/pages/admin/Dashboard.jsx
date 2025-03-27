@@ -97,7 +97,7 @@ const Dashboard = ({ isAdmin = false }) => {
         </button>
       </div>
 
-      <nav className="space-y-1">
+      <nav className="space-y-2">
         {[
           { to: "/dashboard", icon: Home, label: "Inicio" },
           isAdmin && { to: "/admin/usuarios", icon: User, label: "Usuarios" },
