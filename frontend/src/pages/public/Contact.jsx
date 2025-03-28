@@ -11,7 +11,7 @@ const Contact = () => {
             <span className="text-gradient-primary">Estamos aquí</span>
             <span className="text-gradient-secondary"> para ayudarte</span>
           </h1>
-         </div>
+        </div>
         
         <div className="row g-5">
           <div className="col-lg-6">
