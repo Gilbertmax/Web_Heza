@@ -132,16 +132,21 @@ const Dashboard = ({ isAdmin = false }) => {
       
         <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-6 gap-6 card mb-4 shadow-sm">
             <div>
-              <h1 className="text-2xl md:text-3xl font-bold text-gray-800 mb-2">Hola, {userData?.name}</h1>
-              <p className="text-gray-500">Resumen general del sistema</p>
+            <h1 className="display-7 text-dark mb-4">
+                  <span className="text-gradient-primary">Bienvenido </span>
+                  <span className="text-gradient-secondary"> {userData?.name}</span>
+              </h1>
+              <h4 className="section-subtitle text-primary mb-4">
+                  Resumen general del sistema
+              </h4>
             </div>
 
           <div className="flex flex-col md:flex-row gap-2 w-full md:w-auto mb-5">
-            <button className="flex items-center justify-center px-4 py-2.5 bg-primary text-white rounded-lg hover:bg-primary-600 transition-colors text-sm font-medium">
+            <button className="btn btn-primary btn-lg px-2 py-2 me-4 rounded-pill shadow-hover">
               <Users size={16} className="mr-2" />
               Nuevo Usuario
             </button>
-            <button className="flex items-center justify-center px-4 py-2.5 bg-dark text-white rounded-lg hover:bg-dark-600 transition-colors text-sm font-medium">
+            <button className="btn btn-primary btn-lg px-2 py-2  rounded-pill shadow-hover">
               <FileText size={16} className="mr-2" />
               Generar Reporte
             </button>
