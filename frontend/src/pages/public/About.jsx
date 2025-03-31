@@ -216,10 +216,12 @@ const About = () => {
                         sus procesos fiscales y corporativos.
                       </p>
                     </div>
+                    
                   </div>
                 </div>
               </div>
             </div>
+
           </div>
         </div>
       </section>

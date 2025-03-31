@@ -65,9 +65,9 @@ const Dashboard = ({ isAdmin = false }) => {
   }, [isAdmin]);
 
   const StatCard = ({ icon: Icon, title, value, color }) => (
-    <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-100">
-      <div className="flex items-center mb-4">
-        <div className={`p-3 rounded-lg bg-${color}-100 mr-4`}>
+    <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-50">
+      <div className="flex items-center bg-white  mb-4">
+        <div className={`p-3 rounded-lg bg-${color}-300 mr-4`}>
           <Icon size={24} className={`text-${color}-600`} />
         </div>
         <div>
@@ -79,89 +79,112 @@ const Dashboard = ({ isAdmin = false }) => {
   );
 
   const renderNavbar = () => (
-    <nav className="bg-gray-800 text-white shadow-lg fixed w-full z-50">
-      <div className="max-w-7xl mx-auto px-4">
-        <div className="flex justify-between items-center h-16">
-          <div className="flex items-center">
-            <div className="h-10 w-10 bg-primary rounded-lg mr-3"></div>
-            <span className="text-xl font-semibold">{isAdmin ? 'Admin Panel' : 'Mi Espacio'}</span>
-          </div>
-          
-          <div className="hidden md:flex space-x-4">
-            {[
-              { to: "/dashboard", icon: Home, label: "Inicio" },
-              ...(isAdmin ? [
-                { to: "/admin/usuarios", icon: User, label: "Usuarios" },
-                { to: "/admin/clientes", icon: Users, label: "Clientes" },
-                { to: "/admin/noticias", icon: BookOpen, label: "Noticias" },
-                { to: "/admin/eventos", icon: Calendar, label: "Eventos" },
-              ] : []),
-              { to: "/documentos", icon: FileText, label: "Documentos" },
-              { to: "/mensajes", icon: MessageSquare, label: "Mensajes" },
-              { to: "/configuracion", icon: Settings, label: "Configuración" },
-            ].filter(Boolean).map((item, index) => (
-              <Link
-                key={index}
-                to={item.to}
-                className="flex items-center px-3 py-2 rounded-md text-sm font-medium hover:bg-gray-700"
-              >
-                <item.icon size={18} className="mr-2" />
-                {item.label}
-              </Link>
-            ))}
-          </div>
-        </div>
+    <div className="container-fluid py-4 bg-light-pattern position-relative">
+     <div className="row g-2">
+      <div className="col-lg-3">
+        <div className="pe-lg-4 sticky-intro" style={{ top: '20px', zIndex: 1 }}>
+          <nav className="bg-gray-200 text-white shadow-lg fixed w-full   main-nav bg-white ">
+            <div className="max-w-6xl mx-auto px-4 mb-2  flex items-center justify-between h-14  ">
+             <div className="flex items-center">
+              <div className="flex mb-3 justify-center">
+                  <span className="section-badge bg-primary-soft text-primary px-3 py-1 rounded-md">
+                    {isAdmin ? 'Panel Administrador' : 'Mi Espacio'}
+                  </span>
+              </div>
+            
+        
+             <div className="hidden space-x-4 mx-auto ">
+              {[
+                { to: "/dashboard", icon: Home, label: "Inicio" },
+                ...(isAdmin ? [
+                  { to: "/admin/usuarios", icon: User, label: "Usuarios" },
+                  { to: "/admin/clientes", icon: Users, label: "Clientes" },
+                  { to: "/admin/noticias", icon: BookOpen, label: "Noticias" },
+                  { to: "/admin/eventos", icon: Calendar, label: "Eventos" },
+                ] : []),
+                { to: "/documentos", icon: FileText, label: "Documentos" },
+                { to: "/mensajes", icon: MessageSquare, label: "Mensajes" },
+                { to: "/configuracion", icon: Settings, label: "Configuración" },
+              ].filter(Boolean).map((item, index) => (
+                <Link
+                  key={index}
+                  to={item.to}
+                  className="flex items-center bg-white  nav-link  px-3 py-2 rounded-md text-sm font-medium hover:bg-gray-700 mb-5"
+                >
+                  <item.icon size={18} className="mr-2" />
+                  {item.label}
+                </Link>
+              ))}
+            </div>
+           </div>
+         </div>
+        </nav>
+       </div>
       </div>
-    </nav>
+     </div>
+   </div>
+  
   );
-
+ 
   const renderAdminPanel = () => (
-    <div className="pt-16 px-4 md:px-8">
-      <div className="max-w-7xl mx-auto">
-        <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-8 gap-4">
-          <div>
-            <h1 className="text-2xl md:text-3xl font-bold text-gray-800 mb-1">Hola, {userData?.name}</h1>
-            <p className="text-gray-500">Resumen general del sistema</p>
-          </div>
-          <div className="flex flex-col md:flex-row gap-2 w-full md:w-auto">
-            <button className="flex items-center justify-center px-4 py-2.5 bg-primary text-white rounded-lg hover:bg-primary-600 transition-colors text-sm font-medium">
+    <div className="max-w-7xl mx-auto ">
+      <div className="col-lg-8 ml-auto absolute top-0 row g-5 pt-5 display-7 text-dark mb-3 ">
+      
+        <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-6 gap-6 card mb-4 shadow-sm">
+            <div>
+            <h1 className="display-7 text-dark mb-4">
+                  <span className="text-gradient-primary">Bienvenido </span>
+                  <span className="text-gradient-secondary"> {userData?.name}</span>
+              </h1>
+              <h4 className="section-subtitle text-primary mb-4">
+                  Resumen general del sistema
+              </h4>
+            </div>
+
+          <div className="flex flex-col md:flex-row gap-2 w-full md:w-auto mb-5">
+            <button className="btn btn-primary btn-lg px-2 py-2 me-4 rounded-pill shadow-hover">
               <Users size={16} className="mr-2" />
               Nuevo Usuario
             </button>
-            <button className="flex items-center justify-center px-4 py-2.5 bg-dark text-white rounded-lg hover:bg-dark-600 transition-colors text-sm font-medium">
+            <button className="btn btn-primary btn-lg px-2 py-2  rounded-pill shadow-hover">
               <FileText size={16} className="mr-2" />
               Generar Reporte
             </button>
           </div>
+          
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8 ">
           <StatCard icon={Users} title="Usuarios Registrados" value={stats.totalUsers} color="primary" />
           <StatCard icon={UserPlus} title="Clientes Activos" value={stats.activeClients} color="green" />
           <StatCard icon={Clock} title="Tareas Pendientes" value={stats.pendingTasks} color="yellow" />
         </div>
 
-        <div className="grid lg:grid-cols-2 gap-6">
-          <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-100">
-            <h2 className="text-xl font-bold text-gray-800 mb-4 flex items-center">
-              <BarChart size={24} className="mr-2 text-primary-600" />
+      
+        <div className="grid lg:grid-cols-2 gap-6 ">
+
+          <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-100 ">
+            <h2 className="text-xl font-bold text-gray-800 mb-4 flex items-center ">
+              <BarChart size={24} className="mr-2 text-primary-600  " />
               Actividad Reciente
             </h2>
             <AdminClientes />
           </div>
           
           <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-100">
-            <h2 className="text-xl font-bold text-gray-800 mb-4 flex items-center">
+            <h2 className="text-xl font-bold text-gray-800 mb-4 flex items-center ">
               <PieChart size={24} className="mr-2 text-green-600" />
               Distribución de Servicios
             </h2>
-            <div className="h-64 flex items-center justify-center bg-gray-50 rounded-lg">
+            <div className="h-64 flex items-center justify-center bg-gray-50 rounded-lg ">
               <span className="text-gray-400">Gráfico estadístico</span>
             </div>
-          </div>
+           </div> 
+
         </div>
       </div>
-    </div>
+    </div>     
+        
   );
 
   const renderClientPanel = () => (
@@ -172,7 +195,7 @@ const Dashboard = ({ isAdmin = false }) => {
           <p className="text-gray-500">Último acceso: {new Date().toLocaleDateString()}</p>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8 ">
           <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-100 hover:border-primary-100 transition-colors">
             <div className="flex items-center space-x-4">
               <div className="p-3 bg-primary-100 rounded-lg">
@@ -259,18 +282,15 @@ const Dashboard = ({ isAdmin = false }) => {
   );
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="row g-2">
       {renderNavbar()}
-      
-      {loading ? (
-        <Loading fullScreen message={isAdmin ? "Cargando panel..." : "Cargando tu espacio..."} />
-      ) : (
-        <main>
-          {isAdmin ? renderAdminPanel() : renderClientPanel()}
-        </main>
-      )}
+      <main className="max-w-7xl mx-auto">
+        {loading && <Loading fullScreen message={isAdmin ? "Cargando panel..." : "Cargando tu espacio..."} />}
+        {!loading && isAdmin && renderAdminPanel()}
+        {!loading && !isAdmin && renderClientPanel()}
+      </main>
     </div>
-  );
+  );  
 };
 
 Dashboard.propTypes = {
