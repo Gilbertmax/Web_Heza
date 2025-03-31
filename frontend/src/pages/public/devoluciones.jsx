@@ -28,7 +28,7 @@ const Devoluciones = () => {
       <div className="container">
         {/* Beneficios Clave */}
         <section className="key-benefits mb-8">
-          <div className="row justify-content-center mb-6">
+          <div className="row justify-content-center mb-6 ">
             <div className="col-lg-10">
               <h2 className="display-5 text-center text-primary mt-5 mb-8">Ventajas Competitivas</h2>
               <div className="benefits-grid row g-4">
@@ -55,9 +55,9 @@ const Devoluciones = () => {
                   }
                 ].map((benefit, index) => (
                   <div key={index} className="col-md-6">
-                    <div className="specialty-card  p-4 rounded-5 h-100 shadow-sm">
-                      <i className={`fas ${benefit.icon} fa-2x text-primary mb-3`}></i>
-                      <h4 className="h5 mb-3">{benefit.title}</h4>
+                    <div className="specialty-card p-4 rounded-5 h-100 shadow-sm">
+                      <i className={`fas ${benefit.icon} fa-2x text-primary mb-3 `}></i>
+                      <h4 className="h5 mb-3 me-3">{benefit.title}</h4>
                       <p className="text-muted mb-3">{benefit.text}</p>
                     </div>
                   </div>

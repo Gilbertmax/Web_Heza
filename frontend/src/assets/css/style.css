@@ -11230,6 +11230,13 @@ section {
   text-overflow: ellipsis;
   white-space: nowrap;
 }
+
+.array-top{
+  top: 10rem;
+  left: 0;
+  right: 200;
+  align-items: center;
+}
 /* ============ COMPONENTES ESPECÍFICOS ============ */
 
 /* Header Mobile */
