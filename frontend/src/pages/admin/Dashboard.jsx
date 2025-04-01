@@ -135,20 +135,20 @@ const Dashboard = ({ isAdmin = false }) => {
 
       {/* Stats Cards */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-        <div className="feature-card bg-white rounded-4 p-4 shadow-hover ">
-           <StatCard icon={Users} title="Usuarios Registrados" value={stats.totalUsers} color="fas fa-rocket me-2" />
+        <div className="feature-card bg-white rounded-4 p-4 shadow-hover col-12 text-center">
+           <StatCard icon={Users} title="Usuarios Registrados" value={stats.totalUsers} color=" mr-2 text-green-600" />
         </div>
-        <div className="feature-card bg-white rounded-4 p-4 shadow-hover">
-           <StatCard icon={UserPlus} title="Clientes Activos" value={stats.activeClients} color="green" />
+        <div className="feature-card bg-white rounded-4 p-4 shadow-hover col-12 text-center">
+           <StatCard icon={UserPlus} title="Clientes Activos" value={stats.activeClients} color="text-primary-600" />
         </div>
-        <div className="feature-card bg-white rounded-4 p-4 shadow-hover">
-           <StatCard icon={Clock} title="Tareas Pendientes" value={stats.pendingTasks} color="yellow" />
+        <div className="feature-card bg-white rounded-4 p-4 shadow-hover col-12 text-center">
+           <StatCard icon={Clock} title="Tareas Pendientes" value={stats.pendingTasks} color="text-primary-600" />
         </div>    
       </div>
 
       {/* Charts Section */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 ">
-        <div className="feature-card bg-white rounded-4 p-4 shadow-hover">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 text-center">
+        <div className="feature-card bg-white rounded-4 p-4 shadow-hover ">
           <h2 className="text-xl font-bold text-gray-800 mb-4 flex items-center">
             <BarChart size={24} className="mr-2 text-primary-600" />
             Actividad Reciente
