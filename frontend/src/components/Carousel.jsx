@@ -8,7 +8,7 @@ const HeroCarousel = () => {
   const navigate = useNavigate();
 
   const handleWhatsApp = () => {
-    window.open('https://wa.me/523333305376', '_blank');
+    window.open('https://wa.me/523331674762', '_blank');
   };
 
   return (
