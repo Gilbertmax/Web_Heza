@@ -207,11 +207,11 @@ const About = () => {
 
                   <div className="col-12">
                   <div className="innovation-alert bg-primary-soft rounded-4 p-4 mt-4 specialty-card ">
-                      <h4 className="text-primary mb-3">
-                        <i className="fas fa-rocket me-2"></i>
+                      <h4 className="text-primary mb-3 me-2">
+                        <i className="fas fa-rocket  mr-2"></i>
                         Innovación Tecnológica
                       </h4>
-                      <p className="mb-0">
+                      <p className="mb-0 me-2 mr-5">
                         Implementamos herramientas digitales de última generación para optimizar 
                         sus procesos fiscales y corporativos.
                       </p>

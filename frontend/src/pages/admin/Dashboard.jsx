@@ -17,14 +17,14 @@ import {
 } from 'react-feather';
 import Loading from '../../components/Loading/Loading.jsx'; 
 const AdminClientes = () => (
-  <div className="space-y-4">
+  <div className="space-y-5">
     <div className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
-      <span className="font-medium">Cliente Ejemplo 1</span>
-      <span className="text-sm text-gray-500">Activo</span>
+      <span className="text-primary mb-3 me-2">Cliente Ejemplo 1</span>
+      <span className="section-badge bg-primary text-white mb-4 "> Activo</span>
     </div>
     <div className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
-      <span className="font-medium">Cliente Ejemplo 2</span>
-      <span className="text-sm text-gray-500">Pendiente</span>
+      <span className="text-primary mb-3 me-2">Cliente Ejemplo 2</span>
+      <span className="section-badge bg-primary text-white mb-4"> Pendiente</span>
     </div>
   </div>
 );
@@ -149,9 +149,11 @@ const Dashboard = ({ isAdmin = false }) => {
       {/* Charts Section */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 text-center">
         <div className="feature-card bg-white rounded-4 p-4 shadow-hover ">
-          <h2 className="text-xl font-bold text-gray-800 mb-4 flex items-center">
-            <BarChart size={24} className="mr-2 text-primary-600" />
-            Actividad Reciente
+          <h2 className="text-xl font-bold text-gray-800 mb-4 flex items-cente">
+          <div className="bg-primary-gradient p-2 rounded">
+               <BarChart size={25} className="text-white mr-2" />
+               <span className="text-dark mt-3">Actividad Reciente</span>
+          </div>
           </h2>
           <div>
            <AdminClientes />
@@ -159,14 +161,17 @@ const Dashboard = ({ isAdmin = false }) => {
         </div>
         
         <div className="feature-card bg-white rounded-4 p-4 shadow-hover">
-          <h2 className="text-xl font-bold text-gray-800 mb-4 flex items-center">
-            <PieChart size={24} className="mr-2 text-green-600" />
-            Distribución de Servicios
-          </h2>
+        <h2 className="text-xl font-bold text-gray-800 mb-4 flex items-cente">  
+        <div className="bg-primary-gradient p-2 rounded">
+          <PieChart size={25} className="text-white mr-2" />               
+          <span className="text-dark mt-3">Distribución de Servicios</span>
+        </div>
+        </h2>
           <div className="h-64 flex items-center justify-center bg-gray-50 rounded-lg">
-            <span className="text-gray-400">Gráfico estadístico</span>
+            <span className="text-primary mb-3 me-2">Gráfico estadístico</span>
           </div>
         </div>
+
       </div>
     </div>
   );
