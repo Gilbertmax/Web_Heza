@@ -66,7 +66,7 @@ const Dashboard = ({ isAdmin = false }) => {
           </h2>
         </div>
         <div>          
-          <p className={`text-3xl font-bold text-${color}-600`}>{value}</p>
+          <p className={`section-badge bg-primary text-white mb-4 text-${color}-600`}>{value}</p>
         </div>
       </div>
     </div>
