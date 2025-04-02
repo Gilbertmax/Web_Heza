@@ -55,13 +55,17 @@ const Dashboard = ({ isAdmin = false }) => {
   }, [isAdmin]);
 
   const StatCard = ({ icon: Icon, title, value, color }) => (
-    <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-50">
-      <div className="flex items-center mb-4">
+    
+    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 text-center">
+      <div className="ffeature-card bg-white rounded-4 p-4 shadow-hover">
         <div className={`p-3 rounded-lg bg-${color}-100 mr-4`}>
-          {Icon && <Icon size={24} className={`text-${color}-600`} />}
+        <h2 className="text-xl font-bold text-gray-800 mb-4 flex items-cente">
+            <div className="bg-primary-gradient p-2 rounded">
+            <p className="text-sm text-gray-500 font-medium">{Icon && <Icon size={24} className={`text-${color}-600`} />} {title}</p>
+            </div>
+          </h2>
         </div>
-        <div>
-          <p className="text-sm text-gray-500 font-medium">{title}</p>
+        <div>          
           <p className={`text-3xl font-bold text-${color}-600`}>{value}</p>
         </div>
       </div>
@@ -135,7 +139,7 @@ const Dashboard = ({ isAdmin = false }) => {
 
       {/* Stats Cards */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-        <div className="feature-card bg-white rounded-4 p-4 shadow-hover col-12 text-center">
+        <div className="feature-card bg-white rounded-4 p-4 shadow-hover">
            <StatCard icon={Users} title="Usuarios Registrados" value={stats.totalUsers} color=" mr-2 text-green-600" />
         </div>
         <div className="feature-card bg-white rounded-4 p-4 shadow-hover col-12 text-center">
