@@ -2,20 +2,43 @@
 CREATE DATABASE IF NOT EXISTS heza;
 USE heza;
 
--- Users table (base table for all user types)
+-- Eliminar tablas si existen para evitar conflictos
+DROP TABLE IF EXISTS galeria_eventos;
+DROP TABLE IF EXISTS mensajes;
+DROP TABLE IF EXISTS documentos;
+DROP TABLE IF EXISTS diagnosticos;
+DROP TABLE IF EXISTS cliente_servicio;
+DROP TABLE IF EXISTS empleados;
+DROP TABLE IF EXISTS eventos;
+DROP TABLE IF EXISTS servicios;
+DROP TABLE IF EXISTS clientes;
+DROP TABLE IF EXISTS categorias_documentos;
+DROP TABLE IF EXISTS users;
+
+-- Tabla de usuarios
 CREATE TABLE users (
-  id INT PRIMARY KEY AUTO_INCREMENT,
+  id INT AUTO_INCREMENT PRIMARY KEY,
   nombre VARCHAR(100) NOT NULL,
-  email VARCHAR(100) UNIQUE NOT NULL,
+  email VARCHAR(100) NOT NULL UNIQUE,
   password VARCHAR(100) NOT NULL,
   telefono VARCHAR(20),
   rol ENUM('admin', 'cliente', 'empleado') NOT NULL DEFAULT 'cliente',
-  activo BOOLEAN DEFAULT TRUE,
+  activo TINYINT(1) DEFAULT 1,
   fecha_registro TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-  ultima_conexion TIMESTAMP NULL
+  ultima_conexion TIMESTAMP NULL,
+  reset_token VARCHAR(255),
+  reset_token_expiry DATETIME,
+  original_email VARCHAR(255)
 );
 
--- Clientes table (extends users)
+-- Tabla de categorías de documentos
+CREATE TABLE categorias_documentos (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  nombre VARCHAR(100) NOT NULL,
+  descripcion TEXT
+);
+
+-- Tabla de clientes
 CREATE TABLE clientes (
   id INT PRIMARY KEY,
   empresa VARCHAR(100) NOT NULL,
@@ -26,67 +49,20 @@ CREATE TABLE clientes (
   codigo_postal VARCHAR(10),
   giro VARCHAR(100),
   numero_empleados INT,
-  ventas_anuales DECIMAL(15,2),
-  FOREIGN KEY (id) REFERENCES users(id) ON DELETE CASCADE
+  ventas_anuales DECIMAL(15,2)
 );
 
--- Empleados table (extends users)
-CREATE TABLE empleados (
-  id INT PRIMARY KEY,
-  puesto VARCHAR(100),
-  departamento VARCHAR(100),
-  fecha_contratacion DATE,
-  FOREIGN KEY (id) REFERENCES users(id) ON DELETE CASCADE
-);
-
--- Categorias de documentos
-CREATE TABLE categorias_documentos (
-  id INT PRIMARY KEY AUTO_INCREMENT,
-  nombre VARCHAR(100) NOT NULL,
-  descripcion TEXT
-);
-
--- Documentos
-CREATE TABLE documentos (
-  id INT PRIMARY KEY AUTO_INCREMENT,
-  nombre VARCHAR(255) NOT NULL,
-  descripcion TEXT,
-  ruta_archivo VARCHAR(255) NOT NULL,
-  tipo_archivo VARCHAR(50) NOT NULL,
-  tamano_archivo INT,
-  fecha_subida TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-  fecha_modificacion TIMESTAMP NULL ON UPDATE CURRENT_TIMESTAMP,
-  id_categoria INT,
-  id_cliente INT,
-  id_empleado INT,
-  FOREIGN KEY (id_categoria) REFERENCES categorias_documentos(id),
-  FOREIGN KEY (id_cliente) REFERENCES clientes(id),
-  FOREIGN KEY (id_empleado) REFERENCES empleados(id)
-);
-
--- Servicios
+-- Tabla de servicios
 CREATE TABLE servicios (
-  id INT PRIMARY KEY AUTO_INCREMENT,
+  id INT AUTO_INCREMENT PRIMARY KEY,
   nombre VARCHAR(100) NOT NULL,
   descripcion TEXT NOT NULL,
-  activo BOOLEAN DEFAULT TRUE
+  activo TINYINT(1) DEFAULT 1
 );
 
--- Relación cliente-servicio
-CREATE TABLE cliente_servicio (
-  id_cliente INT,
-  id_servicio INT,
-  fecha_inicio DATE NOT NULL,
-  fecha_fin DATE,
-  notas TEXT,
-  PRIMARY KEY (id_cliente, id_servicio),
-  FOREIGN KEY (id_cliente) REFERENCES clientes(id),
-  FOREIGN KEY (id_servicio) REFERENCES servicios(id)
-);
-
--- Eventos
+-- Tabla de eventos
 CREATE TABLE eventos (
-  id INT PRIMARY KEY AUTO_INCREMENT,
+  id INT AUTO_INCREMENT PRIMARY KEY,
   titulo VARCHAR(255) NOT NULL,
   descripcion TEXT,
   fecha DATE NOT NULL,
@@ -97,70 +73,85 @@ CREATE TABLE eventos (
   fecha_creacion TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
--- Galería de imágenes para eventos
-CREATE TABLE galeria_eventos (
-  id INT PRIMARY KEY AUTO_INCREMENT,
-  id_evento INT NOT NULL,
-  url_imagen VARCHAR(255) NOT NULL,
-  FOREIGN KEY (id_evento) REFERENCES eventos(id) ON DELETE CASCADE
+-- Tabla de empleados
+CREATE TABLE empleados (
+  id INT PRIMARY KEY,
+  puesto VARCHAR(100),
+  departamento VARCHAR(100),
+  fecha_contratacion DATE
 );
 
--- Mensajes
+-- Tabla de relación cliente-servicio
+CREATE TABLE cliente_servicio (
+  id_cliente INT NOT NULL,
+  id_servicio INT NOT NULL,
+  fecha_inicio DATE NOT NULL,
+  fecha_fin DATE,
+  notas TEXT,
+  PRIMARY KEY (id_cliente, id_servicio),
+  FOREIGN KEY (id_cliente) REFERENCES clientes(id) ON DELETE CASCADE,
+  FOREIGN KEY (id_servicio) REFERENCES servicios(id) ON DELETE CASCADE
+);
+
+-- Tabla de diagnósticos
+CREATE TABLE diagnosticos (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  id_cliente INT,
+  fecha TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  uso_contabilidad TINYINT(1),
+  manual_cumplimiento TINYINT(1),
+  verificacion_mensual TINYINT(1),
+  revision_declaraciones TINYINT(1),
+  consistencia_sat TINYINT(1),
+  carta_responsiva TINYINT(1),
+  notas TEXT,
+  FOREIGN KEY (id_cliente) REFERENCES clientes(id) ON DELETE SET NULL
+);
+
+-- Tabla de documentos
+CREATE TABLE documentos (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  nombre VARCHAR(255) NOT NULL,
+  descripcion TEXT,
+  ruta_archivo VARCHAR(255) NOT NULL,
+  tipo_archivo VARCHAR(50) NOT NULL,
+  tamano_archivo INT,
+  fecha_subida TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  fecha_modificacion TIMESTAMP NULL ON UPDATE CURRENT_TIMESTAMP,
+  id_categoria INT,
+  id_cliente INT,
+  id_empleado INT,
+  FOREIGN KEY (id_categoria) REFERENCES categorias_documentos(id) ON DELETE SET NULL,
+  FOREIGN KEY (id_cliente) REFERENCES clientes(id) ON DELETE SET NULL,
+  FOREIGN KEY (id_empleado) REFERENCES empleados(id) ON DELETE SET NULL
+);
+
+-- Tabla de mensajes
 CREATE TABLE mensajes (
-  id INT PRIMARY KEY AUTO_INCREMENT,
+  id INT AUTO_INCREMENT PRIMARY KEY,
   asunto VARCHAR(255) NOT NULL,
   contenido TEXT NOT NULL,
   fecha_envio TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   id_remitente INT NOT NULL,
   id_destinatario INT NOT NULL,
-  leido BOOLEAN DEFAULT FALSE,
-  FOREIGN KEY (id_remitente) REFERENCES users(id),
-  FOREIGN KEY (id_destinatario) REFERENCES users(id)
+  leido TINYINT(1) DEFAULT 0,
+  FOREIGN KEY (id_remitente) REFERENCES users(id) ON DELETE CASCADE,
+  FOREIGN KEY (id_destinatario) REFERENCES users(id) ON DELETE CASCADE
 );
 
--- Diagnósticos empresariales
-CREATE TABLE diagnosticos (
-  id INT PRIMARY KEY AUTO_INCREMENT,
-  id_cliente INT,
-  fecha TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-  uso_contabilidad BOOLEAN,
-  manual_cumplimiento BOOLEAN,
-  verificacion_mensual BOOLEAN,
-  revision_declaraciones BOOLEAN,
-  consistencia_sat BOOLEAN,
-  carta_responsiva BOOLEAN,
-  notas TEXT,
-  FOREIGN KEY (id_cliente) REFERENCES clientes(id)
+-- Tabla de galería de eventos
+CREATE TABLE galeria_eventos (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  id_evento INT NOT NULL,
+  url_imagen VARCHAR(255) NOT NULL,
+  FOREIGN KEY (id_evento) REFERENCES eventos(id) ON DELETE CASCADE
 );
 
--- Datos iniciales para categorías de documentos
-INSERT INTO categorias_documentos (nombre, descripcion) VALUES
-('Facturación', 'Documentos relacionados con facturas y comprobantes fiscales'),
-('Contratos', 'Contratos y acuerdos legales'),
-('Estados Financieros', 'Balances, estados de resultados y otros reportes financieros'),
-('Nóminas', 'Documentos relacionados con pagos de nómina'),
-('Impuestos', 'Declaraciones y documentos fiscales'),
-('Legal', 'Documentos legales y corporativos'),
-('Administrativo', 'Documentos administrativos generales');
-
--- Datos iniciales para servicios
-INSERT INTO servicios (nombre, descripcion) VALUES
-('Diagnóstico Empresarial', 'Evaluación integral de la situación fiscal y financiera de la empresa'),
-('Asesoría Fiscal', 'Consultoría especializada en materia fiscal y tributaria'),
-('Contabilidad', 'Servicios de contabilidad general y especializada'),
-('Asesoría Laboral y Seguro Social', 'Consultoría en temas laborales y de seguridad social'),
-('Finanzas Corporativas', 'Servicios de gestión financiera para empresas'),
-('Legal Corporativo', 'Asesoría legal para empresas'),
-('Consultoría y Consejos Consultivos', 'Servicios de consultoría estratégica'),
-('Protección Patrimonial', 'Servicios para proteger el patrimonio empresarial y personal');
-
--- Crear usuario administrador inicial
-INSERT INTO users (nombre, email, password, rol, telefono)
-VALUES ('Administrador', 'AdminHeza', '$2b$10$X7VYHy.uOgA.j8Vl4vF9s.v8MV1hFZhF5nUr5kJJRsP/x8bqR6h4e', 'admin', '5551234567');
--- Nota: La contraseña es 'es3Hm3f9y&CdoxVcLruS@VCurrent' hasheada con bcrypt (este hash se actualizará al ejecutar seedData.js)
-
--- Add to users table
-ALTER TABLE users 
-ADD COLUMN reset_token VARCHAR(255) NULL,
-ADD COLUMN reset_token_expiry DATETIME NULL,
-ADD COLUMN original_email VARCHAR(255) NULL;
+-- Índices para mejorar el rendimiento
+CREATE INDEX idx_documentos_categoria ON documentos(id_categoria);
+CREATE INDEX idx_documentos_cliente ON documentos(id_cliente);
+CREATE INDEX idx_documentos_empleado ON documentos(id_empleado);
+CREATE INDEX idx_diagnosticos_cliente ON diagnosticos(id_cliente);
+CREATE INDEX idx_mensajes_remitente ON mensajes(id_remitente);
+CREATE INDEX idx_mensajes_destinatario ON mensajes(id_destinatario);
+CREATE INDEX idx_galeria_evento ON galeria_eventos(id_evento);
