@@ -40,7 +40,7 @@ const Header = () => {
               </div>
               <div className="topbar-item">
                 <FontAwesomeIcon icon={faPhoneAlt} className="text-primary me-2" />
-                <a href="tel:3333305376" className="text-white small">(33) 3330-5376</a>
+                <a href="tel:3331674762" className="text-white small">(33) 3167-4762</a>
               </div>
             </div>
             
