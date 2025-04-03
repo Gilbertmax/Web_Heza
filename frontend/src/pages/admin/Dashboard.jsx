@@ -16,14 +16,14 @@ import {
 } from 'react-feather';
 import Loading from '../../components/Loading/Loading.jsx'; 
 const AdminClientes = () => (
-  <div className="space-y-4">
+  <div className="space-y-5">
     <div className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
-      <span className="font-medium">Cliente Ejemplo 1</span>
-      <span className="text-sm text-gray-500">Activo</span>
+      <span className="text-primary mb-3 me-2">Cliente Ejemplo 1</span>
+      <span className="section-badge bg-primary text-white mb-4 "> Activo</span>
     </div>
     <div className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
-      <span className="font-medium">Cliente Ejemplo 2</span>
-      <span className="text-sm text-gray-500">Pendiente</span>
+      <span className="text-primary mb-3 me-2">Cliente Ejemplo 2</span>
+      <span className="section-badge bg-primary text-white mb-4"> Pendiente</span>
     </div>
   </div>
 );
@@ -54,14 +54,18 @@ const Dashboard = ({ isAdmin = false }) => {
   }, [isAdmin]);
 
   const StatCard = ({ icon: Icon, title, value, color }) => (
-    <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-50">
-      <div className="flex items-center mb-4">
+    
+    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 text-center">
+      <div className="ffeature-card bg-white rounded-4 p-4 shadow-hover">
         <div className={`p-3 rounded-lg bg-${color}-100 mr-4`}>
-          {Icon && <Icon size={24} className={`text-${color}-600`} />}
+        <h2 className="text-xl font-bold text-gray-800 mb-4 flex items-cente">
+            <div className="bg-primary-gradient p-2 rounded">
+            <p className="text-sm text-gray-500 font-medium">{Icon && <Icon size={24} className={`text-${color}-600`} />} {title}</p>
+            </div>
+          </h2>
         </div>
-        <div>
-          <p className="text-sm text-gray-500 font-medium">{title}</p>
-          <p className={`text-3xl font-bold text-${color}-600`}>{value}</p>
+        <div>          
+          <p className={`section-badge bg-primary text-white mb-4 text-${color}-600`}>{value}</p>
         </div>
       </div>
     </div>
@@ -107,25 +111,25 @@ const Dashboard = ({ isAdmin = false }) => {
   );
 
   const renderAdminPanel = () => (
-    <div className="col-lg-9 p-6">
+    <div className="col-lg-10 p-4">
       <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-6 gap-6">
         <div>
           <h1 className="display-7 text-dark mb-4">
             <span className="text-gradient-primary">Bienvenido </span>
             <span className="text-gradient-secondary"> {userData?.name}</span>
           </h1>
-          <h4 className="section-subtitle text-primary mb-4">
+          <h4 className="mb-4">
             Resumen general del sistema
           </h4>
         </div>
 
         {/* Buttons */}
         <div className="flex flex-col md:flex-row gap-2 w-full md:w-auto">
-          <button className="btn btn-primary btn-lg px-2 py-2 me-4 rounded-pill shadow-hover">
+          <button className="btn btn-primary btn-lg px-2 py-2 me-4 rounded-pill shadow-hover mb-3">
             <Users size={16} className="mr-2" />
             Nuevo Usuario
           </button>
-          <button className="btn btn-primary btn-lg px-2 py-2 rounded-pill shadow-hover">
+          <button className="btn btn-outline-primary btn-lg px-2 py-2 rounded-pill shadow-hover mb-3">
             <FileText size={16} className="mr-2" />
             Generar Reporte
           </button>
@@ -133,31 +137,44 @@ const Dashboard = ({ isAdmin = false }) => {
       </div>
 
       {/* Stats Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
-        <StatCard icon={Users} title="Usuarios Registrados" value={stats.totalUsers} color="primary" />
-        <StatCard icon={UserPlus} title="Clientes Activos" value={stats.activeClients} color="green" />
-        <StatCard icon={Clock} title="Tareas Pendientes" value={stats.pendingTasks} color="yellow" />
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+        <div className="feature-card bg-white rounded-4 p-4 shadow-hover">
+           <StatCard icon={Users} title="Usuarios Registrados" value={stats.totalUsers} color=" text-white mr-2" />
+        </div>
+        <div className="feature-card bg-white rounded-4 p-4 shadow-hover col-12 text-center">
+           <StatCard icon={UserPlus} title="Clientes Activos" value={stats.activeClients} color=" text-white mr-2" />
+        </div>
+        <div className="feature-card bg-white rounded-4 p-4 shadow-hover col-12 text-center">
+           <StatCard icon={Clock} title="Tareas Pendientes" value={stats.pendingTasks} color=" text-white mr-2" />
+        </div>    
       </div>
 
       {/* Charts Section */}
-      <div className="grid lg:grid-cols-2 gap-6">
-        <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-100">
-          <h2 className="text-xl font-bold text-gray-800 mb-4 flex items-center">
-            <BarChart size={24} className="mr-2 text-primary-600" />
-            Actividad Reciente
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 text-center">
+        <div className="feature-card bg-white rounded-4 p-4 shadow-hover ">
+          <h2 className="text-xl font-bold text-gray-800 mb-4 flex items-cente">
+          <div className="bg-primary-gradient p-2 rounded">
+               <BarChart size={25} className="text-white mr-2" />
+               <span className="text-dark mt-3">Actividad Reciente</span>
+          </div>
           </h2>
-          <AdminClientes />
-        </div>
-        
-        <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-100">
-          <h2 className="text-xl font-bold text-gray-800 mb-4 flex items-center">
-            <PieChart size={24} className="mr-2 text-green-600" />
-            Distribución de Servicios
-          </h2>
-          <div className="h-64 flex items-center justify-center bg-gray-50 rounded-lg">
-            <span className="text-gray-400">Gráfico estadístico</span>
+          <div>
+           <AdminClientes />
           </div>
         </div>
+        
+        <div className="feature-card bg-white rounded-4 p-4 shadow-hover">
+        <h2 className="text-xl font-bold text-gray-800 mb-4 flex items-cente">  
+        <div className="bg-primary-gradient p-2 rounded">
+          <PieChart size={25} className="text-white mr-2" />               
+          <span className="text-dark mt-3">Distribución de Servicios</span>
+        </div>
+        </h2>
+          <div className="h-64 flex items-center justify-center bg-gray-50 rounded-lg">
+            <span className="text-primary mb-3 me-2">Gráfico estadístico</span>
+          </div>
+        </div>
+
       </div>
     </div>
   );

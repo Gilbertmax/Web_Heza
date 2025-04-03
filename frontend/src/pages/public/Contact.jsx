@@ -6,7 +6,7 @@ const Contact = () => {
     <div className="container-fluid py-5 bg-light">
       <div className="container py-5">
         <div className="text-center pb-4">
-          <h6 className="text-uppercase text-primary">Contáctanos</h6>
+          <h6 className="section-badge bg-primary-soft text-primary mb-3">Contáctanos</h6>
           <h1 className="display-4 text-dark mb-4">
             <span className="text-gradient-primary">Estamos aquí</span>
             <span className="text-gradient-secondary"> para ayudarte</span>
@@ -23,7 +23,7 @@ const Contact = () => {
           
           <div className="col-lg-6">
             <div className="contact-info bg-white rounded-4 shadow p-5 h-100">
-              <div className="mb-5">
+              <div className="mb-5 feature-card bg-white rounded-4 p-4 shadow-hover">
                 <h3 className="text-primary mb-4">Oficinas</h3>
                 <div className="d-flex align-items-center mb-3">
                   <i className="fas fa-map-marker-alt fa-lg text-primary me-3"></i>
@@ -41,7 +41,7 @@ const Contact = () => {
                 </div>
               </div>
 
-              <div className="mb-5">
+              <div className="mb-5 feature-card bg-white rounded-4 p-4 shadow-hover">
                 <h3 className="text-primary mb-4">Contacto</h3>
                 <div className="d-flex align-items-center mb-3">
                   <i className="fas fa-envelope fa-lg text-primary me-3"></i>
@@ -51,7 +51,7 @@ const Contact = () => {
                 </div>
               </div>
 
-              <div className="commitment-section">
+              <div className=" innovation-alert bg-primary-soft rounded-4 p-4 mt-4 specialty-card">
                 <h3 className="text-primary mb-4">Nuestro Compromiso</h3>
                 <div className="d-flex align-items-start">
                   <i className="fas fa-handshake fa-lg text-primary me-3"></i>

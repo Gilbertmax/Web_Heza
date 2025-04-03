@@ -2,6 +2,8 @@ import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import diagnosticoImg from '../../assets/img/img-diagnostico.png';
+import {FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import {faStethoscope} from '@fortawesome/free-solid-svg-icons';
 
 const DiagnosticoEmpresarial = () => {
   const navigate = useNavigate();
@@ -92,7 +94,7 @@ const DiagnosticoEmpresarial = () => {
             <div className="form-card bg-white rounded-4 shadow-lg p-5">
               <div className="text-center mb-5">
                 <div className="icon-box bg-primary-gradient text-white rounded-circle mb-4 mx-auto">
-                  <i className="fas fa-file-alt fa-2x"></i>
+                  <i className="fas fa-file-alt fa-2x"> <FontAwesomeIcon icon={faStethoscope} /> </i>
                 </div>
                 <h2 className="display-5 text-dark mb-3">
                   Solicita tu <span className="text-gradient-primary">Pre-Diagnóstico</span>
