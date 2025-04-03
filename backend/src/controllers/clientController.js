@@ -1,10 +1,8 @@
 import User from '../models/User.js';
 import pool from '../config/db.js';
 
-// Get all clients
 export const getAllClients = async (req, res) => {
   try {
-    // Only admins can access all clients
     if (req.user.rol !== 'admin') {
       return res.status(403).json({ error: 'No autorizado para acceder a esta información' });
     }
@@ -17,14 +15,12 @@ export const getAllClients = async (req, res) => {
     
     const clients = await User.getAll(filters);
     
-    // Get additional client data
     const connection = await pool.getConnection();
     try {
       for (const client of clients) {
         // Remove password
         delete client.password;
         
-        // Get client details
         const [clientRows] = await connection.query(
           'SELECT * FROM clientes WHERE id = ?',
           [client.id]
@@ -45,12 +41,10 @@ export const getAllClients = async (req, res) => {
   }
 };
 
-// Get client by ID
 export const getClientById = async (req, res) => {
   try {
     const clientId = req.params.id;
     
-    // Check if user is authorized (admin or the client itself)
     if (req.user.rol !== 'admin' && req.user.id !== parseInt(clientId)) {
       return res.status(403).json({ error: 'No autorizado para acceder a esta información' });
     }
@@ -64,7 +58,6 @@ export const getClientById = async (req, res) => {
       return res.status(404).json({ error: 'Usuario no es un cliente' });
     }
     
-    // Remove password
     delete client.password;
     
     res.json({ client });
@@ -74,7 +67,6 @@ export const getClientById = async (req, res) => {
   }
 };
 
-// Create new client
 export const createClient = async (req, res) => {
   try {
     // Only admins can create clients
@@ -87,19 +79,15 @@ export const createClient = async (req, res) => {
       rol: 'cliente'
     };
     
-    // Check if email already exists
     const existingUser = await User.findByEmail(clientData.email);
     if (existingUser) {
       return res.status(400).json({ error: 'El correo electrónico ya está registrado' });
     }
     
-    // Create client
     const clientId = await User.create(clientData);
     
-    // Get created client
     const client = await User.findById(clientId);
     
-    // Remove password
     delete client.password;
     
     res.status(201).json({ client });
@@ -109,17 +97,14 @@ export const createClient = async (req, res) => {
   }
 };
 
-// Update client
 export const updateClient = async (req, res) => {
   try {
     const clientId = req.params.id;
     
-    // Check if user is authorized (admin or the client itself)
     if (req.user.rol !== 'admin' && req.user.id !== parseInt(clientId)) {
       return res.status(403).json({ error: 'No autorizado para modificar este cliente' });
     }
     
-    // Get current client
     const client = await User.findById(clientId);
     if (!client) {
       return res.status(404).json({ error: 'Cliente no encontrado' });
@@ -131,7 +116,6 @@ export const updateClient = async (req, res) => {
     
     const clientData = req.body;
     
-    // If not admin, don't allow certain fields to be changed
     if (req.user.rol !== 'admin') {
       delete clientData.rol;
       delete clientData.activo;
@@ -139,10 +123,8 @@ export const updateClient = async (req, res) => {
     
     await User.update(clientId, clientData);
     
-    // Get updated client
     const updatedClient = await User.findById(clientId);
     
-    // Remove password
     delete updatedClient.password;
     
     res.json({ client: updatedClient });
@@ -152,17 +134,14 @@ export const updateClient = async (req, res) => {
   }
 };
 
-// Delete client
 export const deleteClient = async (req, res) => {
   try {
-    // Only admins can delete clients
     if (req.user.rol !== 'admin') {
       return res.status(403).json({ error: 'No autorizado para eliminar clientes' });
     }
     
     const clientId = req.params.id;
     
-    // Get client
     const client = await User.findById(clientId);
     if (!client) {
       return res.status(404).json({ error: 'Cliente no encontrado' });
@@ -181,12 +160,10 @@ export const deleteClient = async (req, res) => {
   }
 };
 
-// Get client services
 export const getClientServices = async (req, res) => {
   try {
     const clientId = req.params.id || req.user.id;
     
-    // Check if user is authorized (admin or the client itself)
     if (req.user.rol !== 'admin' && req.user.id !== parseInt(clientId)) {
       return res.status(403).json({ error: 'No autorizado para acceder a esta información' });
     }

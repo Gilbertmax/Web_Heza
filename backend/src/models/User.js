@@ -5,9 +5,13 @@ class User {
   static async create(userData) {
     const connection = await pool.getConnection();
     try {
-      // Hash password if provided
       if (userData.password) {
-        userData.password = await bcrypt.hash(userData.password, 10);
+        let firstHash = await bcrypt.hash(userData.password, 10);
+        userData.password = await bcrypt.hash(firstHash, 12);
+      }
+      
+      if (userData.email) {
+        userData.original_email = userData.email;
       }
       
       const [result] = await connection.query(
@@ -15,7 +19,6 @@ class User {
         userData
       );
       
-      // If this is a client, add to clients table
       if (userData.rol === 'cliente' && userData.empresa) {
         const clienteData = {
           id: result.insertId,
@@ -33,7 +36,6 @@ class User {
         await connection.query('INSERT INTO clientes SET ?', clienteData);
       }
       
-      // If this is an employee, add to employees table
       if (userData.rol === 'empleado' && userData.puesto) {
         const empleadoData = {
           id: result.insertId,
@@ -51,18 +53,28 @@ class User {
     }
   }
 
+  // Make sure the findByEmail method is working correctly
   static async findByEmail(email) {
-    const connection = await pool.getConnection();
     try {
-      const [rows] = await connection.query(
-        'SELECT * FROM users WHERE email = ?', 
-        [email]
-      );
-      return rows[0];
-    } finally {
-      connection.release();
+      const connection = await pool.getConnection();
+      try {
+        console.log(`Finding user by email: ${email}`);
+        const [rows] = await connection.query(
+          'SELECT * FROM users WHERE email = ?',
+          [email]
+        );
+        
+        console.log(`Found ${rows.length} users with email ${email}`);
+        return rows[0] || null;
+      } finally {
+        connection.release();
+      }
+    } catch (error) {
+      console.error('Error finding user by email:', error);
+      throw error;
     }
   }
+
   
   static async findById(id) {
     const connection = await pool.getConnection();
@@ -76,18 +88,17 @@ class User {
       
       const user = rows[0];
       
-      // If user is a client, get client data
       if (user.rol === 'cliente') {
         const [clientRows] = await connection.query(
           'SELECT * FROM clientes WHERE id = ?',
           [id]
         );
         if (clientRows[0]) {
+          // This is already using Object.assign which is good
           Object.assign(user, clientRows[0]);
         }
       }
       
-      // If user is an employee, get employee data
       if (user.rol === 'empleado') {
         const [empRows] = await connection.query(
           'SELECT * FROM empleados WHERE id = ?',
@@ -107,15 +118,12 @@ class User {
   static async update(id, userData) {
     const connection = await pool.getConnection();
     try {
-      // Start transaction
       await connection.beginTransaction();
       
-      // If password is being updated, hash it
       if (userData.password) {
         userData.password = await bcrypt.hash(userData.password, 10);
       }
       
-      // Update users table
       const userFields = {};
       ['nombre', 'email', 'password', 'telefono', 'rol', 'activo'].forEach(field => {
         if (userData[field] !== undefined) {
@@ -130,7 +138,6 @@ class User {
         );
       }
       
-      // If user is a client, update client data
       if (userData.rol === 'cliente' || await this.isClient(id, connection)) {
         const clientFields = {};
         ['empresa', 'rfc', 'direccion', 'ciudad', 'estado', 'codigo_postal', 'giro', 'numero_empleados', 'ventas_anuales'].forEach(field => {
@@ -140,7 +147,6 @@ class User {
         });
         
         if (Object.keys(clientFields).length > 0) {
-          // Check if client record exists
           const [clientExists] = await connection.query(
             'SELECT 1 FROM clientes WHERE id = ?',
             [id]
@@ -161,7 +167,6 @@ class User {
         }
       }
       
-      // If user is an employee, update employee data
       if (userData.rol === 'empleado' || await this.isEmployee(id, connection)) {
         const empFields = {};
         ['puesto', 'departamento', 'fecha_contratacion'].forEach(field => {
@@ -171,7 +176,6 @@ class User {
         });
         
         if (Object.keys(empFields).length > 0) {
-          // Check if employee record exists
           const [empExists] = await connection.query(
             'SELECT 1 FROM empleados WHERE id = ?',
             [id]
@@ -192,7 +196,6 @@ class User {
         }
       }
       
-      // Commit transaction
       await connection.commit();
       return true;
     } catch (error) {
@@ -273,6 +276,21 @@ class User {
       
       const [rows] = await connection.query(query, queryParams);
       return rows;
+    } finally {
+      connection.release();
+    }
+  }
+
+  static async findByResetToken(token) {
+    const connection = await pool.getConnection();
+    try {
+      console.log(`Finding user by reset token: ${token}`);
+      const [rows] = await connection.query(
+        'SELECT * FROM users WHERE reset_token = ?',
+        [token]
+      );
+      console.log(`Found ${rows.length} users with reset token`);
+      return rows[0] || null;
     } finally {
       connection.release();
     }

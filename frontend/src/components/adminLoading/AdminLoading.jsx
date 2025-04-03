@@ -1,151 +1,233 @@
 import React, { useState } from 'react';
-import PropTypes from 'prop-types';
 import { useNavigate } from 'react-router-dom';
+import axios from 'axios';
 import './AdminLoading.css';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faEye, faEyeSlash } from '@fortawesome/free-solid-svg-icons';
 
-const AdminLoading = ({ 
-  message = 'Verificando credenciales administrativas...',
-  type = 'spiral',
-  size = 'large',
-  color = 'primary',
-  fullScreen = true,
-  textPosition = 'below',
-  progress,
-  showLogin = true
-}) => {
-  const [email, setEmail] = useState('');
+const AdminLoading = ({ showLogin = false, fullScreen = true }) => {
+  const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
-  const [isLoading, setIsLoading] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [showResetForm, setShowResetForm] = useState(false);
+  const [resetEmailPrefix, setResetEmailPrefix] = useState('');
+  const [resetSent, setResetSent] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
+  
   const navigate = useNavigate();
 
-  const handleAdminLogin = async (e) => {
+  const handleLogin = async (e) => {
     e.preventDefault();
-    setIsLoading(true);
     setError('');
-
+    setLoading(true);
+    
     try {
-      const response = await fetch('http://localhost:5000/api/auth/admin/login', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ email, password }),
+      console.log('Attempting login with:', { email: username, password: password.length + ' chars' });
+      
+      const response = await axios.post('/api/auth/admin/login', { 
+        email: username,
+        password: password 
       });
-
-      const data = await response.json();
-
-      if (response.ok) {
-        // Store admin data in localStorage or context
-        localStorage.setItem('admin', JSON.stringify(data.admin));
-        // Redirect to admin dashboard
-        navigate('/admin/dashboard');
-      } else {
-        setError(data.error || 'Credenciales administrativas inválidas');
-      }
+      
+      console.log('Login successful, response:', response.data);
+      
+      localStorage.setItem('adminToken', response.data.token);
+      localStorage.setItem('adminUser', JSON.stringify(response.data.user));
+      
+      navigate('/admin/dashboard');
     } catch (err) {
-      setError('Error de conexión al servidor');
-      console.error('Admin login error:', err);
+      console.error('Login error:', err.response?.data || err.message);
+      setError(err.response?.data?.error || 'Error al iniciar sesión. Verifica tus credenciales.');
     } finally {
-      setIsLoading(false);
+      setLoading(false);
+    }
+  };
+  
+  // Update the handleResetPassword function in AdminLoading.jsx
+  
+  const handleResetPassword = async (e) => {
+    e.preventDefault();
+    setError('');
+    setLoading(true);
+    
+    try {
+      // Make sure we're using the correct email format
+      let fullEmail = resetEmailPrefix;
+      
+      // If it doesn't contain @, assume it's a username and append the domain
+      if (!resetEmailPrefix.includes('@')) {
+        fullEmail = `${resetEmailPrefix}@heza.com.mx`;
+      }
+      
+      console.log('Requesting password reset for:', fullEmail);
+      
+      // Make sure the API endpoint is correct
+      const response = await axios.post('/api/auth/request-password-reset', { 
+        email: fullEmail 
+      });
+      
+      console.log('Password reset response:', response.data);
+      setResetSent(true);
+    } catch (err) {
+      console.error('Password reset error:', err);
+      
+      // Improved error handling
+      if (err.code === 'ECONNREFUSED' || err.message.includes('Network Error')) {
+        setError('No se pudo conectar con el servidor. Por favor, asegúrate de que el servidor backend esté en ejecución.');
+      } else {
+        setError(err.response?.data?.error || 'Error al solicitar restablecimiento. Intenta de nuevo más tarde.');
+      }
+    } finally {
+      setLoading(false);
     }
   };
 
-  // Admin-specific loading spinner
-  const renderLoadingSpinner = () => (
-    <div className="admin-spinner">
-      {type === 'spiral' && (
+  const togglePasswordVisibility = () => {
+    setShowPassword(!showPassword);
+  };
+
+  if (!showLogin) {
+    return (
+      <div className={`admin-loading-container ${fullScreen ? 'admin-full-screen' : ''}`}>
         <div className="admin-spiral-spinner">
           <div className="admin-spiral-circle"></div>
         </div>
-      )}
-      {type === 'dots' && (
-        <div className="admin-dots-spinner">
-          <div className="admin-dot admin-dot1"></div>
-          <div className="admin-dot admin-dot2"></div>
-          <div className="admin-dot admin-dot3"></div>
-        </div>
-      )}
-      {type === 'progress' && (
-        <div className="admin-progress-bar">
-          <div 
-            className="admin-progress-fill" 
-            style={{ width: `${progress || 0}%` }}
-          ></div>
-        </div>
-      )}
-    </div>
-  );
-
-  if (showLogin) {
-    return (
-      <div className={`admin-loading-container ${fullScreen ? 'admin-full-screen' : ''}`}>
-        <div className="admin-login-form">
-          <h2 className="text-center mb-4">Acceso Administrativo</h2>
-          {error && <div className="admin-alert admin-alert-danger">{error}</div>}
-          <form onSubmit={handleAdminLogin}>
-            <div className="admin-form-group">
-              <label htmlFor="adminEmail">Email Administrativo</label>
-              <input
-                type="email"
-                id="adminEmail"
-                placeholder="admin@heza.com"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                required
-              />
-            </div>
-            <div className="admin-form-group">
-              <label htmlFor="adminPassword">Contraseña</label>
-              <input
-                type="password"
-                id="adminPassword"
-                placeholder="••••••••"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                required
-              />
-            </div>
-            <div className="admin-auth-buttons">
-              <button 
-                type="submit" 
-                className="admin-btn"
-                disabled={isLoading}
-              >
-                {isLoading ? 'Verificando...' : 'Acceder como Administrador'}
-              </button>
-            </div>
-          </form>
-        </div>
+        <p className="admin-loading-text">Cargando panel administrativo...</p>
       </div>
     );
   }
 
   return (
-    <div 
-      className={`admin-loading-container ${fullScreen ? 'admin-full-screen' : ''}`}
-      role="status"
-      aria-live="polite"
-    >
-      {renderLoadingSpinner()}
-      {message && (
-        <div className={`admin-loading-text ${textPosition}`}>
-          {message}
-        </div>
-      )}
+    <div className="admin-loading-container">
+      <div className="admin-login-form">
+        <h2 className="text-center">Acceso Administrativo</h2>
+        
+        {!showResetForm ? (
+          <>
+            {error && <div className="alert alert-danger">{error}</div>}
+            
+            <form onSubmit={handleLogin}>
+              <div className="admin-form-group">
+                <label htmlFor="username">Usuario</label>
+                <input
+                  type="text"
+                  id="username"
+                  className="form-control"
+                  value={username}
+                  onChange={(e) => setUsername(e.target.value)}
+                  required
+                />
+              </div>
+              
+              <div className="admin-form-group">
+                <label htmlFor="password">Contraseña</label>
+                <div className="password-input-container">
+                  <input
+                    type={showPassword ? "text" : "password"}
+                    id="password"
+                    className="form-control"
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    required
+                  />
+                  <button 
+                    type="button" 
+                    className="password-toggle-btn"
+                    onClick={togglePasswordVisibility}
+                    aria-label={showPassword ? "Ocultar contraseña" : "Mostrar contraseña"}
+                  >
+                    <FontAwesomeIcon 
+                      icon={showPassword ? faEyeSlash : faEye} 
+                      className="eye-icon"
+                    />
+                  </button>
+                </div>
+              </div>
+              
+              <button 
+                type="submit" 
+                className="btn btn-primary w-100 mb-3"
+                disabled={loading}
+              >
+                {loading ? 'Iniciando sesión...' : 'Iniciar Sesión'}
+              </button>
+              
+              <div className="text-center">
+                <button
+                  type="button"
+                  className="btn btn-link"
+                  onClick={() => setShowResetForm(true)}
+                >
+                  ¿Olvidaste tu contraseña?
+                </button>
+              </div>
+            </form>
+          </>
+        ) : (
+          <>
+            {resetSent ? (
+              <div className="alert alert-success">
+                Se ha enviado un correo con instrucciones para restablecer tu contraseña.
+                <div className="text-center mt-3">
+                  <button
+                    type="button"
+                    className="btn btn-link"
+                    onClick={() => {
+                      setShowResetForm(false);
+                      setResetSent(false);
+                    }}
+                  >
+                    Volver al inicio de sesión
+                  </button>
+                </div>
+              </div>
+            ) : (
+              <>
+                {error && <div className="alert alert-danger">{error}</div>}
+                
+                <form onSubmit={handleResetPassword}>
+                  <div className="admin-form-group">
+                    <label htmlFor="resetEmail">Correo Electrónico</label>
+                    <div className="email-input-container">
+                      <input
+                        type="text"
+                        id="resetEmailPrefix"
+                        className="form-control"
+                        value={resetEmailPrefix}
+                        onChange={(e) => setResetEmailPrefix(e.target.value)}
+                        placeholder="usuario"
+                        required
+                      />
+                      <span className="email-domain">@heza.com.mx</span>
+                    </div>
+                  </div>
+                  
+                  <button 
+                    type="submit" 
+                    className="btn btn-primary w-100 mb-3"
+                    disabled={loading}
+                  >
+                    {loading ? 'Enviando...' : 'Restablecer Contraseña'}
+                  </button>
+                  
+                  <div className="text-center">
+                    <button
+                      type="button"
+                      className="btn btn-link"
+                      onClick={() => setShowResetForm(false)}
+                    >
+                      Volver al inicio de sesión
+                    </button>
+                  </div>
+                </form>
+              </>
+            )}
+          </>
+        )}
+      </div>
     </div>
   );
-};
-
-AdminLoading.propTypes = {
-  message: PropTypes.string,
-  type: PropTypes.oneOf(['spiral', 'dots', 'progress']),
-  size: PropTypes.oneOf(['small', 'medium', 'large']),
-  color: PropTypes.oneOf(['primary', 'secondary', 'monochrome']),
-  fullScreen: PropTypes.bool,
-  textPosition: PropTypes.oneOf(['below', 'right', 'hidden']),
-  progress: PropTypes.number,
-  showLogin: PropTypes.bool
 };
 
 export default AdminLoading;

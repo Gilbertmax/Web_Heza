@@ -2,6 +2,7 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faFacebookF, faTwitter, faYoutube } from '@fortawesome/free-brands-svg-icons';
+
 const Footer = () => {
   return (
     <div className="container-fluid bg-dark pt-6" style={{ marginTop: "90px" }}>
@@ -119,7 +120,7 @@ const Footer = () => {
                 Acceso Clientes/Usuarios
               </Link>
               <Link 
-                to="/admin/acceso"  
+                to="/admin/login"  
                 className="btn btn-outline-primary btn-sm hover-lift"
               >
                 <i className="fas fa-lock me-2"></i>

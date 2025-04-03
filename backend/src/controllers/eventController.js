@@ -1,6 +1,5 @@
 import Event from '../models/Event.js';
 
-// Get all events
 export const getAllEvents = async (req, res) => {
   try {
     const filters = {
@@ -19,7 +18,6 @@ export const getAllEvents = async (req, res) => {
   }
 };
 
-// Get event by ID
 export const getEventById = async (req, res) => {
   try {
     const eventId = req.params.id;
@@ -36,10 +34,8 @@ export const getEventById = async (req, res) => {
   }
 };
 
-// Create new event
 export const createEvent = async (req, res) => {
   try {
-    // Only admins can create events
     if (req.user.rol !== 'admin') {
       return res.status(403).json({ error: 'No autorizado para crear eventos' });
     }
@@ -57,17 +53,14 @@ export const createEvent = async (req, res) => {
   }
 };
 
-// Update event
 export const updateEvent = async (req, res) => {
   try {
-    // Only admins can update events
     if (req.user.rol !== 'admin') {
       return res.status(403).json({ error: 'No autorizado para modificar eventos' });
     }
     
     const eventId = req.params.id;
     
-    // Check if event exists
     const event = await Event.findById(eventId);
     if (!event) {
       return res.status(404).json({ error: 'Evento no encontrado' });
@@ -86,17 +79,14 @@ export const updateEvent = async (req, res) => {
   }
 };
 
-// Delete event
 export const deleteEvent = async (req, res) => {
   try {
-    // Only admins can delete events
     if (req.user.rol !== 'admin') {
       return res.status(403).json({ error: 'No autorizado para eliminar eventos' });
     }
     
     const eventId = req.params.id;
     
-    // Check if event exists
     const event = await Event.findById(eventId);
     if (!event) {
       return res.status(404).json({ error: 'Evento no encontrado' });

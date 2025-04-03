@@ -3,6 +3,8 @@ import multer from 'multer';
 import path from 'path';
 import { fileURLToPath } from 'url';
 import fs from 'fs';
+import authRoutes from './authRoutes.js';
+
 
 // Controllers
 import * as authController from '../controllers/authController.js';
@@ -16,12 +18,10 @@ import { verifyToken, isAdmin, isClient, isAdminOrClient } from '../middleware/a
 
 const router = express.Router();
 
-// Set up file upload
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 const UPLOAD_DIR = path.join(__dirname, '../../uploads');
 
-// Ensure upload directory exists
 if (!fs.existsSync(UPLOAD_DIR)) {
   fs.mkdirSync(UPLOAD_DIR, { recursive: true });
 }
@@ -73,5 +73,12 @@ router.delete('/events/:id', verifyToken, isAdmin, eventController.deleteEvent);
 
 // Public API routes
 router.post('/contact', apiController.enviarDiagnostico);
+
+router.get('/health', (req, res) => {
+  res.json({ status: 'ok', message: 'Server is running' });
+});
+
+
+router.use('/auth', authRoutes);
 
 export default router;
