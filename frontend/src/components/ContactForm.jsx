@@ -92,8 +92,9 @@ const ContactForm = () => {
 
       <div className="text-center mt-4">
         <p className="small text-muted">
-          <i className="fas fa-lock me-2"></i>
+          <i className="text-primary mb-3 me-2">
           Tus datos están protegidos
+          </i>
         </p>
       </div>
     </form>
