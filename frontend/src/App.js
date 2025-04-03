@@ -37,6 +37,7 @@ const DashboardAdmin = lazy(() => import('./pages/admin/Dashboard'));
 const NoticiasAdmin = lazy(() => import('./pages/admin/NoticiasAdmin'));
 const EventosAdmin = lazy(() => import('./pages/admin/EventosAdmin'));
 const AdminLoading = lazy(() => import('./components/adminLoading/AdminLoading'));
+const UsuariosAdmin=lazy(()=> import('./pages/admin/UsuariosAdmin'));
 
 function App() {
   return (
@@ -77,11 +78,13 @@ function App() {
           <Route path="/admin/dashboard" element={<DashboardAdmin isAdmin={true} />} />
           <Route path="/admin/noticias" element={<NoticiasAdmin />} />
           <Route path="/admin/eventos" element={<EventosAdmin />} /> 
+          <Route path="/admin/usuarios" element={<UsuariosAdmin/>} />
           
           {/* Autenticación */}
           <Route path="/admin/acceso" element={<AdminLoading showLogin fullScreen />} />
           <Route path="/acceso" element={<Loading showLogin fullScreen />} />
         </Routes>
+        
       </Suspense>
       <Footer />
       <ChatBot />

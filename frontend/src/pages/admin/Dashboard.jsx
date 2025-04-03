@@ -92,6 +92,7 @@ const Dashboard = ({ isAdmin = false }) => {
               { to: "/admin/clientes", icon: Users, label: "Clientes" },
               { to: "/admin/noticias", icon: BookOpen, label: "Noticias" },
               { to: "/admin/eventos", icon: Calendar, label: "Eventos" },
+              
             ] : []),
             { to: "/documentos", icon: FileText, label: "Documentos" },
             { to: "/mensajes", icon: MessageSquare, label: "Mensajes" },
