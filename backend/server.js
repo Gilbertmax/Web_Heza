@@ -3,6 +3,7 @@ import cors from 'cors';
 import dotenv from 'dotenv';
 import apiRoutes from './src/routes/api.js';
 import initializeDatabase from './src/database/initDb.js';
+import authRoutes from './src/routes/authRoutes.js';
 
 // Load environment variables
 dotenv.config();
@@ -18,6 +19,9 @@ app.use(express.urlencoded({ extended: true }));
 
 // API routes
 app.use('/api', apiRoutes);
+
+// Mount the auth routes
+app.use('/api/auth', authRoutes);
 
 // Health check route
 app.get('/health', (req, res) => {
@@ -45,5 +49,7 @@ const startServer = async () => {
     process.exit(1);
   }
 };
+
+process.noDeprecation = true; 
 
 startServer();

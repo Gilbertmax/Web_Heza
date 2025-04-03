@@ -65,19 +65,16 @@ class Document {
       
       const queryParams = [clientId];
       
-      // Add category filter
       if (filters.categoria) {
         query += ' AND d.id_categoria = ?';
         queryParams.push(filters.categoria);
       }
       
-      // Add search filter
       if (filters.search) {
         query += ' AND (d.nombre LIKE ? OR d.descripcion LIKE ?)';
         queryParams.push(`%${filters.search}%`, `%${filters.search}%`);
       }
       
-      // Add date filter
       if (filters.fecha_desde) {
         query += ' AND d.fecha_subida >= ?';
         queryParams.push(filters.fecha_desde);
@@ -88,7 +85,6 @@ class Document {
         queryParams.push(filters.fecha_hasta);
       }
       
-      // Add ordering
       query += ' ORDER BY d.fecha_subida DESC';
       
       const [rows] = await connection.query(query, queryParams);
