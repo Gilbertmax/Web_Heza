@@ -119,7 +119,7 @@ const Footer = () => {
                 Acceso Clientes/Usuarios
               </Link>
               <Link 
-                to="/admin/dashboard" 
+                to="/admin/acceso"  
                 className="btn btn-outline-primary btn-sm hover-lift"
               >
                 <i className="fas fa-lock me-2"></i>
