@@ -8,7 +8,7 @@ const Contabilidad = () => {
       <div className="container py-5">
         <div className="row mb-5">
           <div className="col-12 text-center">
-            <h6 className="text-uppercase text-primary">Servicio</h6>
+            <h6 className="section-badge bg-primary-soft text-primary mb-3">Servicio</h6>
             <h1 className="display-3 text-dark mb-4">
               <span className="text-gradient-secondary"> Contabilidad</span>
             </h1>

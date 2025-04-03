@@ -8,7 +8,7 @@ const AsesoriaFiscal = () => {
       <div className="container py-5">
         <div className="row mb-5">
           <div className="col-12 text-center">
-            <h6 className="text-uppercase text-primary">Orientacion</h6>
+            <h6 className="section-badge bg-primary-soft text-primary mb-3">Orientacion</h6>
             <h1 className="display-3 text-dark mb-4">
               <span className="text-gradient-primary">Asesoria</span> 
               <span className="text-gradient-secondary"> Fiscal</span>
