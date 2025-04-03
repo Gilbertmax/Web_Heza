@@ -140,13 +140,13 @@ const Dashboard = ({ isAdmin = false }) => {
       {/* Stats Cards */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
         <div className="feature-card bg-white rounded-4 p-4 shadow-hover">
-           <StatCard icon={Users} title="Usuarios Registrados" value={stats.totalUsers} color=" mr-2 text-green-600" />
+           <StatCard icon={Users} title="Usuarios Registrados" value={stats.totalUsers} color=" text-white mr-2" />
         </div>
         <div className="feature-card bg-white rounded-4 p-4 shadow-hover col-12 text-center">
-           <StatCard icon={UserPlus} title="Clientes Activos" value={stats.activeClients} color="text-primary-600" />
+           <StatCard icon={UserPlus} title="Clientes Activos" value={stats.activeClients} color=" text-white mr-2" />
         </div>
         <div className="feature-card bg-white rounded-4 p-4 shadow-hover col-12 text-center">
-           <StatCard icon={Clock} title="Tareas Pendientes" value={stats.pendingTasks} color="text-primary-600" />
+           <StatCard icon={Clock} title="Tareas Pendientes" value={stats.pendingTasks} color=" text-white mr-2" />
         </div>    
       </div>
 
