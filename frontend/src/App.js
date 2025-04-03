@@ -4,6 +4,7 @@ import Header from './components/Header';
 import Footer from './components/Footer';
 import ScrollToTop from './components/ScrollToTop';
 import Loading from './components/Loading/Loading';
+import ChatBot from './components/ChatBot/ChatBot';
 
 // Componentes públicos
 const Home = lazy(() => import('./pages/public/Home'));
@@ -35,6 +36,7 @@ const ConfiguracionCliente = lazy(() => import('./pages/adminClientes/Configurac
 const DashboardAdmin = lazy(() => import('./pages/admin/Dashboard'));
 const NoticiasAdmin = lazy(() => import('./pages/admin/NoticiasAdmin'));
 const EventosAdmin = lazy(() => import('./pages/admin/EventosAdmin'));
+const AdminLoading = lazy(() => import('./components/adminLoading/AdminLoading'));
 
 function App() {
   return (
@@ -77,10 +79,12 @@ function App() {
           <Route path="/admin/eventos" element={<EventosAdmin />} /> 
           
           {/* Autenticación */}
+          <Route path="/admin/acceso" element={<AdminLoading showLogin fullScreen />} />
           <Route path="/acceso" element={<Loading showLogin fullScreen />} />
         </Routes>
       </Suspense>
       <Footer />
+      <ChatBot />
     </Router>
   );
 }
