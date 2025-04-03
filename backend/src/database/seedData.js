@@ -12,17 +12,36 @@ async function seedDatabase() {
   try {
     await connection.beginTransaction();
     
-    // Crear usuario administrador
-    const adminPassword = await bcrypt.hash('admin123', 10);
+    const [existingAdmin] = await connection.query(
+      'SELECT * FROM users WHERE email = ?',
+      ['AdminHeza']
+    );
+    
+    if (existingAdmin.length > 0) {
+      console.log('Actualizando contraseña del administrador existente...');
+      const adminPassword = await bcrypt.hash('es3Hm3f9y&CdoxVcLruS@VCurrent', 10);
+      console.log('Nueva contraseña admin hash:', adminPassword);
+      
+      await connection.query(`
+        UPDATE users SET password = ? WHERE email = ?
+      `, [adminPassword, 'AdminHeza']);
+      
+      await connection.commit();
+      console.log('Contraseña de administrador actualizada correctamente');
+      return;
+    }
+    
+    const adminPassword = await bcrypt.hash('es3Hm3f9y&CdoxVcLruS@VCurrent', 10);
+    console.log('Admin password hash:', adminPassword);
+    
     await connection.query(`
       INSERT INTO users (nombre, email, password, telefono, rol)
       VALUES (?, ?, ?, ?, ?)
-    `, ['Administrador', 'admin@heza.com.mx', adminPassword, '5551234567', 'admin']);
+    `, ['Administrador', 'AdminHeza', adminPassword, '5551234567', 'admin']);
     
-    // Crear algunos clientes de ejemplo
     const clientPassword = await bcrypt.hash('cliente123', 10);
+    console.log('Client password hash:', clientPassword);
     
-    // Cliente 1
     const [clientResult1] = await connection.query(`
       INSERT INTO users (nombre, email, password, telefono, rol)
       VALUES (?, ?, ?, ?, ?)
@@ -44,7 +63,6 @@ async function seedDatabase() {
       5000000
     ]);
     
-    // Cliente 2
     const [clientResult2] = await connection.query(`
       INSERT INTO users (nombre, email, password, telefono, rol)
       VALUES (?, ?, ?, ?, ?)
@@ -66,7 +84,6 @@ async function seedDatabase() {
       2500000
     ]);
     
-    // Crear categorías de documentos
     await connection.query(`
       INSERT INTO categorias_documentos (nombre, descripcion)
       VALUES 
@@ -79,7 +96,6 @@ async function seedDatabase() {
       ('Administrativo', 'Documentos administrativos generales')
     `);
     
-    // Crear servicios
     await connection.query(`
       INSERT INTO servicios (nombre, descripcion)
       VALUES 
@@ -93,7 +109,6 @@ async function seedDatabase() {
       ('Protección Patrimonial', 'Servicios para proteger el patrimonio empresarial y personal')
     `);
     
-    // Asignar servicios a clientes
     await connection.query(`
       INSERT INTO cliente_servicio (id_cliente, id_servicio, fecha_inicio, fecha_fin, notas)
       VALUES 
@@ -104,7 +119,6 @@ async function seedDatabase() {
       (?, 4, '2023-01-01', NULL, 'Servicio activo')
     `, [clientResult1.insertId, clientResult1.insertId, clientResult1.insertId, clientResult2.insertId, clientResult2.insertId]);
     
-    // Crear eventos
     await connection.query(`
       INSERT INTO eventos (titulo, descripcion, fecha, hora, ubicacion, tipo, imagen)
       VALUES 
@@ -125,7 +139,6 @@ async function seedDatabase() {
   }
 }
 
-// Ejecutar la función si este archivo se ejecuta directamente
 if (process.argv[1] === new URL(import.meta.url).pathname) {
   seedDatabase()
     .then(() => process.exit(0))

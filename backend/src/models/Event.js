@@ -4,10 +4,8 @@ class Event {
   static async create(eventData) {
     const connection = await pool.getConnection();
     try {
-      // Start transaction
       await connection.beginTransaction();
       
-      // Insert event
       const [result] = await connection.query(
         'INSERT INTO eventos SET ?', 
         eventData
@@ -15,7 +13,6 @@ class Event {
       
       const eventId = result.insertId;
       
-      // Insert gallery images if provided
       if (eventData.galeria && Array.isArray(eventData.galeria) && eventData.galeria.length > 0) {
         const galleryValues = eventData.galeria.map(url => [eventId, url]);
         await connection.query(
@@ -24,7 +21,6 @@ class Event {
         );
       }
       
-      // Commit transaction
       await connection.commit();
       return eventId;
     } catch (error) {
@@ -38,7 +34,6 @@ class Event {
   static async findById(id) {
     const connection = await pool.getConnection();
     try {
-      // Get event data
       const [eventRows] = await connection.query(
         'SELECT * FROM eventos WHERE id = ?', 
         [id]
@@ -48,7 +43,6 @@ class Event {
       
       const event = eventRows[0];
       
-      // Get gallery images
       const [galleryRows] = await connection.query(
         'SELECT url_imagen FROM galeria_eventos WHERE id_evento = ?',
         [id]
@@ -65,13 +59,10 @@ class Event {
   static async update(id, eventData) {
     const connection = await pool.getConnection();
     try {
-      // Start transaction
       await connection.beginTransaction();
       
-      // Extract gallery data
       const { galeria, ...eventFields } = eventData;
       
-      // Update event
       if (Object.keys(eventFields).length > 0) {
         await connection.query(
           'UPDATE eventos SET ? WHERE id = ?',
@@ -79,15 +70,12 @@ class Event {
         );
       }
       
-      // Update gallery if provided
       if (galeria && Array.isArray(galeria)) {
-        // Delete existing gallery
         await connection.query(
           'DELETE FROM galeria_eventos WHERE id_evento = ?',
           [id]
         );
         
-        // Insert new gallery images
         if (galeria.length > 0) {
           const galleryValues = galeria.map(url => [id, url]);
           await connection.query(
@@ -97,7 +85,6 @@ class Event {
         }
       }
       
-      // Commit transaction
       await connection.commit();
       return true;
     } catch (error) {
@@ -124,7 +111,6 @@ class Event {
       let query = 'SELECT * FROM eventos';
       const queryParams = [];
       
-      // Add filters
       if (Object.keys(filters).length > 0) {
         query += ' WHERE ';
         const filterConditions = [];
@@ -152,12 +138,10 @@ class Event {
         query += filterConditions.join(' AND ');
       }
       
-      // Add ordering
       query += ' ORDER BY fecha DESC';
       
       const [rows] = await connection.query(query, queryParams);
       
-      // Get gallery images for each event
       const events = await Promise.all(rows.map(async (event) => {
         const [galleryRows] = await connection.query(
           'SELECT url_imagen FROM galeria_eventos WHERE id_evento = ?',

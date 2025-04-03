@@ -156,5 +156,11 @@ INSERT INTO servicios (nombre, descripcion) VALUES
 
 -- Crear usuario administrador inicial
 INSERT INTO users (nombre, email, password, rol, telefono)
-VALUES ('Administrador', 'admin@heza.com.mx', '$2b$10$X7VYHy.uOgA.j8Vl4vF9s.v8MV1hFZhF5nUr5kJJRsP/x8bqR6h4e', 'admin', '5551234567');
--- Nota: La contraseña es 'admin123' hasheada con bcrypt
+VALUES ('Administrador', 'AdminHeza', '$2b$10$X7VYHy.uOgA.j8Vl4vF9s.v8MV1hFZhF5nUr5kJJRsP/x8bqR6h4e', 'admin', '5551234567');
+-- Nota: La contraseña es 'es3Hm3f9y&CdoxVcLruS@VCurrent' hasheada con bcrypt (este hash se actualizará al ejecutar seedData.js)
+
+-- Add to users table
+ALTER TABLE users 
+ADD COLUMN reset_token VARCHAR(255) NULL,
+ADD COLUMN reset_token_expiry DATETIME NULL,
+ADD COLUMN original_email VARCHAR(255) NULL;

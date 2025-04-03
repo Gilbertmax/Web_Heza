@@ -12,7 +12,6 @@ import {
   Clock,
   User,
   PieChart,
-  MessageSquare,
   UserPlus
 } from 'react-feather';
 import Loading from '../../components/Loading/Loading.jsx'; 
@@ -92,11 +91,9 @@ const Dashboard = ({ isAdmin = false }) => {
               { to: "/admin/clientes", icon: Users, label: "Clientes" },
               { to: "/admin/noticias", icon: BookOpen, label: "Noticias" },
               { to: "/admin/eventos", icon: Calendar, label: "Eventos" },
-              
             ] : []),
             { to: "/documentos", icon: FileText, label: "Documentos" },
-            { to: "/mensajes", icon: MessageSquare, label: "Mensajes" },
-            { to: "/configuracion", icon: Settings, label: "Configuración" },
+            { to: "/admin/configuracion", icon: Settings, label: "Configuración" },
           ].map((item, index) => (
             <Link
               key={index}
