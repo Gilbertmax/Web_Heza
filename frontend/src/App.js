@@ -4,6 +4,9 @@ import Header from './components/Header';
 import Footer from './components/Footer';
 import ScrollToTop from './components/ScrollToTop';
 import Loading from './components/Loading/Loading';
+import ChatBot from './components/ChatBot/ChatBot';
+import ResetPassword from './components/adminLoading/ResetPassword';
+import AdminLoading from './components/adminLoading/AdminLoading';
 
 // Componentes públicos
 const Home = lazy(() => import('./pages/public/Home'));
@@ -35,6 +38,7 @@ const ConfiguracionCliente = lazy(() => import('./pages/adminClientes/Configurac
 const DashboardAdmin = lazy(() => import('./pages/admin/Dashboard'));
 const NoticiasAdmin = lazy(() => import('./pages/admin/NoticiasAdmin'));
 const EventosAdmin = lazy(() => import('./pages/admin/EventosAdmin'));
+const ConfiguracionAdmin = lazy(() => import('./pages/admin/ConfiguracionAdmin'));
 
 function App() {
   return (
@@ -75,12 +79,17 @@ function App() {
           <Route path="/admin/dashboard" element={<DashboardAdmin isAdmin={true} />} />
           <Route path="/admin/noticias" element={<NoticiasAdmin />} />
           <Route path="/admin/eventos" element={<EventosAdmin />} /> 
+          <Route path="/admin/configuracion" element={<ConfiguracionAdmin />} />
           
           {/* Autenticación */}
+          <Route path="/admin/login" element={<AdminLoading showLogin fullScreen />} />
+          <Route path="/admin/reset-password/:token" element={<ResetPassword />} />
+          <Route path="/admin/acceso" element={<AdminLoading showLogin fullScreen />} />
           <Route path="/acceso" element={<Loading showLogin fullScreen />} />
         </Routes>
       </Suspense>
       <Footer />
+      <ChatBot />
     </Router>
   );
 }
