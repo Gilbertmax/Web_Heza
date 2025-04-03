@@ -78,7 +78,7 @@ const ChatBot = () => {
       {/* Chat window */}
       <div className={`chat-window ${isOpen ? 'open' : ''}`}>
         <div className="chat-header">
-          <h3>Asistente HEZA</h3>
+          <h3 className=" text-white mr-2">Asistente HEZA</h3>
           <button onClick={toggleChat} className="close-button">
             <FontAwesomeIcon icon={faTimes} />
           </button>
