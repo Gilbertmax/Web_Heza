@@ -39,8 +39,10 @@ const DashboardAdmin = lazy(() => import('./pages/admin/Dashboard'));
 const NoticiasAdmin = lazy(() => import('./pages/admin/NoticiasAdmin'));
 const EventosAdmin = lazy(() => import('./pages/admin/EventosAdmin'));
 const ConfiguracionAdmin = lazy(() => import('./pages/admin/ConfiguracionAdmin'));
+
 const UsuariosAdmin = lazy(()=> import('./pages/admin/UsuariosAdmin'));
 const ClienteAdmin = lazy(()=> import('./pages/admin/ClientesAdmin'));
+
 
 function App() {
   return (
@@ -84,6 +86,7 @@ function App() {
           <Route path="/admin/configuracion" element={<ConfiguracionAdmin />} />
           <Route path="/admin/usuarios" element={<UsuariosAdmin/>} />
           <Route path="/admin/clientes" element={<ClienteAdmin/>} />
+
           
           {/* Autenticación */}
           <Route path="/admin/login" element={<AdminLoading showLogin fullScreen />} />
