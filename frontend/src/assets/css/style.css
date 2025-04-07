@@ -11362,3 +11362,12 @@ section {
     padding-bottom: 2rem !important;
   }
 }
+.custom-link .arrow-icon {
+  color: #B49C73;
+  transition: color 0.2s ease;
+}
+
+.custom-link:hover .arrow-icon {
+  color: #263D4F; /* Color al hacer hover */
+}
+
