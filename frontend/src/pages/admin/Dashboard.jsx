@@ -92,7 +92,7 @@ const Dashboard = ({ isAdmin = false }) => {
               { to: "/admin/noticias", icon: BookOpen, label: "Noticias" },
               { to: "/admin/eventos", icon: Calendar, label: "Eventos" },
             ] : []),
-            { to: "/documentos", icon: FileText, label: "Documentos" },
+            { to: "/admin/documentos", icon: FileText, label: "Documentos" },
             { to: "/admin/configuracion", icon: Settings, label: "Configuración" },
             
           ].map((item, index) => (

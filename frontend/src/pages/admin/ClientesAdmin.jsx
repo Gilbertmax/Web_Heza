@@ -6,7 +6,7 @@ import { faEye, faEyeSlash } from '@fortawesome/free-solid-svg-icons';
 
 
 
-const Register = ({ fullScreen }) => {
+const RC = ({ fullScreen }) => {
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -163,11 +163,11 @@ const Register = ({ fullScreen }) => {
   );
 };
 
-Register.propTypes = {
+RC.propTypes = {
   fullScreen: PropTypes.bool,
 };
 
-export default Register;
+export default RC;
 
 
 

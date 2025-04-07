@@ -16,12 +16,15 @@ const PerfilCliente = () => {
 
   return (
     <div className="container py-4">
-      <h2 className="mb-4">Perfil de la Empresa</h2>
-      <div className="card shadow">
+      <h2 className="display-7 text-dark mb-4">
+          <span className="text-gradient-primary">Perfil de </span>
+          <span className="text-gradient-secondary"> la Empresa</span>
+      </h2> 
+      <div className="card shadow specialty-card">
         <div className="card-body">
           <form onSubmit={handleSubmit}>
             <div className="row g-3">
-              <div className="col-md-6">
+              <div className="col-md-6 admin-form-group">
                 <label className="form-label">Nombre de la Empresa</label>
                 <input
                   type="text"
@@ -30,7 +33,7 @@ const PerfilCliente = () => {
                   onChange={(e) => setEmpresa({...empresa, nombre: e.target.value})}
                 />
               </div>
-              <div className="col-md-6">
+              <div className="col-md-6 admin-form-group">
                 <label className="form-label">RFC</label>
                 <input
                   type="text"
@@ -39,7 +42,7 @@ const PerfilCliente = () => {
                   readOnly
                 />
               </div>
-              <div className="col-12">
+              <div className="col-12 admin-form-group">
                 <label className="form-label">Dirección</label>
                 <input
                   type="text"
@@ -48,7 +51,7 @@ const PerfilCliente = () => {
                   onChange={(e) => setEmpresa({...empresa, direccion: e.target.value})}
                 />
               </div>
-              <div className="col-md-6">
+              <div className="col-md-6 admin-form-group">
                 <label className="form-label">Teléfono</label>
                 <input
                   type="tel"
@@ -57,7 +60,7 @@ const PerfilCliente = () => {
                   onChange={(e) => setEmpresa({...empresa, telefono: e.target.value})}
                 />
               </div>
-              <div className="col-md-6">
+              <div className="col-md-6 admin-form-group">
                 <label className="form-label">Email</label>
                 <input
                   type="email"

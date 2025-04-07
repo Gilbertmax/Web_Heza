@@ -23,17 +23,16 @@ const Cliente = () => {
               <h5 className="display-7 text-dark mb-4">
                   <span className="text-gradient-primary">Información </span>
                   <span className="text-gradient-secondary"> Empresa</span>
-              </h5>
-              
+              </h5>              
               <ul className="list-group list-group-flush">
                 <li className="list-group-item specialty-card">
-                  <strong>RFC:</strong> {empresaInfo.rfc}
+                  <strong className="form-text text-primary">RFC:</strong> {empresaInfo.rfc}
                 </li>
                 <li className="list-group-item specialty-card">
-                  <strong>Régimen Fiscal:</strong> {empresaInfo.regimenFiscal}
+                <strong className="form-text text-primary">Régimen Fiscal:</strong> {empresaInfo.regimenFiscal}
                 </li>
                 <li className="list-group-item specialty-card">
-                  <strong>Contacto:</strong> {empresaInfo.contacto}
+                <strong className="form-text text-primary">Contacto:</strong> {empresaInfo.contacto}
                 </li>
               </ul>
             </div>
@@ -42,13 +41,19 @@ const Cliente = () => {
           <nav className="card shadow-sm">
             <div className="list-group list-group-flush ">
               <Link to="documentos" className="list-group-item list-group-item-action specialty-card">
-                <i className="fas fa-folder-open me-2"></i>Documentos
+                <span className="section-badge bg-primary-soft text-primary fas fa-folder-open ">
+                 Documentos
+                </span>
               </Link>
               <Link to="perfil" className="list-group-item list-group-item-action specialty-card">
-                <i className="fas fa-building me-2"></i>Perfil Empresa
+                <span className="section-badge bg-primary-soft text-primary fas fa-folder-open ">
+                  Perfil Empresa
+                </span>                
               </Link>
               <Link to="configuracion" className="list-group-item list-group-item-action specialty-card">
-                <i className="fas fa-cog me-2"></i>Configuración
+                <span className="section-badge bg-primary-soft text-primary fas fa-folder-open ">
+                    Configuración
+                </span> 
               </Link>
             </div>
           </nav>
