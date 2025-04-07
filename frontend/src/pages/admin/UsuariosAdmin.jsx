@@ -57,83 +57,88 @@ const Register = ({ fullScreen }) => {
             <span className="text-gradient-secondary"> de Usuario </span>
         </h5>
         {error && <div className="alert alert-danger">{error}</div>}
-        <div  className="admin-login-form mb-4 col-md-6 form-floating ">
+        <div  className="admin-login-form mb-4 col-md-6 form-floating">
+
         <form  onSubmit={handleRegister}>
-
-          <div className=" admin-form-group ">
-            <label htmlFor="name"> Nombre</label>
-            <input
-              type="text"
-              id="name"
-              className="form-control"
-              value={name}
-              onChange={(e) => setName(e.target.value)}
-              required
-              
-            />
-          </div>
-          
-          <div className=" admin-form-group">
-            <label htmlFor="email">Email</label>
-            <input
-              type="email"
-              id="email"
-              className="form-control"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              required
-            />
-          </div>
-
-          <div className=" admin-form-group">
-            <label htmlFor="password">Contraseña</label>
-            <div className="password-input-container">
-                <input                
-                type={showPassword ? "text" : "password"}
-                id="password"
+        <div className="row">
+          <div className="col-md-6 admin-form-group">
+            <div className=" mb-3 ">
+              <label htmlFor="name"> Nombre</label>
+              <input
+                type="text"
+                id="name"
                 className="form-control"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
+                value={name}
+                onChange={(e) => setName(e.target.value)}
                 required
-                placeholder="••••••••"
-              />          
-                <button 
-                  type="button" 
-                  className="password-toggle-btn"
-                  onClick={togglePasswordVisibility}
-                  aria-label={showPassword ? "Ocultar contraseña" : "Mostrar contraseña"}
-                  >
-                      <FontAwesomeIcon 
-                       icon={showPassword ? faEyeSlash : faEye} 
-                       className="eye-icon"
-                       />
-                </button>
+                
+              />
+            </div>
+            
+            <div className="mb-3">
+              <label htmlFor="email">Email</label>
+              <input
+                type="email"
+                id="email"
+                className="form-control"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                required
+              />
+            </div>
+
+            <div className=" mb-3">
+              <label htmlFor="password">Contraseña</label>
+              <div className="password-input-container">
+                  <input                
+                  type={showPassword ? "text" : "password"}
+                  id="password"
+                  className="form-control"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  required
+                  placeholder="••••••••"
+                />          
+                  <button 
+                    type="button" 
+                    className="password-toggle-btn"
+                    onClick={togglePasswordVisibility}
+                    aria-label={showPassword ? "Ocultar contraseña" : "Mostrar contraseña"}
+                    >
+                        <FontAwesomeIcon 
+                        icon={showPassword ? faEyeSlash : faEye} 
+                        className="eye-icon"
+                        />
+                  </button>
+              </div>
             </div>
           </div>
+          <div className="col-md-6 admin-form-group">
+            <div className=" mb-3">
+              <label htmlFor="number">Telefono</label>
+              <input
+                type="numer"
+                id="telefon numer"
+                className="form-control"
+                value={telefono}
+                onChange={(e) => setNumero(e.target.value)}
+                required
+              />
+            </div>
 
-          <div className=" admin-form-group">
-            <label htmlFor="number">Telefono</label>
-            <input
-              type="numer"
-              id="telefon numer"
-              className="form-control"
-              value={telefono}
-              onChange={(e) => setNumero(e.target.value)}
-              required
-            />
-          </div>
-
-          <div className="admin-form-group">
-            <label htmlFor="number">Puesto</label>
-            <input
-              type="Puesto"
-              id="puesto"
-              className="form-control"
-              value={puesto}
-              onChange={(e) => setPuesto(e.target.value)}
-              required
-            />
-          </div>
+            <div className="mb-3">
+              <label htmlFor="number">Puesto</label>
+              <input
+                type="Puesto"
+                id="puesto"
+                className="form-control"
+                value={puesto}
+                onChange={(e) => setPuesto(e.target.value)}
+                required
+              />
+            </div>
+            </div>
+        </div>  
           <div className="mb-5 mr-4 mt-4">
             <button type="submit" className="btn btn-primary btn-lg px-5 py-3 rounded-pill shadow-hover" disabled={isLoading}>
             <i className="fas fa-arrow-right ms-2"></i>
