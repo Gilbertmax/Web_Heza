@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import { useNavigate } from 'react-router-dom';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faEye, faEyeSlash } from '@fortawesome/free-solid-svg-icons';
 
 
 
@@ -10,10 +12,14 @@ const Register = ({ fullScreen }) => {
   const [password, setPassword] = useState('');
   const [telefono, setNumero] = useState('');
   const [puesto, setPuesto]= useState('');
+  const [showPassword, setShowPassword] = useState(false);
 
   const [error, setError] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
+  const togglePasswordVisibility = () => {
+    setShowPassword(!showPassword);
+  };
 
   const handleRegister = async (e) => {
     e.preventDefault();
@@ -45,12 +51,17 @@ const Register = ({ fullScreen }) => {
 
   return (
     <div className={`register-container ${fullScreen ? 'full-screen' : ''}`}>
-      <div className="register-form">
-        <h2 className="text-center mb-4">Registro de Usuario</h2>
+      <div className="text-center register-form form-card bg-white rounded-20 shadow-lg row justify-content-center col-lg-15 bg-white rounded-4 shadow-lg p-5 row g-8">
+      <h5 className="display-6 text-dark mb-4">
+            <span className="text-gradient-primary">Registro</span>
+            <span className="text-gradient-secondary"> de Usuario </span>
+        </h5>
         {error && <div className="alert alert-danger">{error}</div>}
-        <form onSubmit={handleRegister}>
-          <div className="form-group">
-            <label htmlFor="name">Nombre</label>
+        <div  className="admin-login-form mb-4 col-md-6 form-floating ">
+        <form  onSubmit={handleRegister}>
+
+          <div className=" admin-form-group ">
+            <label htmlFor="name"> Nombre</label>
             <input
               type="text"
               id="name"
@@ -58,9 +69,11 @@ const Register = ({ fullScreen }) => {
               value={name}
               onChange={(e) => setName(e.target.value)}
               required
+              
             />
           </div>
-          <div className="form-group">
+          
+          <div className=" admin-form-group">
             <label htmlFor="email">Email</label>
             <input
               type="email"
@@ -71,18 +84,34 @@ const Register = ({ fullScreen }) => {
               required
             />
           </div>
-          <div className="form-group">
+
+          <div className=" admin-form-group">
             <label htmlFor="password">Contraseña</label>
-            <input
-              type="password"
-              id="password"
-              className="form-control"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              required
-            />
+            <div className="password-input-container">
+                <input                
+                type={showPassword ? "text" : "password"}
+                id="password"
+                className="form-control"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                required
+                placeholder="••••••••"
+              />          
+                <button 
+                  type="button" 
+                  className="password-toggle-btn"
+                  onClick={togglePasswordVisibility}
+                  aria-label={showPassword ? "Ocultar contraseña" : "Mostrar contraseña"}
+                  >
+                      <FontAwesomeIcon 
+                       icon={showPassword ? faEyeSlash : faEye} 
+                       className="eye-icon"
+                       />
+                </button>
+            </div>
           </div>
-          <div className="form-group">
+
+          <div className=" admin-form-group">
             <label htmlFor="number">Telefono</label>
             <input
               type="numer"
@@ -93,7 +122,8 @@ const Register = ({ fullScreen }) => {
               required
             />
           </div>
-          <div className="form-group">
+
+          <div className="  admin-form-group">
             <label htmlFor="number">Puesto</label>
             <input
               type="Puesto"
@@ -104,12 +134,14 @@ const Register = ({ fullScreen }) => {
               required
             />
           </div>
-          <div className="auth-buttons">
-            <button type="submit" className="btn-auth user" disabled={isLoading}>
+          <div className="mb-5 mr-4 mt-4">
+            <button type="submit" className="btn btn-primary btn-lg px-5 py-3 rounded-pill shadow-hover" disabled={isLoading}>
+            <i className="fas fa-arrow-right ms-2"></i>
               {isLoading ? 'Registrando...' : 'Registrar'}
             </button>
           </div>
         </form>
+        </div>
       </div>
     </div>
   );

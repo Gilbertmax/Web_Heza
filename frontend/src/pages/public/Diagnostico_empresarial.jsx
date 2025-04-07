@@ -107,6 +107,7 @@ const DiagnosticoEmpresarial = () => {
               <div className="row justify-content-center">
                 <div className="col-lg-8">
                   <div className="bg-white rounded-4 shadow-lg p-5">
+
                     <form onSubmit={handleSubmit(onSubmit)}>
                       
                     <div className="row g-4">
@@ -146,7 +147,7 @@ const DiagnosticoEmpresarial = () => {
                         </div>
                       </div>
 
-                      <div className="col-12">
+                      <div className=" col-md-12 ">
                         <div className="form-floating">
                           <input
                             {...register("email", {
@@ -170,6 +171,7 @@ const DiagnosticoEmpresarial = () => {
                             <i className="fas fa-arrow-right ms-2"></i>
                           </button>
                         </div>
+
                       </div>
                     </form>
                   </div>

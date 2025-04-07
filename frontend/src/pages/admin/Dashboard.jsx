@@ -94,6 +94,7 @@ const Dashboard = ({ isAdmin = false }) => {
             ] : []),
             { to: "/documentos", icon: FileText, label: "Documentos" },
             { to: "/admin/configuracion", icon: Settings, label: "Configuración" },
+            
           ].map((item, index) => (
             <Link
               key={index}
