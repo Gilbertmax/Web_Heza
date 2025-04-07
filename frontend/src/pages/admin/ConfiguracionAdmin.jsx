@@ -139,9 +139,9 @@ const ConfiguracionAdmin = () => {
           <span className="text-gradient-primary">Configuración </span>
           <span className="text-gradient-secondary">de Cuenta</span>
         </h1>
-        <h4 className="section-subtitle text-primary mb-4">
+        <h5 className="section-subtitle text-primary mb-4">
           Actualiza tu información de contacto y seguridad
-        </h4>
+        </h5>
       </div>
 
       {message.text && (
@@ -158,10 +158,12 @@ const ConfiguracionAdmin = () => {
         <div className="col-lg-6 mb-4">
           <div className="card shadow-sm border-0 h-100">
             <div className="card-header bg-white border-0 pt-4">
-              <h5 className="card-title">Información de Contacto</h5>
-              <p className="text-muted small">Actualiza tu información personal y de contacto</p>
+            <span className="section-badge bg-primary-soft text-primary mb-3">
+                Información de Contacto
+            </span>
+            <p className="small text-primary mb-0 ">Actualiza tu información personal y de contacto</p>
             </div>
-            <div className="card-body">
+            <div className="card-body admin-form-group">
               <form onSubmit={handleProfileUpdate}>
                 <div className="mb-3">
                   <label htmlFor="nombre" className="form-label">Nombre</label>
@@ -187,7 +189,7 @@ const ConfiguracionAdmin = () => {
                     onChange={handleChange}
                     required
                   />
-                  <div className="form-text">
+                  <div className="form-text text-primary mb-0">
                     Este correo se utilizará para notificaciones y recuperación de contraseña.
                   </div>
                 </div>
@@ -220,13 +222,15 @@ const ConfiguracionAdmin = () => {
         <div className="col-lg-6 mb-4">
           <div className="card shadow-sm border-0 h-100">
             <div className="card-header bg-white border-0 pt-4">
-              <h5 className="card-title">Seguridad</h5>
-              <p className="text-muted small">Actualiza tu contraseña para mantener tu cuenta segura</p>
+              <span className="section-badge bg-primary-soft text-primary mb-3">
+                Seguridad
+              </span>
+              <p className="small text-primary mb-0">Actualiza tu contraseña para mantener tu cuenta segura</p>
             </div>
             <div className="card-body">
               {!passwordSection ? (
                 <div className="text-center py-4">
-                  <p className="mb-4">Cambia tu contraseña periódicamente para mantener tu cuenta segura.</p>
+                  <h5 className="mb-4 ">Cambia tu contraseña periódicamente para mantener tu cuenta segura.</h5>
                   <button 
                     className="btn btn-outline-primary"
                     onClick={() => setPasswordSection(true)}
@@ -236,7 +240,7 @@ const ConfiguracionAdmin = () => {
                 </div>
               ) : (
                 <form onSubmit={handlePasswordUpdate}>
-                  <div className="mb-3">
+                  <div className="mb-3 admin-form-group">
                     <label htmlFor="currentPassword" className="form-label">Contraseña Actual</label>
                     <input
                       type="password"
@@ -249,7 +253,7 @@ const ConfiguracionAdmin = () => {
                     />
                   </div>
                   
-                  <div className="mb-3">
+                  <div className="mb-3 admin-form-group">
                     <label htmlFor="newPassword" className="form-label">Nueva Contraseña</label>
                     <input
                       type="password"
@@ -261,12 +265,12 @@ const ConfiguracionAdmin = () => {
                       required
                       minLength="8"
                     />
-                    <div className="form-text">
+                    <div className="form-text text-primary mb-0">
                       La contraseña debe tener al menos 8 caracteres.
                     </div>
                   </div>
                   
-                  <div className="mb-4">
+                  <div className="mb-4 admin-form-group">
                     <label htmlFor="confirmPassword" className="form-label">Confirmar Nueva Contraseña</label>
                     <input
                       type="password"
@@ -299,8 +303,7 @@ const ConfiguracionAdmin = () => {
                           confirmPassword: ''
                         }));
                       }}
-                    >
-                      Cancelar
+                    >Cancelar
                     </button>
                   </div>
                 </form>
