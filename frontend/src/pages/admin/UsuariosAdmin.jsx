@@ -123,7 +123,7 @@ const Register = ({ fullScreen }) => {
             />
           </div>
 
-          <div className="  admin-form-group">
+          <div className="admin-form-group">
             <label htmlFor="number">Puesto</label>
             <input
               type="Puesto"
