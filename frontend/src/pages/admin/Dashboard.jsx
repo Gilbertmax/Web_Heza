@@ -136,7 +136,7 @@ const Dashboard = ({ isAdmin = false }) => {
         </div>
       </div>
 
-      {/* Stats Cards */}
+                              {/* Stats Cards */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
         <div className="feature-card bg-white rounded-4 p-4 shadow-hover">
            <StatCard icon={Users} title="Usuarios Registrados" value={stats.totalUsers} color=" text-white mr-2" />
