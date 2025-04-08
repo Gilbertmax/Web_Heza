@@ -12,7 +12,8 @@ import {
   Clock,
   User,
   PieChart,
-  UserPlus
+  UserPlus,
+  Bell
 } from 'react-feather';
 import Loading from '../../components/Loading/Loading.jsx'; 
 const AdminClientes = () => (
@@ -92,7 +93,7 @@ const Dashboard = ({ isAdmin = false }) => {
               { to: "/admin/noticias", icon: BookOpen, label: "Noticias" },
               { to: "/admin/eventos", icon: Calendar, label: "Eventos" },
             ] : []),
-            { to: "/admin/documentos", icon: FileText, label: "Documentos" },
+            { to: "/admin/documentos", icon: Bell, label: "Notificaciones" },
             { to: "/admin/configuracion", icon: Settings, label: "Configuración" },
             
           ].map((item, index) => (
@@ -145,7 +146,7 @@ const Dashboard = ({ isAdmin = false }) => {
            <StatCard icon={UserPlus} title="Clientes Activos" value={stats.activeClients} color=" text-white mr-2" />
         </div>
         <div className="feature-card bg-white rounded-4 p-4 shadow-hover col-12 text-center">
-           <StatCard icon={Clock} title="Tareas Pendientes" value={stats.pendingTasks} color=" text-white mr-2" />
+           <StatCard icon={Bell} title="Solicitudes" value={stats.pendingTasks} color=" text-white mr-2" />
         </div>    
       </div>
 
