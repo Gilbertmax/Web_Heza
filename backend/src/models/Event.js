@@ -6,7 +6,6 @@ class Event {
     try {
       await connection.beginTransaction();
       
-      // Extraer galeria del objeto eventData para evitar error de SQL
       const { galeria, ...eventFields } = eventData;
       
       const [result] = await connection.query(
@@ -108,7 +107,6 @@ class Event {
     }
   }
   
-  // In the SQL query:
   static async getAll(filters = {}) {
     const connection = await pool.getConnection();
     try {
@@ -146,7 +144,6 @@ class Event {
           queryParams.push(filters.fecha_hasta);
         }
         
-        // Solo agregar WHERE si hay condiciones de filtro
         if (filterConditions.length > 0) {
           query += ' WHERE ' + filterConditions.join(' AND ');
         }
