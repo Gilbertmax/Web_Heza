@@ -7,20 +7,26 @@ module.exports = function(app) {
       target: 'http://localhost:5000',
       changeOrigin: true,
       pathRewrite: {
-        '^/api': '/api'
+        '^/api': '/api',
+      },
+      onProxyReq: (proxyReq, req, res) => {
+        console.log('Proxying request:', {
+          method: req.method,
+          path: req.path,
+          body: req.body
+        });
       },
       onError: (err, req, res) => {
-        console.error('Proxy error:', err);
+        console.error('Proxy error:', {
+          error: err,
+          url: req.originalUrl,
+          method: req.method
+        });
         res.status(500).json({ 
-          error: 'Error de conexión con el servidor. Por favor, asegúrate de que el servidor backend esté en ejecución.' 
+          error: 'Proxy error occurred' 
         });
       },
-      // Add retry logic
-      onProxyReq: (proxyReq, req, res) => {
-        req.on('error', (err) => {
-          console.error('Request error:', err);
-        });
-      }
+      logLevel: 'debug'
     })
   );
 };

@@ -5,15 +5,12 @@ import { fileURLToPath } from 'url';
 import fs from 'fs';
 import authRoutes from './authRoutes.js';
 
-
-// Controllers
 import * as authController from '../controllers/authController.js';
 import * as clientController from '../controllers/clientController.js';
 import * as documentController from '../controllers/documentController.js';
 import * as eventController from '../controllers/eventController.js';
 import * as apiController from '../controllers/apiController.js';
 
-// Middleware
 import { verifyToken, isAdmin, isClient, isAdminOrClient } from '../middleware/auth.js';
 
 const router = express.Router();
@@ -39,7 +36,6 @@ const storage = multer.diskStorage({
 
 const upload = multer({ storage });
 
-// Auth routes
 router.post('/auth/register', authController.register);
 router.post('/auth/login', authController.login);
 router.post('/auth/admin/login', authController.adminLogin);
@@ -47,7 +43,6 @@ router.get('/auth/profile', verifyToken, authController.getProfile);
 router.put('/auth/profile', verifyToken, authController.updateProfile);
 router.post('/auth/change-password', verifyToken, authController.changePassword);
 
-// Client routes
 router.get('/clients', verifyToken, isAdmin, clientController.getAllClients);
 router.get('/clients/:id', verifyToken, isAdminOrClient, clientController.getClientById);
 router.post('/clients', verifyToken, isAdmin, clientController.createClient);
@@ -55,7 +50,6 @@ router.put('/clients/:id', verifyToken, isAdminOrClient, clientController.update
 router.delete('/clients/:id', verifyToken, isAdmin, clientController.deleteClient);
 router.get('/clients/:id/services', verifyToken, isAdminOrClient, clientController.getClientServices);
 
-// Document routes
 router.get('/documents/categories', verifyToken, documentController.getCategories);
 router.get('/documents/client/:clientId', verifyToken, isAdminOrClient, documentController.getClientDocuments);
 router.get('/documents/:id', verifyToken, documentController.getDocument);
@@ -64,20 +58,17 @@ router.put('/documents/:id', verifyToken, upload.single('file'), documentControl
 router.delete('/documents/:id', verifyToken, documentController.deleteDocument);
 router.get('/documents/:id/download', verifyToken, documentController.downloadDocument);
 
-// Event routes
 router.get('/events', eventController.getAllEvents);
 router.get('/events/:id', eventController.getEventById);
 router.post('/events', verifyToken, isAdmin, eventController.createEvent);
 router.put('/events/:id', verifyToken, isAdmin, eventController.updateEvent);
 router.delete('/events/:id', verifyToken, isAdmin, eventController.deleteEvent);
 
-// Public API routes
 router.post('/contact', apiController.enviarDiagnostico);
 
 router.get('/health', (req, res) => {
   res.json({ status: 'ok', message: 'Server is running' });
 });
-
 
 router.use('/auth', authRoutes);
 

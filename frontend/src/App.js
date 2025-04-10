@@ -7,6 +7,9 @@ import Loading from './components/Loading/Loading';
 import ChatBot from './components/ChatBot/ChatBot';
 import ResetPassword from './components/adminLoading/ResetPassword';
 import AdminLoading from './components/adminLoading/AdminLoading';
+import Noticias from './pages/public/Noticias';
+import Eventos from './pages/public/Eventos';
+import EventoDetalle from './pages/public/EventoDetalle';
 
 // Componentes públicos
 const Home = lazy(() => import('./pages/public/Home'));
@@ -57,6 +60,9 @@ function App() {
           <Route path="/contacto" element={<Contact />} />
           <Route path="/equipo" element={<Team />} />
           <Route path="/encuesta" element={<Encuesta />} />
+          <Route path="/noticias" element={<Noticias />} />
+          <Route path="/eventos" element={<Eventos />} />
+          <Route path="/eventos/:id" element={<EventoDetalle />} />
 
           {/* Rutas de servicios */}
           <Route path="/servicios/diagnostico-empresarial" element={<DiagnosticoEmpresarial />} />
@@ -86,6 +92,7 @@ function App() {
           <Route path="/admin/usuarios" element={<UsuariosAdmin/>} />
           <Route path="/admin/clientes" element={<ClienteAdmin/>} />
           <Route path="/admin/documentos" element={<DocumentAdmin/>} />
+          
 
           
           {/* Autenticación */}

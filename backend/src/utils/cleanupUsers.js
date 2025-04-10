@@ -8,7 +8,6 @@ const cleanupUsers = async () => {
   try {
     console.log('Starting user cleanup...');
     
-    // Delete the test user (ID 3)
     console.log('Deleting test user with email: gilberto_gonzalez@heza.com.mx');
     const [deleteResult] = await connection.query(
       'DELETE FROM users WHERE email = ?',
@@ -16,7 +15,6 @@ const cleanupUsers = async () => {
     );
     console.log(`Deleted ${deleteResult.affectedRows} test user(s)`);
     
-    // Update admin ID from 2 to 1
     console.log('Updating admin ID from 2 to 1');
     const [updateResult] = await connection.query(
       'UPDATE users SET id = 1 WHERE id = 2'

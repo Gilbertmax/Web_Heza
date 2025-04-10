@@ -14,7 +14,7 @@ const Footer = () => {
               <i className="fas fa-map-marker-alt fa-2x text-primary mr-4"></i>
               <div>
                 <h5 className="text-white mb-2">Oficinas</h5>
-                <p className="text-muted mb-1">(33) 3330-5376 - Heza Guadalajara</p>
+                <p className="text-muted mb-1">(33) 3167-4762 - Heza Guadalajara</p>
                 <p className="text-muted mb-0">(322) 225-4236 - Heza Vallarta</p>
               </div>
             </div>
@@ -90,18 +90,7 @@ const Footer = () => {
               ))}
             </div>
           </div>
-
-          <div className="col-lg-3 col-md-6 mb-5">
-              <h4 className="text-primary mb-4">Eventos / Noticias</h4>
-              <div className="d-flex flex-column gap-2">
-                {['legal', 'finanzas', 'ley-federal', 'novedades', 'aviso-privacidad'].map((link, index) => (
-                  <Link key={index} to={`/${link}`} className="footer-link">
-                    {['Legal', 'Finanzas', 'Ley Federal', 'Novedades', 'Aviso de Privacidad'][index]}
-                  </Link>
-                ))}
-              </div>
-            </div>
-          </div>
+        </div>
 
         {/* Copyright */}
         <div className="row py-4 mt-4 border-top border-secondary">
