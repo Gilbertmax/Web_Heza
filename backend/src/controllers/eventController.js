@@ -93,7 +93,7 @@ export const createEvent = async (req, res) => {
       fecha: req.body.fecha || new Date().toISOString().split('T')[0],
       ubicacion: req.body.ubicacion || '',
       tipo: req.body.tipo || 'Próximo',
-      descripcion: req.body.contenido || '',
+      descripcion: req.body.descripcion || '',
       imagen: imagePath,
       galeria: galeriaArray
     };
@@ -167,12 +167,12 @@ export const updateEvent = async (req, res) => {
     
     const eventData = {
       titulo: req.body.titulo,
-      fecha: req.body.fecha,
-      ubicacion: req.body.ubicacion,
-      tipo: req.body.tipo,
-      descripcion: req.body.contenido || '',
-      imagen: imagePath,
-      galeria: galeriaArray
+      fecha: req.body.fecha || existingEvent.fecha,
+      hora: req.body.hora || existingEvent.hora,
+      ubicacion: req.body.ubicacion || existingEvent.ubicacion,
+      tipo: req.body.tipo || existingEvent.tipo,
+      descripcion: req.body.descripcion || existingEvent.descripcion,
+      imagen: imagePath || existingEvent.imagen
     };
     
     await Event.update(eventId, eventData);

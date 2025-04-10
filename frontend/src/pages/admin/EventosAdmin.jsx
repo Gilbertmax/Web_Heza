@@ -3,16 +3,15 @@ import { Button, Form, Modal, Card, Row, Col, Badge } from 'react-bootstrap';
 import axios from 'axios';
 import ImageUploader from '../../components/ImageUploader';
 import MultiImageUploader from '../../components/MultiImageUploader';
-import TimeInput from '../../components/TimeInput';
+import TimeInput from '../../components/Time/TimeInput';
 
 const EventosAdmin = () => {
   const [showModal, setShowModal] = useState(false);
   const [eventos, setEventos] = useState([]);
-  // In the state initialization:
   const [nuevoEvento, setNuevoEvento] = useState({
     titulo: '',
     fecha: new Date().toISOString().split('T')[0],
-    hora: '18:00', // Default time
+    hora: '18:00',
     ubicacion: '',
     tipo: 'Próximo',
     descripcion: '',
@@ -133,12 +132,11 @@ const EventosAdmin = () => {
     if (evento) {
       setEditMode(true);
       setCurrentId(evento.id);
-      // In handleOpenModal, change 'contenido' to 'descripcion'
       setNuevoEvento({
         titulo: evento.titulo || '',
-        descripcion: evento.descripcion || '', // Changed from contenido
+        descripcion: evento.descripcion || '',
         fecha: evento.fecha ? evento.fecha.split('T')[0] : new Date().toISOString().split('T')[0],
-        hora: evento.hora || '18:00', // Add hora here
+        hora: evento.hora || '18:00',
         ubicacion: evento.ubicacion || '',
         tipo: evento.tipo || 'Próximo',
         imagen: evento.imagen || '',
@@ -180,7 +178,6 @@ const EventosAdmin = () => {
         </Button>
       </div>
 
-      {/* Modal para crear/editar eventos */}
       <Modal show={showModal} onHide={() => setShowModal(false)} size="lg">
         <Modal.Header closeButton>
           <Modal.Title>{editMode ? 'Editar Evento' : 'Nuevo Evento'}</Modal.Title>

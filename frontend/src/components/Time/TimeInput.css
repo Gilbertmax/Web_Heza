@@ -1,0 +1,25 @@
+.time-picker {
+  max-width: 240px;
+}
+
+.time-select {
+  min-width: 70px;
+  text-align: center;
+}
+
+.am-pm-toggle {
+  min-width: 50px;
+  font-weight: bold;
+}
+
+.input-group-text {
+  font-weight: bold;
+  background-color: #f8f9fa;
+}
+
+/* Mejora la apariencia en dispositivos móviles */
+@media (max-width: 576px) {
+  .time-picker {
+    max-width: 100%;
+  }
+}
