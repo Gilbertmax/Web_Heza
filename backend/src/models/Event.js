@@ -6,15 +6,18 @@ class Event {
     try {
       await connection.beginTransaction();
       
+      // Extraer galeria del objeto eventData para evitar error de SQL
+      const { galeria, ...eventFields } = eventData;
+      
       const [result] = await connection.query(
         'INSERT INTO eventos SET ?', 
-        eventData
+        eventFields
       );
       
       const eventId = result.insertId;
       
-      if (eventData.galeria && Array.isArray(eventData.galeria) && eventData.galeria.length > 0) {
-        const galleryValues = eventData.galeria.map(url => [eventId, url]);
+      if (galeria && Array.isArray(galeria) && galeria.length > 0) {
+        const galleryValues = galeria.map(url => [eventId, url]);
         await connection.query(
           'INSERT INTO galeria_eventos (id_evento, url_imagen) VALUES ?',
           [galleryValues]
@@ -105,14 +108,22 @@ class Event {
     }
   }
   
+  // In the SQL query:
   static async getAll(filters = {}) {
     const connection = await pool.getConnection();
     try {
-      let query = 'SELECT * FROM eventos';
+      let query = `
+        SELECT 
+          e.*,
+          TIME_FORMAT(e.hora, '%H:%i') as hora,
+          GROUP_CONCAT(ge.url_imagen) AS galeria
+        FROM eventos e
+        LEFT JOIN galeria_eventos ge ON e.id = ge.id_evento
+      `;
+      
       const queryParams = [];
       
       if (Object.keys(filters).length > 0) {
-        query += ' WHERE ';
         const filterConditions = [];
         
         if (filters.tipo) {
@@ -135,26 +146,22 @@ class Event {
           queryParams.push(filters.fecha_hasta);
         }
         
-        query += filterConditions.join(' AND ');
+        // Solo agregar WHERE si hay condiciones de filtro
+        if (filterConditions.length > 0) {
+          query += ' WHERE ' + filterConditions.join(' AND ');
+        }
       }
       
-      query += ' ORDER BY fecha DESC';
+      query += ' GROUP BY e.id ORDER BY e.fecha DESC';
       
       const [rows] = await connection.query(query, queryParams);
       
-      const events = await Promise.all(rows.map(async (event) => {
-        const [galleryRows] = await connection.query(
-          'SELECT url_imagen FROM galeria_eventos WHERE id_evento = ?',
-          [event.id]
-        );
-        
-        return {
-          ...event,
-          galeria: galleryRows.map(row => row.url_imagen)
-        };
+      return rows.map(row => ({
+        ...row,
+        galeria: row.galeria ? row.galeria.split(',') : [],
+        hora: row.hora || null
       }));
       
-      return events;
     } finally {
       connection.release();
     }

@@ -53,18 +53,15 @@ class User {
     }
   }
 
-  // Make sure the findByEmail method is working correctly
   static async findByEmail(email) {
     try {
       const connection = await pool.getConnection();
       try {
-        console.log(`Finding user by email: ${email}`);
         const [rows] = await connection.query(
           'SELECT * FROM users WHERE email = ?',
           [email]
         );
         
-        console.log(`Found ${rows.length} users with email ${email}`);
         return rows[0] || null;
       } finally {
         connection.release();
@@ -75,7 +72,6 @@ class User {
     }
   }
 
-  
   static async findById(id) {
     const connection = await pool.getConnection();
     try {
@@ -94,7 +90,6 @@ class User {
           [id]
         );
         if (clientRows[0]) {
-          // This is already using Object.assign which is good
           Object.assign(user, clientRows[0]);
         }
       }
@@ -248,7 +243,6 @@ class User {
       let query = 'SELECT * FROM users';
       const queryParams = [];
       
-      // Add filters
       if (Object.keys(filters).length > 0) {
         query += ' WHERE ';
         const filterConditions = [];
@@ -271,7 +265,6 @@ class User {
         query += filterConditions.join(' AND ');
       }
       
-      // Add ordering
       query += ' ORDER BY fecha_registro DESC';
       
       const [rows] = await connection.query(query, queryParams);
@@ -284,12 +277,10 @@ class User {
   static async findByResetToken(token) {
     const connection = await pool.getConnection();
     try {
-      console.log(`Finding user by reset token: ${token}`);
       const [rows] = await connection.query(
         'SELECT * FROM users WHERE reset_token = ?',
         [token]
       );
-      console.log(`Found ${rows.length} users with reset token`);
       return rows[0] || null;
     } finally {
       connection.release();

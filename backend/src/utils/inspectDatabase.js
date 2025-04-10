@@ -6,7 +6,6 @@ dotenv.config();
 const inspectDatabase = async () => {
   console.log('Inspeccionando estructura de la base de datos...');
   
-  // Configuración de la base de datos desde variables de entorno
   const dbConfig = {
     host: process.env.DB_HOST || 'localhost',
     port: process.env.DB_PORT || 3306,
@@ -16,11 +15,9 @@ const inspectDatabase = async () => {
   };
   
   try {
-    // Conectar a MySQL
     const connection = await mysql.createConnection(dbConfig);
     console.log('Conexión a MySQL establecida correctamente');
     
-    // Obtener lista de tablas
     const [tables] = await connection.query('SHOW TABLES');
     console.log('\n=== TABLAS EN LA BASE DE DATOS ===');
     
@@ -30,12 +27,10 @@ const inspectDatabase = async () => {
       const tableNames = tables.map(table => Object.values(table)[0]);
       console.log(`Tablas encontradas (${tableNames.length}): ${tableNames.join(', ')}`);
       
-      // Para cada tabla, obtener su estructura
       for (const tableName of tableNames) {
         console.log(`\n=== ESTRUCTURA DE LA TABLA: ${tableName} ===`);
         const [columns] = await connection.query(`DESCRIBE ${tableName}`);
         
-        // Mostrar columnas en formato de tabla
         console.table(columns.map(col => ({
           Field: col.Field,
           Type: col.Type,
@@ -45,12 +40,10 @@ const inspectDatabase = async () => {
           Extra: col.Extra
         })));
         
-        // Contar registros en la tabla
         const [countResult] = await connection.query(`SELECT COUNT(*) as count FROM ${tableName}`);
         const count = countResult[0].count;
         console.log(`Total de registros en ${tableName}: ${count}`);
         
-        // Mostrar algunos registros de ejemplo si hay datos
         if (count > 0) {
           const [sampleData] = await connection.query(`SELECT * FROM ${tableName} LIMIT 3`);
           console.log(`\nEjemplo de datos en ${tableName}:`);
@@ -72,5 +65,4 @@ const inspectDatabase = async () => {
   }
 };
 
-// Ejecutar la inspección si este archivo se ejecuta directamente
 inspectDatabase();

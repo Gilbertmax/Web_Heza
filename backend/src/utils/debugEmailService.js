@@ -9,7 +9,6 @@ const debugEmailService = async () => {
   try {
     console.log('=== Email Service Debug ===');
     
-    // Check environment variables
     console.log('\n1. Checking environment variables:');
     const requiredVars = ['SMTP_HOST', 'SMTP_PORT', 'SMTP_USER', 'SMTP_PASS'];
     let missingVars = [];
@@ -27,7 +26,6 @@ const debugEmailService = async () => {
       console.log(`\n⚠️ Missing environment variables: ${missingVars.join(', ')}`);
       console.log('Please check your .env file and make sure these variables are set.');
       
-      // Check if .env file exists
       const envPath = path.resolve(process.cwd(), '.env');
       if (fs.existsSync(envPath)) {
         console.log('✅ .env file exists');
@@ -38,7 +36,6 @@ const debugEmailService = async () => {
       console.log('\n✅ All required environment variables are set');
     }
     
-    // Test email sending
     console.log('\n2. Testing email sending:');
     const testEmail = process.env.TEST_EMAIL || 'gilberto_gonzalez@heza.com.mx';
     console.log(`Sending test email to: ${testEmail}`);
