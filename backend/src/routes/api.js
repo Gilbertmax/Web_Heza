@@ -10,6 +10,7 @@ import * as clientController from '../controllers/clientController.js';
 import * as documentController from '../controllers/documentController.js';
 import * as eventController from '../controllers/eventController.js';
 import * as apiController from '../controllers/apiController.js';
+import * as dashboardController from '../controllers/dashboardController.js';
 
 import { verifyToken, isAdmin, isClient, isAdminOrClient } from '../middleware/auth.js';
 
@@ -65,6 +66,10 @@ router.put('/events/:id', verifyToken, isAdmin, eventController.updateEvent);
 router.delete('/events/:id', verifyToken, isAdmin, eventController.deleteEvent);
 
 router.post('/contact', apiController.enviarDiagnostico);
+
+// Dashboard endpoints
+router.get('/dashboard/stats', verifyToken, isAdmin, dashboardController.getDashboardStats);
+router.get('/dashboard/client-stats', verifyToken, isClient, dashboardController.getClientDashboardStats);
 
 router.get('/health', (req, res) => {
   res.json({ status: 'ok', message: 'Server is running' });
