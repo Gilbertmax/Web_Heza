@@ -1,8 +1,9 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import axios from 'axios';
-import { Carousel, Container, Row, Badge } from 'react-bootstrap';
+import { Carousel, Container, Row, Col, Badge, Modal } from 'react-bootstrap';
 import Loading from '../../components/Loading/Loading';
+import '../../assets/css/gallery.css';
 
 const EventoDetalle = () => {
   const { id } = useParams();
@@ -10,6 +11,9 @@ const EventoDetalle = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const carouselRef = useRef(null);
+  const [activeIndex, setActiveIndex] = useState(0);
+  const [showLightbox, setShowLightbox] = useState(false);
+  const [lightboxIndex, setLightboxIndex] = useState(0);
 
   useEffect(() => {
     const fetchEvento = async () => {
@@ -89,6 +93,17 @@ const EventoDetalle = () => {
   }
 
   const hasGallery = evento.galeria && Array.isArray(evento.galeria) && evento.galeria.length > 0;
+  
+  // Función para abrir el lightbox con una imagen específica
+  const openLightbox = (index) => {
+    setLightboxIndex(index);
+    setShowLightbox(true);
+  };
+
+  // Calcular todas las imágenes (principal + galería) para el lightbox
+  const allImages = [];
+  if (evento.imagen) allImages.push(evento.imagen);
+  if (hasGallery) allImages.push(...evento.galeria);
 
   return (
     <Container className="py-5">
@@ -123,36 +138,64 @@ const EventoDetalle = () => {
 
       <div className="card mb-5 shadow-sm border-0 overflow-hidden">
         {hasGallery ? (
-          <Carousel ref={carouselRef} interval={5000} className="h-100">
-            {evento.imagen && (
-              <Carousel.Item>
-                <img 
-                  src={getImageUrl(evento.imagen)} 
-                  className="d-block w-100" 
-                  alt={evento.titulo} 
-                  style={{ height: '500px', objectFit: 'cover' }}
-                />
-              </Carousel.Item>
-            )}
+          <div className="position-relative">
+            <Carousel 
+              ref={carouselRef} 
+              interval={5000} 
+              className="h-100 evento-carousel"
+              activeIndex={activeIndex}
+              onSelect={(index) => setActiveIndex(index)}
+              indicators={true}
+            >
+              {evento.imagen && (
+                <Carousel.Item>
+                  <div className="carousel-image-container" onClick={() => openLightbox(0)}>
+                    <img 
+                      src={getImageUrl(evento.imagen)} 
+                      className="d-block w-100 zoom-effect" 
+                      alt={evento.titulo} 
+                      style={{ height: '500px', objectFit: 'cover' }}
+                    />
+                    <div className="carousel-image-overlay">
+                      <span className="expand-icon"><i className="bi bi-arrows-fullscreen"></i></span>
+                    </div>
+                  </div>
+                </Carousel.Item>
+              )}
+              
+              {evento.galeria.map((img, idx) => (
+                <Carousel.Item key={idx}>
+                  <div className="carousel-image-container" onClick={() => openLightbox(idx + (evento.imagen ? 1 : 0))}>
+                    <img 
+                      src={getImageUrl(img)} 
+                      className="d-block w-100 zoom-effect" 
+                      alt={`${evento.titulo} - Imagen ${idx + 1}`} 
+                      style={{ height: '500px', objectFit: 'cover' }}
+                    />
+                    <div className="carousel-image-overlay">
+                      <span className="expand-icon"><i className="bi bi-arrows-fullscreen"></i></span>
+                    </div>
+                  </div>
+                </Carousel.Item>
+              ))}
+            </Carousel>
             
-            {evento.galeria.map((img, idx) => (
-              <Carousel.Item key={idx}>
-                <img 
-                  src={getImageUrl(img)} 
-                  className="d-block w-100" 
-                  alt={`${evento.titulo} - Imagen ${idx + 1}`} 
-                  style={{ height: '500px', objectFit: 'cover' }}
-                />
-              </Carousel.Item>
-            ))}
-          </Carousel>
+            <div className="carousel-counter">
+              {activeIndex + 1} / {allImages.length}
+            </div>
+          </div>
         ) : (
-          <img 
-            src={getImageUrl(evento.imagen)} 
-            className="card-img-top" 
-            alt={evento.titulo} 
-            style={{ height: '500px', objectFit: 'cover' }}
-          />
+          <div className="carousel-image-container" onClick={() => openLightbox(0)}>
+            <img 
+              src={getImageUrl(evento.imagen)} 
+              className="card-img-top" 
+              alt={evento.titulo} 
+              style={{ height: '500px', objectFit: 'cover' }}
+            />
+            <div className="carousel-image-overlay">
+              <span className="expand-icon"><i className="bi bi-arrows-fullscreen"></i></span>
+            </div>
+          </div>
         )}
         
         <div className="card-body p-4">
@@ -166,23 +209,99 @@ const EventoDetalle = () => {
           {hasGallery && (
             <div className="mt-4">
               <h4 className="mb-3">Galería de imágenes</h4>
-              <Row xs={2} md={4} className="g-3">
+              <Row className="g-3 gallery-thumbnails">
+                {evento.imagen && (
+                  <Col xs={6} sm={4} md={3} lg={2} className="gallery-thumbnail-container">
+                    <div 
+                      className={`gallery-thumbnail ${activeIndex === 0 ? 'active' : ''}`}
+                      onClick={() => setActiveIndex(0)}
+                    >
+                      <img
+                        src={getImageUrl(evento.imagen)}
+                        className="img-fluid"
+                        alt={`Imagen principal`}
+                      />
+                      <div className="thumbnail-overlay">
+                        <span className="thumbnail-number">1</span>
+                      </div>
+                    </div>
+                  </Col>
+                )}
+                
                 {evento.galeria.map((img, idx) => (
-                  <div key={idx} className="col-2">
-                    <img
-                      src={getImageUrl(img)}
-                      className="img-thumbnail cursor-pointer"
-                      alt={`Thumbnail ${idx + 1}`}
-                      onClick={() => carouselRef.current.to(idx + (evento.imagen ? 0 : 1))} // Fix: Use .to() instead of .select()
-                      style={{ height: '80px', objectFit: 'cover' }}
-                    />
-                  </div>
+                  <Col xs={6} sm={4} md={3} lg={2} key={idx} className="gallery-thumbnail-container">
+                    <div 
+                      className={`gallery-thumbnail ${activeIndex === idx + (evento.imagen ? 1 : 0) ? 'active' : ''}`}
+                      onClick={() => setActiveIndex(idx + (evento.imagen ? 1 : 0))}
+                    >
+                      <img
+                        src={getImageUrl(img)}
+                        className="img-fluid"
+                        alt={`Thumbnail ${idx + 1}`}
+                      />
+                      <div className="thumbnail-overlay">
+                        <span className="thumbnail-number">{idx + (evento.imagen ? 2 : 1)}</span>
+                      </div>
+                    </div>
+                  </Col>
                 ))}
               </Row>
             </div>
           )}
         </div>
       </div>
+      
+      {/* Lightbox Modal */}
+      <Modal 
+        show={showLightbox} 
+        onHide={() => setShowLightbox(false)} 
+        size="xl" 
+        centered 
+        className="gallery-lightbox-modal"
+      >
+        <Modal.Header closeButton>
+          <Modal.Title>{evento.titulo} - Imagen {lightboxIndex + 1} de {allImages.length}</Modal.Title>
+        </Modal.Header>
+        <Modal.Body className="p-0">
+          <Carousel 
+            activeIndex={lightboxIndex} 
+            onSelect={setLightboxIndex}
+            interval={null}
+            indicators={false}
+            className="lightbox-carousel"
+          >
+            {allImages.map((img, idx) => (
+              <Carousel.Item key={idx}>
+                <div className="lightbox-img-container d-flex justify-content-center align-items-center">
+                  <img 
+                    src={getImageUrl(img)} 
+                    className="lightbox-img" 
+                    alt={`${evento.titulo} - Imagen ${idx + 1}`} 
+                  />
+                </div>
+              </Carousel.Item>
+            ))}
+          </Carousel>
+          
+          <div className="lightbox-controls">
+            <button 
+              className="btn btn-outline-light me-2" 
+              onClick={() => setLightboxIndex(Math.max(0, lightboxIndex - 1))}
+              disabled={lightboxIndex === 0}
+            >
+              <i className="bi bi-chevron-left"></i>
+            </button>
+            <span className="text-light">{lightboxIndex + 1} / {allImages.length}</span>
+            <button 
+              className="btn btn-outline-light ms-2" 
+              onClick={() => setLightboxIndex(Math.min(allImages.length - 1, lightboxIndex + 1))}
+              disabled={lightboxIndex === allImages.length - 1}
+            >
+              <i className="bi bi-chevron-right"></i>
+            </button>
+          </div>
+        </Modal.Body>
+      </Modal>
     </Container>
   );
 };
