@@ -21,33 +21,21 @@ export const getDashboardStats = async (req, res) => {
       );
       const activeClients = clientRows[0].total;
       
-      // Obtener tareas pendientes
-      const [taskRows] = await connection.query(
-        'SELECT COUNT(*) as total FROM tareas WHERE estado = "pendiente"'
-      );
-      const pendingTasks = taskRows[0].total;
-      
       // Obtener solicitudes de acceso pendientes
       const [pendingAccessRows] = await connection.query(
-        'SELECT COUNT(*) as total FROM users WHERE estado = "pendiente"'
+        'SELECT COUNT(*) as total FROM users WHERE activo = 0 AND rol != "admin"'
       );
       const pendingAccessRequests = pendingAccessRows[0].total;
+      
+      // No hay tabla de tareas, usamos solicitudes pendientes como tareas pendientes
+      const pendingTasks = pendingAccessRequests;
       
       // Obtener clientes recientes para actividad
       const [recentClients] = await connection.query(
         `SELECT u.id, u.nombre, u.activo 
          FROM users u 
          WHERE u.rol = "cliente" 
-         ORDER BY u.fecha_creacion DESC 
-         LIMIT 5`
-      );
-      
-      // Obtener distribución de servicios
-      const [serviceDistribution] = await connection.query(
-        `SELECT s.tipo, COUNT(*) as total 
-         FROM servicios s 
-         GROUP BY s.tipo 
-         ORDER BY total DESC 
+         ORDER BY u.fecha_registro DESC 
          LIMIT 5`
       );
       
@@ -58,8 +46,7 @@ export const getDashboardStats = async (req, res) => {
           pendingTasks,
           pendingAccessRequests
         },
-        recentClients,
-        serviceDistribution
+        recentClients
       });
     } finally {
       connection.release();

@@ -13,7 +13,6 @@ import {
   BookOpen,
   Clock,
   User,
-  PieChart,
   UserPlus
 } from 'react-feather';
 const AdminClientes = ({ recentClients = [] }) => (
@@ -45,7 +44,6 @@ const Dashboard = ({ isAdmin = false }) => {
     pendingTasks: 0
   });
   const [recentClients, setRecentClients] = useState([]);
-  const [serviceDistribution, setServiceDistribution] = useState([]);
 
 
   useEffect(() => {
@@ -71,7 +69,6 @@ const Dashboard = ({ isAdmin = false }) => {
             if (response.data && response.data.stats) {
               setStats(response.data.stats);
               setRecentClients(response.data.recentClients || []);
-              setServiceDistribution(response.data.serviceDistribution || []);
             }
           } catch (statsError) {
             console.error('Error al obtener estadísticas:', statsError);
@@ -251,7 +248,7 @@ const Dashboard = ({ isAdmin = false }) => {
         <StatCard 
           icon={Clock} 
           title="Solicitudes Pendientes" 
-          value={stats.pendingAccessRequests}
+          value={stats.pendingAccessRequests || 0}
         />
       </div>
 
@@ -267,36 +264,7 @@ const Dashboard = ({ isAdmin = false }) => {
             <AdminClientes recentClients={recentClients} />
           </div>
 
-          <div className="p-6 bg-white rounded-xl shadow-sm hover:shadow-md transition-shadow duration-300">
-            <div className="flex items-center mb-4">
-              <div className="bg-primary-gradient p-3 rounded-lg mr-3">
-                <PieChart className="text-white w-6 h-6" />
-              </div>
-              <h3 className="text-lg font-semibold text-gray-600">Distribución de Servicios</h3>
-            </div>
-            <div className="space-y-4">
-              {serviceDistribution?.map((service, index) => (
-                <div key={index} className="flex items-center justify-between p-3 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors">
-                  <span className="text-gray-600">{service.tipo}</span>
-                  <div className="flex items-center">
-                    <span className="text-sm bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent font-bold mr-2">
-                      {service.total}
-                    </span>
-                    <div className="w-20 h-2 bg-gray-200 rounded-full overflow-hidden">
-                      <div 
-                        className="h-full bg-gradient-to-r from-primary to-secondary" 
-                        style={{ width: `${(service.total / Math.max(...serviceDistribution.map(s => s.total))) * 100}%` }}
-                      />
-                    </div>
-                  </div>
-                </div>
-              )) || (
-                <div className="text-center py-4 text-gray-400">
-                  No hay datos disponibles
-                </div>
-              )}
-            </div>
-          </div>
+
         </div>
     </div>
   );
