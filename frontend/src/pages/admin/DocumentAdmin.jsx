@@ -1,95 +1,72 @@
-import React, { useState } from 'react';
-import { Button, Form, Modal } from 'react-bootstrap';
+import React from 'react';
+import { Link } from 'react-router-dom';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import {  faArrowLeft} from '@fortawesome/free-solid-svg-icons';
 
-const NoticiasAdmin = () => {
-  const [showModal, setShowModal] = useState(false);
-  const [nuevaNoticia, setNuevaNoticia] = useState({
-    titulo: '',
-    contenido: '',
-    fecha: '',
-    imagen: ''
-  });
+const DetalleDocumento = () => {
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    // Lógica para guardar en API
-    setShowModal(false);
+  
+  const documento = {
+    id: 1,
+    nombre: `Documento`,
+    tipo: 'PDF',
+    fechaSubida: '2024-03-15',
+    tamaño: '2.5 MB',
+    descripción: 'Documento de ejemplo con detalles importantes',
+    urlDescarga: '#'
   };
 
   return (
-    <div className="p-4">
-      <div className="d-flex justify-content-between mb-4">
-        <h2>Administración de Noticias</h2>
-        <Button variant="primary" onClick={() => setShowModal(true)}>
-          Nueva Noticia
-        </Button>
-      </div>
+    <div className="container py-4">
+      <div className="card shadow">
+        <div className="card-body">
+          <div className="d-flex justify-content-between align-items-center mb-4 ">
+          <h2 className="display- text-dark mb-2">
+             <span className="text-gradient-secondary"> {documento.nombre}</span>
+          </h2>
+          <Link 
+            to="/admin/dashboard" 
+            className="btn btn-outline-primary d-flex align-items-center gap-2 custom-link"
+          >
+                <FontAwesomeIcon 
+                    icon={faArrowLeft} 
+                    className="arrow-icon" 
+                    size="lg" 
+                />
+             Volver
+          </Link>
 
-      <Modal show={showModal} onHide={() => setShowModal(false)} size="lg">
-        <Modal.Header closeButton>
-          <Modal.Title>Crear Nueva Noticia</Modal.Title>
-        </Modal.Header>
-        <Modal.Body>
-          <Form onSubmit={handleSubmit}>
-            <Form.Group className="mb-3">
-              <Form.Label>Título</Form.Label>
-              <Form.Control 
-                type="text" 
-                required
-                value={nuevaNoticia.titulo}
-                onChange={(e) => setNuevaNoticia({...nuevaNoticia, titulo: e.target.value})}
-              />
-            </Form.Group>
 
-            <Form.Group className="mb-3">
-              <Form.Label>Contenido</Form.Label>
-              <Form.Control 
-                as="textarea" 
-                rows={4}
-                required
-                value={nuevaNoticia.contenido}
-                onChange={(e) => setNuevaNoticia({...nuevaNoticia, contenido: e.target.value})}
-              />
-            </Form.Group>
+          </div>
+          
+          <dl className="row ">
+            <dt className="col-sm-3">Tipo de Archivo:</dt>
+            <dd className="col-sm-9">{documento.tipo}</dd>
 
-            <Form.Group className="mb-3">
-              <Form.Label>Fecha</Form.Label>
-              <Form.Control 
-                type="date" 
-                required
-                value={nuevaNoticia.fecha}
-                onChange={(e) => setNuevaNoticia({...nuevaNoticia, fecha: e.target.value})}
-              />
-            </Form.Group>
+            <dt className="col-sm-3">Fecha de Subida:</dt>
+            <dd className="col-sm-9">{documento.fechaSubida}</dd>
 
-            <Form.Group className="mb-3">
-              <Form.Label>URL de la Imagen</Form.Label>
-              <Form.Control 
-                type="url" 
-                required
-                value={nuevaNoticia.imagen}
-                onChange={(e) => setNuevaNoticia({...nuevaNoticia, imagen: e.target.value})}
-              />
-            </Form.Group>
+            <dt className="col-sm-3">Tamaño:</dt>
+            <dd className="col-sm-9">{documento.tamaño}</dd>
 
-            <div className="d-flex justify-content-end gap-2">
-              <Button variant="secondary" onClick={() => setShowModal(false)}>
-                Cancelar
-              </Button>
-              <Button variant="primary" type="submit">
-                Guardar Noticia
-              </Button>
-            </div>
-          </Form>
-        </Modal.Body>
-      </Modal>
+            <dt className="col-sm-3">Descripción:</dt>
+            <dd className="col-sm-9">{documento.descripción}</dd>
+          </dl>
 
-      {/* Listado de noticias para editar */}
-      <div className="list-group">
-        {/* Mapear noticias existentes con opción de editar/eliminar */}
+          <div className="mt-4">
+            <a 
+              href={documento.urlDescarga} 
+              className="btn btn-primary"
+              download
+            >
+              <i className="fas fa-download me-2"></i>
+              Descargar Documento
+            </a>
+          </div>
+        </div>
       </div>
     </div>
   );
 };
 
-export default NoticiasAdmin;
+export default DetalleDocumento;

@@ -13,7 +13,9 @@ import {
   BookOpen,
   Clock,
   User,
-  UserPlus
+  PieChart,
+  UserPlus,
+  Bell
 } from 'react-feather';
 const AdminClientes = ({ recentClients = [] }) => (
   <div className="space-y-5">
@@ -183,7 +185,7 @@ const Dashboard = ({ isAdmin = false }) => {
               { to: "/admin/noticias", icon: BookOpen, label: "Noticias" },
               { to: "/admin/eventos", icon: Calendar, label: "Eventos" },
             ] : []),
-            { to: "/admin/documentos", icon: FileText, label: "Documentos" },
+            { to: "/admin/documentos", icon: Bell, label: "Notificaciones" },
             { to: "/admin/configuracion", icon: Settings, label: "Configuración" },
             
           ].map((item, index) => (
@@ -232,8 +234,6 @@ const Dashboard = ({ isAdmin = false }) => {
           </button>
         </div>
       </div>
-
-      {/* Stats Cards */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
         <StatCard 
           icon={Users} 
