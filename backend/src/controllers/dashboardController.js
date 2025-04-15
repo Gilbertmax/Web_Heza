@@ -106,3 +106,41 @@ export const getClientDashboardStats = async (req, res) => {
     res.status(500).json({ error: 'Error al obtener estadísticas del cliente' });
   }
 };
+
+// Obtener el número de solicitudes de acceso pendientes para el dashboard
+export const getPendingRequests = async (req, res) => {
+  try {
+    if (req.user.rol !== 'admin') {
+      return res.status(403).json({ error: 'No autorizado para acceder a esta información' });
+    }
+    
+    const connection = await pool.getConnection();
+    try {
+      // Verificar si la tabla solicitudes_acceso existe
+      const [tableExists] = await connection.query(
+        "SELECT COUNT(*) as count FROM information_schema.tables WHERE table_schema = 'heza' AND table_name = 'solicitudes_acceso'"
+      );
+      
+      // Si la tabla no existe, devolver 0 como conteo
+      if (tableExists[0].count === 0) {
+        return res.json({ count: 0 });
+      }
+      
+      // Obtener solicitudes de acceso pendientes
+      const [rows] = await connection.query(
+        'SELECT COUNT(*) as count FROM solicitudes_acceso WHERE estado = "pendiente"'
+      );
+      
+      res.json({ count: rows[0].count });
+    } catch (error) {
+      console.error('Error al obtener conteo de solicitudes pendientes:', error);
+      // En caso de error, devolver 0 como valor seguro
+      res.json({ count: 0 });
+    } finally {
+      connection.release();
+    }
+  } catch (error) {
+    console.error('Error al obtener solicitudes pendientes:', error);
+    res.status(500).json({ error: 'Error al obtener solicitudes pendientes' });
+  }
+};

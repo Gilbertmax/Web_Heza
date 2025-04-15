@@ -4,6 +4,7 @@ import path from 'path';
 import { fileURLToPath } from 'url';
 import fs from 'fs';
 import authRoutes from './authRoutes.js';
+import solicitudAccesoRoutes from './solicitudAccesoRoutes.js';
 
 import * as authController from '../controllers/authController.js';
 import * as clientController from '../controllers/clientController.js';
@@ -44,6 +45,9 @@ router.get('/auth/profile', verifyToken, authController.getProfile);
 router.put('/auth/profile', verifyToken, authController.updateProfile);
 router.post('/auth/change-password', verifyToken, authController.changePassword);
 
+// Rutas de administrador para solicitudes de acceso
+router.use('/admin', solicitudAccesoRoutes);
+
 router.get('/clients', verifyToken, isAdmin, clientController.getAllClients);
 router.get('/clients/:id', verifyToken, isAdminOrClient, clientController.getClientById);
 router.post('/clients', verifyToken, isAdmin, clientController.createClient);
@@ -70,11 +74,13 @@ router.post('/contact', apiController.enviarDiagnostico);
 // Dashboard endpoints
 router.get('/dashboard/stats', verifyToken, isAdmin, dashboardController.getDashboardStats);
 router.get('/dashboard/client-stats', verifyToken, isClient, dashboardController.getClientDashboardStats);
+router.get('/dashboard/pending-requests', verifyToken, isAdmin, dashboardController.getPendingRequests);
 
 router.get('/health', (req, res) => {
   res.json({ status: 'ok', message: 'Server is running' });
 });
 
 router.use('/auth', authRoutes);
+router.use('/admin', solicitudAccesoRoutes);
 
 export default router;

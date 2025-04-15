@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { useNavigate } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faEye, faEyeSlash } from '@fortawesome/free-solid-svg-icons';
-
+import './admin.css';
 
 
 const RC = ({ fullScreen }) => {
@@ -11,8 +11,8 @@ const RC = ({ fullScreen }) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [telefono, setNumero] = useState('');
-  const [NE, setEmpresa]= useState('');
-  const [RFC, setRfc]= useState('');
+  const [empresa, setEmpresa] = useState('');
+  const [rfc, setRfc] = useState('');
   const [showPassword, setShowPassword] = useState(false);
 
   const [error, setError] = useState('');
@@ -28,17 +28,17 @@ const RC = ({ fullScreen }) => {
     setError('');
 
     try {
-      const response = await fetch('http://localhost:5000/api/auth/register', {
+      const response = await fetch('http://localhost:5000/api/clientes/register', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ name, email, password, telefono, NE, RFC, }),
+        body: JSON.stringify({ nombre: name, email, password, telefono, empresa, rfc })
       });
 
       const data = await response.json();
 
       if (response.ok) {
         alert('Usuario registrado con éxito');
-        navigate('/Usuarios/dashboard'); // Redirigir después del registro
+        navigate('/Clientes/dashboard'); // Redirigir después del registro
       } else {
         setError(data.error || 'Error al registrar usuario');
       }
@@ -68,7 +68,7 @@ const RC = ({ fullScreen }) => {
                     <input
                     type="text"
                     id="name"
-                    className="form-control"
+                    className="form-control text-dark"
                     value={name}
                     onChange={(e) => setName(e.target.value)}
                     required
@@ -79,7 +79,7 @@ const RC = ({ fullScreen }) => {
                     <input
                     type="email"
                     id="email"
-                    className="form-control"
+                    className="form-control text-dark"
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
                     required
@@ -91,7 +91,7 @@ const RC = ({ fullScreen }) => {
                         <input
                         type={showPassword ? "text" : "password"}
                         id="password"
-                        className="form-control"
+                        className="form-control text-dark"
                         value={password}
                         onChange={(e) => setPassword(e.target.value)}
                         required
@@ -114,30 +114,30 @@ const RC = ({ fullScreen }) => {
                      <input
                      type="text"
                      id="telefono"
-                     className="form-control"
+                     className="form-control text-dark"
                      value={telefono}
                      onChange={(e) => setNumero(e.target.value)}
                      required
                      />
                 </div>
                 <div className="mb-3">
-                     <label htmlFor="NE">Nombre de la Empresa</label>
+                     <label htmlFor="empresa">Nombre de la Empresa</label>
                      <input
                      type="text"
-                     id="NE"
-                     className="form-control"
-                     value={NE}
+                     id="empresa"
+                     className="form-control text-dark"
+                     value={empresa}
                      onChange={(e) => setEmpresa(e.target.value)}
                      required
                      />
                 </div>
                 <div className="mb-3">
-                    <label htmlFor="RFC">RFC</label>
+                    <label htmlFor="rfc">RFC</label>
                     <input
                     type="text"
-                    id="RFC"
-                    className="form-control"
-                    value={RFC}
+                    id="rfc"
+                    className="form-control text-dark"
+                    value={rfc}
                     onChange={(e) => setRfc(e.target.value)}
                     required
                     />

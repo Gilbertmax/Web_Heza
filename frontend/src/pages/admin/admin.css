@@ -1,0 +1,25 @@
+/* Estilos para los formularios de administración */
+
+/* Asegurar que el texto en los campos de formulario sea visible */
+.form-control.text-dark {
+    color: #212529 !important; /* Color oscuro para el texto */
+}
+
+/* Asegurar que el placeholder tenga suficiente contraste */
+.form-control.text-dark::placeholder {
+    color: #6c757d !important; /* Color gris medio para el placeholder */
+}
+
+/* Estilo para cuando el campo está enfocado */
+.form-control.text-dark:focus {
+    color: #212529 !important;
+    background-color: #fff;
+    border-color: #86b7fe;
+    outline: 0;
+    box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.25);
+}
+
+/* Asegurar que el texto sea visible en los selectores */
+select.form-control.text-dark {
+    color: #212529 !important;
+}
