@@ -192,7 +192,7 @@ const Dashboard = ({ isAdmin = false }) => {
   const handleApproveRequest = async (requestId) => {
     try {
       setRefreshing(true);
-      await axios.post(`/api/dashboard/approve-request/${requestId}`);
+      await axios.post(`/api/admin/solicitudes-acceso/${requestId}/aprobar`);
       loadDashboard(true);
     } catch (error) {
       console.error('Error al aprobar solicitud:', error);
@@ -204,7 +204,7 @@ const Dashboard = ({ isAdmin = false }) => {
   const handleRejectRequest = async (requestId) => {
     try {
       setRefreshing(true);
-      await axios.post(`/api/dashboard/reject-request/${requestId}`);
+      await axios.post(`/api/admin/solicitudes-acceso/${requestId}/rechazar`);
       loadDashboard(true);
     } catch (error) {
       console.error('Error al rechazar solicitud:', error);
@@ -324,11 +324,7 @@ const Dashboard = ({ isAdmin = false }) => {
           title="Clientes Activos" 
           value={stats.activeClients}
         />
-        <StatCard 
-          icon={Clock} 
-          title="Solicitudes Pendientes" 
-          value={stats.pendingAccessRequests || 0}
-        />
+
       </div>
 
       <div className="space-y-6">

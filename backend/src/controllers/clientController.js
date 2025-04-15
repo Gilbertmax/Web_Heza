@@ -18,7 +18,6 @@ export const getAllClients = async (req, res) => {
     const connection = await pool.getConnection();
     try {
       for (const client of clients) {
-        // Remove password
         delete client.password;
         
         const [clientRows] = await connection.query(
@@ -69,7 +68,6 @@ export const getClientById = async (req, res) => {
 
 export const createClient = async (req, res) => {
   try {
-    // Only admins can create clients
     if (req.user.rol !== 'admin') {
       return res.status(403).json({ error: 'No autorizado para crear clientes' });
     }

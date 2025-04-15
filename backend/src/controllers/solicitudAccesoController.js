@@ -3,7 +3,6 @@ import User from '../models/User.js';
 import emailService from '../utils/emailService.js';
 import bcrypt from 'bcrypt';
 
-// Obtener todas las solicitudes de acceso
 export const getSolicitudes = async (req, res) => {
   const connection = await pool.getConnection();
   try {
@@ -20,7 +19,6 @@ export const getSolicitudes = async (req, res) => {
   }
 };
 
-// Obtener el número de solicitudes pendientes
 export const getSolicitudesPendientesCount = async (req, res) => {
   const connection = await pool.getConnection();
   try {
@@ -37,7 +35,6 @@ export const getSolicitudesPendientesCount = async (req, res) => {
   }
 };
 
-// Aprobar una solicitud de acceso
 export const aprobarSolicitud = async (req, res) => {
   const { id } = req.params;
   const connection = await pool.getConnection();
@@ -45,7 +42,6 @@ export const aprobarSolicitud = async (req, res) => {
   try {
     await connection.beginTransaction();
     
-    // Obtener la solicitud
     const [solicitudes] = await connection.query(
       'SELECT * FROM solicitudes_acceso WHERE id = ?',
       [id]
@@ -57,14 +53,18 @@ export const aprobarSolicitud = async (req, res) => {
     
     const solicitud = solicitudes[0];
     
-    // Actualizar el estado de la solicitud
     await connection.query(
       'UPDATE solicitudes_acceso SET estado = "aprobada" WHERE id = ?',
       [id]
     );
     
-    // Crear usuario según el tipo de solicitud
+    let username = solicitud.email.split('@')[0];
+    if (!username || username.trim() === '') {
+      username = 'user_' + Date.now();
+    }
+    
     const userData = {
+      username: username,
       nombre: solicitud.nombre,
       email: solicitud.email,
       telefono: solicitud.telefono,
@@ -73,27 +73,26 @@ export const aprobarSolicitud = async (req, res) => {
     };
     
     if (solicitud.tipo === 'client') {
-      // Para clientes, agregar campos adicionales
-      userData.password = solicitud.password;
+      if (solicitud.password) {
+        userData.password = solicitud.password;
+      } else {
+        const tempPassword = Math.random().toString(36).slice(-8);
+        userData.password = tempPassword;
+      }
       
-      // Datos adicionales para la tabla clientes
       const clienteData = {
         empresa: solicitud.empresa,
         rfc: solicitud.rfc,
         sucursal: solicitud.sucursal
       };
       
-      // Crear el usuario cliente
       await User.create(userData, clienteData);
     } else {
-      // Para usuarios normales, generar contraseña aleatoria
       const tempPassword = Math.random().toString(36).slice(-8);
       userData.password = tempPassword;
       
-      // Crear el usuario
       await User.create(userData);
       
-      // Enviar email con credenciales
       await emailService.sendEmail({
         to: solicitud.email,
         subject: 'Acceso aprobado - HEZA',
@@ -133,13 +132,11 @@ export const aprobarSolicitud = async (req, res) => {
   }
 };
 
-// Rechazar una solicitud de acceso
 export const rechazarSolicitud = async (req, res) => {
   const { id } = req.params;
   const connection = await pool.getConnection();
   
   try {
-    // Obtener la solicitud
     const [solicitudes] = await connection.query(
       'SELECT * FROM solicitudes_acceso WHERE id = ?',
       [id]
@@ -151,13 +148,11 @@ export const rechazarSolicitud = async (req, res) => {
     
     const solicitud = solicitudes[0];
     
-    // Actualizar el estado de la solicitud
     await connection.query(
       'UPDATE solicitudes_acceso SET estado = "rechazada" WHERE id = ?',
       [id]
     );
     
-    // Enviar email de notificación
     await emailService.sendEmail({
       to: solicitud.email,
       subject: 'Solicitud de acceso rechazada - HEZA',
