@@ -6,20 +6,20 @@ dotenv.config();
 const createTransporter = async () => {
   try {
     console.log('Creating email transporter with config:', {
-      host: process.env.EMAIL_HOST,
-      port: process.env.EMAIL_PORT,
-      secure: process.env.EMAIL_SECURE === 'true',
+      host: process.env.SMTP_HOST,
+      port: process.env.SMTP_PORT,
+      secure: process.env.SMTP_PORT === '465',
       user: 'set (hidden)',
       pass: 'set (hidden)'
     });
 
     const transporter = nodemailer.createTransport({
-      host: process.env.EMAIL_HOST,
-      port: process.env.EMAIL_PORT,
-      secure: process.env.EMAIL_SECURE === 'true',
+      host: process.env.SMTP_HOST,
+      port: process.env.SMTP_PORT,
+      secure: process.env.SMTP_PORT === '465',
       auth: {
-        user: process.env.EMAIL_USER,
-        pass: process.env.EMAIL_PASSWORD
+        user: process.env.SMTP_USER,
+        pass: process.env.SMTP_PASS
       },
       debug: false,
       logger: false
@@ -52,7 +52,7 @@ const emailService = {
       }
       
       const info = await transporter.sendMail({
-        from: `"Sistema HEZA" <${process.env.SMTP_USER || 'noreply@heza.com.mx'}>`,
+        from: `"Sistema HEZA" <${process.env.SMTP_USER || 'gilberto_gonzalez@heza.com.mx'}>`,
         to: Array.isArray(to) ? to.join(', ') : to,
         subject,
         html
