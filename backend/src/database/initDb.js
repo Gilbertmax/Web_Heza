@@ -42,7 +42,35 @@ async function initializeDatabase() {
     `, [DB_NAME]);
     
     if (tables.length > 0) {
-      console.log('La base de datos ya está configurada. Omitiendo la creación de tablas.');
+      console.log('La base de datos ya está configurada. Verificando tabla solicitudes_acceso...');
+      
+      // Verificar si existe la tabla solicitudes_acceso
+      const [solicitudesTable] = await connection.query(`
+        SELECT TABLE_NAME 
+        FROM information_schema.TABLES 
+        WHERE TABLE_SCHEMA = ? AND TABLE_NAME = 'solicitudes_acceso'
+      `, [DB_NAME]);
+      
+      // Si no existe la tabla solicitudes_acceso, crearla
+      if (solicitudesTable.length === 0) {
+        console.log('Creando tabla solicitudes_acceso...');
+        const solicitudesPath = path.join(__dirname, 'solicitudes_acceso.sql');
+        const solicitudesSql = fs.readFileSync(solicitudesPath, 'utf8');
+        
+        const solicitudesQueries = solicitudesSql
+          .split(';')
+          .filter(query => query.trim() !== '')
+          .map(query => query + ';');
+        
+        for (const query of solicitudesQueries) {
+          await connection.query(query);
+        }
+        
+        console.log('Tabla solicitudes_acceso creada correctamente');
+      } else {
+        console.log('La tabla solicitudes_acceso ya existe');
+      }
+      
       await connection.end();
       return;
     }

@@ -18,6 +18,7 @@ DROP TABLE IF EXISTS users;
 -- Tabla de usuarios
 CREATE TABLE users (
   id INT AUTO_INCREMENT PRIMARY KEY,
+  username VARCHAR(100) NOT NULL UNIQUE,
   nombre VARCHAR(100) NOT NULL,
   email VARCHAR(100) NOT NULL UNIQUE,
   password VARCHAR(100) NOT NULL,
@@ -147,6 +148,19 @@ CREATE TABLE galeria_eventos (
   FOREIGN KEY (id_evento) REFERENCES eventos(id) ON DELETE CASCADE
 );
 
+-- Tabla de solicitudes de acceso
+CREATE TABLE solicitudes_acceso (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  nombre VARCHAR(100) NOT NULL,
+  email VARCHAR(100) NOT NULL,
+  telefono VARCHAR(20),
+  empresa VARCHAR(100),
+  mensaje TEXT,
+  estado ENUM('pendiente', 'aprobada', 'rechazada') DEFAULT 'pendiente',
+  fecha_solicitud TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  fecha_respuesta TIMESTAMP NULL
+);
+
 -- Índices para mejorar el rendimiento
 CREATE INDEX idx_documentos_categoria ON documentos(id_categoria);
 CREATE INDEX idx_documentos_cliente ON documentos(id_cliente);
@@ -155,3 +169,4 @@ CREATE INDEX idx_diagnosticos_cliente ON diagnosticos(id_cliente);
 CREATE INDEX idx_mensajes_remitente ON mensajes(id_remitente);
 CREATE INDEX idx_mensajes_destinatario ON mensajes(id_destinatario);
 CREATE INDEX idx_galeria_evento ON galeria_eventos(id_evento);
+CREATE INDEX idx_solicitudes_estado ON solicitudes_acceso(estado);

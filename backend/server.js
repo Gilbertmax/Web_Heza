@@ -6,6 +6,7 @@ import { fileURLToPath } from 'url';
 import apiRoutes from './src/routes/api.js';
 import initializeDatabase from './src/database/initDb.js';
 import authRoutes from './src/routes/authRoutes.js';
+import clientesRoutes from './src/routes/clientesRoutes.js';
 import fs from 'fs';
 import newsRoutes from './src/routes/newsRoutes.js';
 import eventRoutes from './src/routes/eventRoutes.js';
@@ -56,6 +57,7 @@ app.use('/api', apiRoutes);
 app.use('/api/auth', authRoutes);
 app.use('/api/news', newsRoutes);
 app.use('/api/events', eventRoutes);
+app.use('/api/clientes', clientesRoutes);
 
 app.get('/api/debug', (req, res) => {
   res.json({ message: 'API is working correctly' });

@@ -1,17 +1,18 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { useNavigate } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faEye, faEyeSlash } from '@fortawesome/free-solid-svg-icons';
+import axios from 'axios';
+import './admin.css';
 
-
-
-const Register = ({ fullScreen }) => {
+const UsuariosAdmin = ({ fullScreen }) => {
+  const [username, setUsername] = useState('');
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [telefono, setNumero] = useState('');
-  const [puesto, setPuesto]= useState('');
+  const [telefono, setTelefono] = useState('');
+  const [rol, setRol] = useState('empleado');
   const [showPassword, setShowPassword] = useState(false);
 
   const [error, setError] = useState('');
@@ -21,29 +22,61 @@ const Register = ({ fullScreen }) => {
     setShowPassword(!showPassword);
   };
 
+  useEffect(() => {
+    const token = localStorage.getItem('adminToken');
+    if (!token) {
+      navigate('/admin/login');
+    }
+  }, [navigate]);
+
   const handleRegister = async (e) => {
     e.preventDefault();
     setIsLoading(true);
     setError('');
 
     try {
-      const response = await fetch('http://localhost:5000/api/auth/register', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ name, email, password, telefono, puesto}),
+      const token = localStorage.getItem('adminToken');
+      if (!token) {
+        setError('No estás autorizado. Por favor inicia sesión.');
+        navigate('/admin/login');
+        return;
+      }
+
+      const userData = { 
+        username,
+        nombre: name, 
+        email, 
+        password, 
+        telefono, 
+        rol,
+        activo: 1
+      };
+
+      // Se elimina el bloque condicional que agregaba campos adicionales
+
+      await axios.post('/api/auth/register', userData, {
+        headers: { 
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
+        }
       });
 
-      const data = await response.json();
-
-      if (response.ok) {
-        alert('Usuario registrado con éxito');
-        navigate('/Usuarios/dashboard'); // Redirigir después del registro
-      } else {
-        setError(data.error || 'Error al registrar usuario');
-      }
+      alert('Usuario registrado con éxito');
+      
+      setName('');
+      setEmail('');
+      setPassword('');
+      setTelefono('');
+      setRol('empleado');
+      
+      navigate('/admin/dashboard');
     } catch (err) {
-      setError('Error de conexión al servidor');
       console.error('Register error:', err);
+      if (err.response && err.response.data) {
+        setError(err.response.data.error || 'Error al registrar usuario');
+      } else {
+        setError('Error de conexión al servidor');
+      }
     } finally {
       setIsLoading(false);
     }
@@ -63,11 +96,20 @@ const Register = ({ fullScreen }) => {
         <div className="row">
           <div className="col-md-6 admin-form-group">
             <div className=" mb-3 ">
-              <label htmlFor="name"> Nombre</label>
+              <label htmlFor="username">Nombre de usuario</label>
+              <input
+                type="text"
+                id="username"
+                className="form-control text-dark"
+                value={username}
+                onChange={(e) => setUsername(e.target.value)}
+                required
+              />
+              <label htmlFor="name"> Nombre completo</label>
               <input
                 type="text"
                 id="name"
-                className="form-control"
+                className="form-control text-dark"
                 value={name}
                 onChange={(e) => setName(e.target.value)}
                 required
@@ -80,7 +122,7 @@ const Register = ({ fullScreen }) => {
               <input
                 type="email"
                 id="email"
-                className="form-control"
+                className="form-control text-dark"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 required
@@ -93,7 +135,7 @@ const Register = ({ fullScreen }) => {
                   <input                
                   type={showPassword ? "text" : "password"}
                   id="password"
-                  className="form-control"
+                  className="form-control text-dark"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   required
@@ -115,27 +157,30 @@ const Register = ({ fullScreen }) => {
           </div>
           <div className="col-md-6 admin-form-group">
             <div className=" mb-3">
-              <label htmlFor="number">Telefono</label>
+              <label htmlFor="telefono">Telefono</label>
               <input
-                type="numer"
-                id="telefon numer"
-                className="form-control"
+                type="tel"
+                id="telefono"
+                className="form-control text-dark"
                 value={telefono}
-                onChange={(e) => setNumero(e.target.value)}
+                onChange={(e) => setTelefono(e.target.value)}
                 required
               />
             </div>
 
+            
             <div className="mb-3">
-              <label htmlFor="number">Puesto</label>
-              <input
-                type="Puesto"
-                id="puesto"
-                className="form-control"
-                value={puesto}
-                onChange={(e) => setPuesto(e.target.value)}
+              <label htmlFor="rol">Rol</label>
+              <select
+                id="rol"
+                className="form-control text-dark"
+                value={rol}
+                onChange={(e) => setRol(e.target.value)}
                 required
-              />
+              >
+                <option value="empleado">Empleado</option>
+                <option value="admin">Administrador</option>
+              </select>
             </div>
             </div>
         </div>  
@@ -152,11 +197,8 @@ const Register = ({ fullScreen }) => {
   );
 };
 
-Register.propTypes = {
+UsuariosAdmin.propTypes = {
   fullScreen: PropTypes.bool,
 };
 
-export default Register;
-
-
-
+export default UsuariosAdmin;
