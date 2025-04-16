@@ -102,13 +102,6 @@ const Footer = () => {
           <div className="col-md-6 text-center text-md-end">
             <div className="d-inline-flex gap-2">
               <Link 
-                to="/acceso" 
-                className="btn btn-outline-primary btn-sm hover-lift"
-              >
-                <i className="fas fa-user me-2"></i>
-                Acceso Clientes/Usuarios
-              </Link>
-              <Link 
                 to="/admin/login"  
                 className="btn btn-outline-primary btn-sm hover-lift"
               >

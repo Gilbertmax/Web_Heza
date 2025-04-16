@@ -10,6 +10,7 @@ import AdminLoading from './components/adminLoading/AdminLoading';
 import Noticias from './pages/public/Noticias';
 import Eventos from './pages/public/Eventos';
 import EventoDetalle from './pages/public/EventoDetalle';
+import ProtectedRoute from './components/ProtectedRoute';
 
 // Componentes públicos
 const Home = lazy(() => import('./pages/public/Home'));
@@ -31,11 +32,11 @@ const ProteccionPatrimonial = lazy(() => import('./pages/public/Proteccion_Patri
 const Devoluciones = lazy(() => import('./pages/public/devoluciones'));
 
 // Dashboard Cliente
-const ClienteLayout = lazy(() => import('./pages/adminClientes/Cliente'));
-const DocumentosCliente = lazy(() => import('./pages/adminClientes/DocumentosCliente'));
-const DetalleDocumento = lazy(() => import('./pages/adminClientes/DetalleDocumento'));
-const PerfilCliente = lazy(() => import('./pages/adminClientes/PerfilCliente'));
-const ConfiguracionCliente = lazy(() => import('./pages/adminClientes/ConfiguracionCliente'));
+//const ClienteLayout = lazy(() => import('./pages/adminClientes/Cliente'));
+//const DocumentosCliente = lazy(() => import('./pages/adminClientes/DocumentosCliente'));
+//const DetalleDocumento = lazy(() => import('./pages/adminClientes/DetalleDocumento'));
+//const PerfilCliente = lazy(() => import('./pages/adminClientes/PerfilCliente'));
+//const ConfiguracionCliente = lazy(() => import('./pages/adminClientes/ConfiguracionCliente'));
 
 // Admin
 const DashboardAdmin = lazy(() => import('./pages/admin/Dashboard'));
@@ -76,6 +77,7 @@ function App() {
           <Route path="/devoluciones" element={<Devoluciones />} />
 
           {/* Dashboard Cliente */}
+          {/*
           <Route path="/clientes/dashboard" element={<ClienteLayout />}>
             <Route index element={<DocumentosCliente />} />
             <Route path="documentos" element={<DocumentosCliente />} />
@@ -83,22 +85,48 @@ function App() {
             <Route path="perfil" element={<PerfilCliente />} />
             <Route path="configuracion" element={<ConfiguracionCliente />} />
           </Route>
+          */}
 
           {/* Administración */}
-          <Route path="/admin/dashboard" element={<DashboardAdmin isAdmin={true} />} />
-          <Route path="/admin/noticias" element={<NoticiasAdmin />} />
-          <Route path="/admin/eventos" element={<EventosAdmin />} /> 
-          <Route path="/admin/configuracion" element={<ConfiguracionAdmin />} />
-          <Route path="/admin/usuarios" element={<UsuariosAdmin/>} />
-          <Route path="/admin/clientes" element={<ClienteAdmin/>} />
-          <Route path="/admin/Notificacion" element={<NotificacionAdmin/>} />
-          
+          <Route path="/admin/dashboard" element={
+            <ProtectedRoute>
+              <DashboardAdmin isAdmin={true} />
+            </ProtectedRoute>
+          } />
+          <Route path="/admin/noticias" element={
+            <ProtectedRoute>
+              <NoticiasAdmin />
+            </ProtectedRoute>
+          } />
+          <Route path="/admin/eventos" element={
+            <ProtectedRoute>
+              <EventosAdmin />
+            </ProtectedRoute>
+          } />
+          <Route path="/admin/configuracion" element={
+            <ProtectedRoute>
+              <ConfiguracionAdmin />
+            </ProtectedRoute>
+          } />
+          <Route path="/admin/usuarios" element={
+            <ProtectedRoute>
+              <UsuariosAdmin />
+            </ProtectedRoute>
+          } />
+          <Route path="/admin/clientes" element={
+            <ProtectedRoute>
+              <ClienteAdmin />
+            </ProtectedRoute>
+          } />
+          <Route path="/admin/Notificacion" element={
+            <ProtectedRoute>
+              <NotificacionAdmin />
+            </ProtectedRoute>
+          } />
 
-          
           {/* Autenticación */}
           <Route path="/admin/login" element={<AdminLoading showLogin fullScreen />} />
           <Route path="/admin/reset-password/:token" element={<ResetPassword />} />
-          <Route path="/admin/acceso" element={<AdminLoading showLogin fullScreen />} />
           <Route path="/acceso" element={<Loading showLogin fullScreen />} />
         </Routes>
       </Suspense>

@@ -7,7 +7,6 @@ import {
   BarChart,
   Calendar, 
   Users, 
-  FileText, 
   Settings,
   Home,
   BookOpen,
@@ -213,17 +212,22 @@ const Dashboard = ({ isAdmin = false }) => {
     }
   };
 
-  const StatCard = ({ icon: Icon, title, value, color }) => (
-    <div className="flex flex-col p-6 bg-white rounded-xl shadow-sm hover:shadow-md transition-shadow duration-300">
-      <div className="flex items-center mb-4">
-        <div className="p-3 bg-gradient-to-br from-primary to-secondary rounded-lg mr-3">
-          <Icon className="text-white w-6 h-6" />
-        </div>
-        <h3 className="text-lg font-semibold text-gray-600">{title}</h3>
+  // Update the StatCard component
+  const StatCard = ({ icon: Icon, title, value }) => (
+    <div className="relative overflow-hidden flex items-center p-6 bg-white/70 backdrop-blur-md rounded-2xl shadow-xl border border-gray-100 hover:scale-[1.025] transition-transform duration-300 group">
+      {/* Vertical accent bar */}
+      <div className="absolute left-0 top-0 h-full w-2 bg-gradient-to-b from-primary to-secondary rounded-l-2xl"></div>
+      {/* Icon */}
+      <div className="flex items-center justify-center bg-gradient-to-br from-primary to-secondary rounded-xl shadow-md mr-5 w-14 h-14">
+        <Icon className="text-white w-7 h-7" />
       </div>
-      <p className="text-3xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-primary to-secondary">
-        {value}
-      </p>
+      {/* Title and Value */}
+      <div className="flex-1 flex flex-col justify-center">
+        <span className="text-base font-medium text-gray-500 mb-1 tracking-wide">{title}</span>
+        <span className="text-5xl font-extrabold text-primary drop-shadow-sm leading-tight group-hover:text-secondary transition-colors duration-300">
+          {value}
+        </span>
+      </div>
     </div>
   );
 
@@ -237,23 +241,6 @@ const Dashboard = ({ isAdmin = false }) => {
           <span className="section-badge bg-primary-soft text-primary px-3 py-1 rounded-md">
             {isAdmin ? 'Panel Administrador' : 'Mi Espacio'}
           </span>
-          <div className="flex items-center">
-            <button 
-              onClick={handleRefresh}
-              className="p-2 text-gray-500 hover:text-primary hover:bg-gray-100 rounded-full transition-colors"
-              title="Actualizar datos"
-              disabled={refreshing}
-            >
-              <RefreshCw size={16} className={refreshing ? 'animate-spin' : ''} />
-            </button>
-            <button 
-              onClick={handleLogout}
-              className="p-2 text-gray-500 hover:text-red-500 hover:bg-gray-100 rounded-full transition-colors ml-1"
-              title="Cerrar sesión"
-            >
-              <LogOut size={16} />
-            </button>
-          </div>
         </div>
         
         <div className="space-y-2">
@@ -295,48 +282,55 @@ const Dashboard = ({ isAdmin = false }) => {
             Resumen general del sistema
           </h4>
         </div>
-
-        <div className="flex flex-col md:flex-row gap-2 w-full md:w-auto">
+        {/* Button group moved here for better visibility */}
+        <div className="flex items-center">
           <button 
-            onClick={() => navigate('/admin/usuarios')} 
-            className="btn btn-primary btn-lg px-2 py-2 me-4 rounded-pill shadow-hover mb-3"
+            onClick={handleRefresh}
+            className="btn btn-outline-primary btn-sm rounded-pill shadow-hover me-2"
+            title="Actualizar datos"
+            disabled={refreshing}
           >
-            <Users size={16} className="mr-2" />
-            Nuevo Usuario
+            <RefreshCw size={16} className={refreshing ? 'animate-spin' : ''} />
           </button>
           <button 
-            onClick={() => navigate('/admin/clientes')} 
-            className="btn btn-outline-primary btn-lg px-2 py-2 rounded-pill shadow-hover mb-3"
+            onClick={handleLogout}
+            className="btn btn-outline-danger btn-sm rounded-pill shadow-hover"
+            title="Cerrar sesión"
           >
-            <FileText size={16} className="mr-2" />
-            Nuevo Cliente
+            <LogOut size={16} />
           </button>
         </div>
       </div>
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
         <StatCard 
           icon={Users} 
-          title="Usuarios Registrados" 
+          title="Usuarios Registrados " 
           value={stats.totalUsers}
         />
         <StatCard 
           icon={UserPlus} 
-          title="Clientes Activos" 
+          title="Clientes Activos " 
           value={stats.activeClients}
         />
-
       </div>
-
+      
       <div className="space-y-6">
-        <div className="p-6 bg-white rounded-xl shadow-sm hover:shadow-md transition-shadow duration-300">
-          <div className="flex items-center justify-between mb-4">
+        <div className="relative overflow-hidden p-7 bg-white/70 backdrop-blur-md rounded-2xl shadow-xl border border-gray-100 hover:scale-[1.015] transition-transform duration-300">
+          {/* Vertical accent bar */}
+          <div className="absolute left-0 top-0 h-full w-2 bg-gradient-to-b from-primary to-secondary rounded-l-2xl"></div>
+          <div className="flex items-center justify-between mb-6">
             <div className="flex items-center">
-              <div className="bg-primary-gradient p-3 rounded-lg mr-3">
-                <BarChart className="text-white w-6 h-6" />
+              <div className="flex items-center justify-center bg-gradient-to-br from-primary to-secondary rounded-xl shadow-md mr-5 w-14 h-14">
+                <BarChart className="text-white w-7 h-7" />
               </div>
-              <h3 className="text-lg font-semibold text-gray-600">Actividad Reciente</h3>
+              <h3 className="text-2xl font-bold text-gray-700 tracking-tight">Actividad Reciente</h3>
             </div>
-            <Link to="/admin/clientes" className="text-primary hover:underline text-sm">Ver todos</Link>
+            <Link 
+              to="/admin/clientes" 
+              className="ml-4 px-4 py-2 rounded-full bg-primary text-white text-sm font-semibold shadow hover:bg-secondary transition-colors duration-200"
+            >
+              Ver todos
+            </Link>
           </div>
           <AdminClientes recentClients={recentClients} onViewClient={handleViewClient} />
         </div>
@@ -345,12 +339,12 @@ const Dashboard = ({ isAdmin = false }) => {
           <div className="p-6 bg-white rounded-xl shadow-sm hover:shadow-md transition-shadow duration-300">
             <div className="flex items-center justify-between mb-4">
               <div className="flex items-center">
-                <div className="bg-warning p-3 rounded-lg mr-3">
+                <div className="bg-primary-gradient p-3 rounded-lg mr-3">
                   <Clock className="text-white w-6 h-6" />
                 </div>
                 <h3 className="text-lg font-semibold text-gray-600">Solicitudes Pendientes</h3>
               </div>
-              <span className="bg-warning text-white text-xs font-bold px-2 py-1 rounded-full">
+              <span className="bg-primary-gradient text-white text-xs font-bold px-2 py-1 rounded-full">
                 {pendingRequests.length}
               </span>
             </div>
@@ -363,7 +357,7 @@ const Dashboard = ({ isAdmin = false }) => {
                       <h4 className="font-medium">{request.nombre}</h4>
                       <p className="text-sm text-gray-500">{request.empresa}</p>
                     </div>
-                    <span className="bg-warning text-white text-xs px-2 py-1 rounded-full">
+                    <span className="bg-primary-gradient text-white text-xs px-2 py-1 rounded-full">
                       {request.tipo === 'client' ? 'Cliente' : 'Usuario'}
                     </span>
                   </div>
@@ -390,13 +384,13 @@ const Dashboard = ({ isAdmin = false }) => {
                   <div className="flex justify-end space-x-2">
                     <button 
                       onClick={() => handleRejectRequest(request.id)}
-                      className="px-3 py-1 bg-gray-200 hover:bg-gray-300 text-gray-700 rounded-md text-sm transition-colors"
+                      className="btn btn-outline-danger btn-sm rounded-pill shadow-hover"
                     >
                       Rechazar
                     </button>
                     <button 
                       onClick={() => handleApproveRequest(request.id)}
-                      className="px-3 py-1 bg-primary hover:bg-primary-dark text-white rounded-md text-sm transition-colors"
+                      className="btn btn-primary btn-sm rounded-pill shadow-hover"
                     >
                       Aprobar
                     </button>
