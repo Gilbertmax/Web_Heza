@@ -4,7 +4,7 @@ import Header from './components/Header';
 import Footer from './components/Footer';
 import ScrollToTop from './components/ScrollToTop';
 import Loading from './components/Loading/Loading';
-import ChatBot from './components/ChatBot/ChatBot';
+// import ChatBot from './components/ChatBot/ChatBot'; 
 import ResetPassword from './components/adminLoading/ResetPassword';
 import AdminLoading from './components/adminLoading/AdminLoading';
 import Noticias from './pages/public/Noticias';
@@ -131,7 +131,7 @@ function App() {
         </Routes>
       </Suspense>
       <Footer />
-      <ChatBot />
+      {/* <ChatBot /> */} 
     </Router>
   );
 }
