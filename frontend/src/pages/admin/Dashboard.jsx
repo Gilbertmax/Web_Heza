@@ -212,19 +212,22 @@ const Dashboard = ({ isAdmin = false }) => {
     }
   };
 
-  // Update the StatCard component
+  // Update the StatCard component - Refined Design
   const StatCard = ({ icon: Icon, title, value }) => (
-    <div className="relative overflow-hidden flex items-center p-6 bg-white/70 backdrop-blur-md rounded-2xl shadow-xl border border-gray-100 hover:scale-[1.025] transition-transform duration-300 group">
-      {/* Vertical accent bar */}
-      <div className="absolute left-0 top-0 h-full w-2 bg-gradient-to-b from-primary to-secondary rounded-l-2xl"></div>
-      {/* Icon */}
-      <div className="flex items-center justify-center bg-gradient-to-br from-primary to-secondary rounded-xl shadow-md mr-5 w-14 h-14">
-        <Icon className="text-white w-7 h-7" />
+    // Card container: Adjusted background, shadow, and hover effect
+    <div className="relative flex items-center p-5 bg-white/80 backdrop-blur-sm rounded-xl shadow-lg border border-gray-200 group transition-all duration-300 ease-out hover:shadow-xl hover:-translate-y-1">
+      {/* Vertical accent bar: Slightly thicker */}
+      <div className="absolute left-0 top-0 h-full w-1.5 bg-gradient-to-b from-primary to-secondary rounded-l-xl"></div>
+      {/* Icon container: Adjusted size, shadow, and margin */}
+      <div className="flex-shrink-0 flex items-center justify-center bg-gradient-to-br from-primary to-secondary rounded-lg shadow-md mr-4 w-12 h-12">
+        <Icon className="text-white w-6 h-6" /> {/* Adjusted icon size */}
       </div>
-      {/* Title and Value */}
-      <div className="flex-1 flex flex-col justify-center">
-        <span className="text-base font-medium text-gray-500 mb-1 tracking-wide">{title}</span>
-        <span className="text-5xl font-extrabold text-primary drop-shadow-sm leading-tight group-hover:text-secondary transition-colors duration-300">
+      {/* Title and Value container */}
+      <div className="flex-1 flex flex-col justify-center min-w-0"> {/* Added min-w-0 for potential truncation */}
+        {/* Title: Adjusted color, size, and added truncation */}
+        <span className="text-sm font-medium text-gray-500 mb-0.5 truncate">{title}</span>
+        {/* Value: Adjusted size, weight, color, and added transition */}
+        <span className="text-4xl font-bold text-gray-800 leading-tight group-hover:text-primary transition-colors duration-300">
           {value}
         </span>
       </div>
@@ -271,50 +274,62 @@ const Dashboard = ({ isAdmin = false }) => {
   );
 
   const renderAdminPanel = () => (
-    <div className="col-lg-10 p-4">
-      <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-6 gap-6">
+    // Main container for the admin panel content area
+    <div className="p-6 lg:p-8"> {/* Increased padding for better spacing */}
+      {/* Header Section: Welcome Message & Action Buttons */}
+      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-8 gap-4"> {/* Adjusted margin-bottom */}
+        {/* Welcome Text */}
         <div>
-          <h1 className="display-7 text-dark mb-4">
-            <span className="text-gradient-primary">Bienvenido </span>
-            <span className="text-gradient-secondary"> {userData?.name}</span>
+          {/* Using Tailwind classes for more control over typography */}
+          <h1 className="text-3xl font-bold text-gray-800 mb-1"> 
+            <span className="text-gradient-primary">Bienvenido</span>
+            <span className="text-gradient-secondary"> {userData?.name || 'Administrador'}</span>
           </h1>
-          <h4 className="mb-4">
+          <p className="text-lg text-gray-500"> {/* Adjusted text size */}
             Resumen general del sistema
-          </h4>
+          </p>
         </div>
-        {/* Button group moved here for better visibility */}
-        <div className="flex items-center">
+        {/* Action Buttons: Refresh & Logout - Updated Styles */}
+        <div className="flex items-center space-x-3 shrink-0"> {/* Added shrink-0 to prevent wrapping issues */}
           <button 
             onClick={handleRefresh}
-            className="btn btn-outline-primary btn-sm rounded-pill shadow-hover me-2"
+            // Applying btn btn-outline-primary btn-sm equivalent styles
+            className="flex items-center px-3 py-1 border border-primary text-primary rounded-md text-sm font-medium hover:bg-primary hover:text-white transition-colors duration-200 shadow-sm hover:shadow-lg disabled:opacity-50 disabled:cursor-not-allowed"
             title="Actualizar datos"
             disabled={refreshing}
           >
-            <RefreshCw size={16} className={refreshing ? 'animate-spin' : ''} />
+            <RefreshCw size={16} className={`me-1 ${refreshing ? 'animate-spin' : ''}`} /> {/* Adjusted icon size and margin */}
+            <span>Actualizar</span> {/* Optional: Add text like in Footer */}
           </button>
           <button 
             onClick={handleLogout}
-            className="btn btn-outline-danger btn-sm rounded-pill shadow-hover"
+            // Applying btn btn-outline-danger btn-sm equivalent styles
+            className="flex items-center px-3 py-1 border border-red-500 text-red-500 rounded-md text-sm font-medium hover:bg-red-500 hover:text-white transition-colors duration-200 shadow-sm hover:shadow-lg"
             title="Cerrar sesión"
           >
-            <LogOut size={16} />
+            <LogOut size={16} className="me-1" /> {/* Adjusted icon size and margin */}
+              <span>Salir</span> {/* Optional: Add text */}
           </button>
         </div>
       </div>
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
+
+      {/* Stat Cards Grid */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-8"> {/* Adjusted gap and margin */}
         <StatCard 
           icon={Users} 
-          title="Usuarios Registrados " 
+          title="Usuarios Registrados " /* Cleaned title */
           value={stats.totalUsers}
         />
         <StatCard 
           icon={UserPlus} 
-          title="Clientes Activos " 
+          title="Clientes Activos " /* Cleaned title */
           value={stats.activeClients}
         />
       </div>
       
-      <div className="space-y-6">
+      {/* Main Content Sections: Recent Activity & Pending Requests */}
+      <div className="space-y-8"> 
+        {/* Actividad Reciente Section */}
         <div className="relative overflow-hidden p-7 bg-white/70 backdrop-blur-md rounded-2xl shadow-xl border border-gray-100 hover:scale-[1.015] transition-transform duration-300">
           {/* Vertical accent bar */}
           <div className="absolute left-0 top-0 h-full w-2 bg-gradient-to-b from-primary to-secondary rounded-l-2xl"></div>
@@ -332,65 +347,81 @@ const Dashboard = ({ isAdmin = false }) => {
               Ver todos
             </Link>
           </div>
-          <AdminClientes recentClients={recentClients} onViewClient={handleViewClient} />
+          {/* Make sure AdminClientes component is defined or imported */}
+          <AdminClientes recentClients={recentClients} onViewClient={handleViewClient} /> 
         </div>
         
+        {/* Solicitudes Pendientes Section */}
         {pendingRequests.length > 0 && (
-          <div className="p-6 bg-white rounded-xl shadow-sm hover:shadow-md transition-shadow duration-300">
-            <div className="flex items-center justify-between mb-4">
+          <div className="relative overflow-hidden p-7 bg-white/70 backdrop-blur-md rounded-2xl shadow-xl border border-gray-100 hover:scale-[1.015] transition-transform duration-300">
+            {/* Vertical accent bar */}
+            <div className="absolute left-0 top-0 h-full w-2 bg-gradient-to-b from-yellow-400 to-orange-500 rounded-l-2xl"></div>
+            <div className="flex items-center justify-between mb-6">
               <div className="flex items-center">
-                <div className="bg-primary-gradient p-3 rounded-lg mr-3">
-                  <Clock className="text-white w-6 h-6" />
+                <div className="flex items-center justify-center bg-gradient-to-br from-yellow-400 to-orange-500 rounded-xl shadow-md mr-5 w-14 h-14">
+                  <Clock className="text-white w-7 h-7" />
                 </div>
-                <h3 className="text-lg font-semibold text-gray-600">Solicitudes Pendientes</h3>
+                <h3 className="text-2xl font-bold text-gray-700 tracking-tight">Solicitudes Pendientes</h3>
               </div>
-              <span className="bg-primary-gradient text-white text-xs font-bold px-2 py-1 rounded-full">
+              {/* Counter Badge */}
+              <span className="ml-4 px-4 py-1.5 rounded-full bg-gradient-to-r from-yellow-400 to-orange-500 text-white text-lg font-bold shadow-sm border-2 border-white">
                 {pendingRequests.length}
               </span>
             </div>
             
-            <div className="space-y-4">
+            {/* List of Requests */}
+            <div className="space-y-5">
               {pendingRequests.map((request) => (
-                <div key={request.id} className="border border-gray-200 rounded-lg p-4">
-                  <div className="flex justify-between items-start mb-3">
+                // Individual Request Card (structure remains the same as previous update)
+                <div key={request.id} className="bg-white/80 border border-gray-200 rounded-xl shadow-sm p-5 transition-shadow hover:shadow-md">
+                  {/* Request Header */}
+                  <div className="flex justify-between items-start mb-4">
                     <div>
-                      <h4 className="font-medium">{request.nombre}</h4>
-                      <p className="text-sm text-gray-500">{request.empresa}</p>
+                      <h4 className="text-lg font-semibold text-primary">{request.nombre}</h4>
+                      <p className="text-sm text-gray-600">{request.empresa}</p>
                     </div>
-                    <span className="bg-primary-gradient text-white text-xs px-2 py-1 rounded-full">
+                    <span className={`px-3 py-1 rounded-full text-xs font-semibold text-white ${request.tipo === 'client' ? 'bg-blue-500' : 'bg-green-500'}`}>
                       {request.tipo === 'client' ? 'Cliente' : 'Usuario'}
                     </span>
                   </div>
                   
-                  <div className="grid grid-cols-2 gap-2 mb-3 text-sm">
-                    <div>
-                      <span className="text-gray-500">Email:</span> {request.email}
+                  {/* Request Details */}
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-3 mb-4 text-sm border-t border-gray-200 pt-4">
+                    <div className="flex items-center">
+                      <span className="text-gray-500 font-medium w-20 shrink-0">Email:</span> 
+                      <span className="text-gray-700 truncate">{request.email}</span>
                     </div>
-                    <div>
-                      <span className="text-gray-500">Teléfono:</span> {request.telefono}
+                    <div className="flex items-center">
+                      <span className="text-gray-500 font-medium w-20 shrink-0">Teléfono:</span> 
+                      <span className="text-gray-700">{request.telefono}</span>
                     </div>
                     {request.tipo === 'client' && (
                       <>
-                        <div>
-                          <span className="text-gray-500">RFC:</span> {request.rfc}
+                        <div className="flex items-center">
+                          <span className="text-gray-500 font-medium w-20 shrink-0">RFC:</span> 
+                          <span className="text-gray-700">{request.rfc}</span>
                         </div>
-                        <div>
-                          <span className="text-gray-500">Sucursal:</span> {request.sucursal === 'vallarta' ? 'HEZA Vallarta' : 'HEZA Guadalajara'}
+                        <div className="flex items-center">
+                          <span className="text-gray-500 font-medium w-20 shrink-0">Sucursal:</span> 
+                          <span className="text-gray-700">{request.sucursal === 'vallarta' ? 'HEZA Vallarta' : 'HEZA Guadalajara'}</span>
                         </div>
                       </>
                     )}
                   </div>
                   
-                  <div className="flex justify-end space-x-2">
+                  {/* Action Buttons */}
+                  <div className="flex justify-end space-x-3 border-t border-gray-200 pt-4">
                     <button 
                       onClick={() => handleRejectRequest(request.id)}
-                      className="btn btn-outline-danger btn-sm rounded-pill shadow-hover"
+                      className="px-4 py-2 rounded-lg bg-red-100 text-red-700 hover:bg-red-200 text-sm font-medium transition-colors shadow-sm hover:shadow-md disabled:opacity-50"
+                      disabled={refreshing}
                     >
                       Rechazar
                     </button>
                     <button 
                       onClick={() => handleApproveRequest(request.id)}
-                      className="btn btn-primary btn-sm rounded-pill shadow-hover"
+                      className="px-4 py-2 rounded-lg bg-primary text-white hover:bg-secondary text-sm font-medium transition-colors shadow-sm hover:shadow-md disabled:opacity-50"
+                      disabled={refreshing}
                     >
                       Aprobar
                     </button>
@@ -401,7 +432,7 @@ const Dashboard = ({ isAdmin = false }) => {
           </div>
         )}
       </div>
-    </div>
+    </div> // End of main container
   );
 
   const renderClientPanel = () => (
