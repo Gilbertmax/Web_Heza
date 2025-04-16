@@ -107,7 +107,7 @@ Para asistencia adicional, contacta al equipo de desarrollo.
 DB_HOST=localhost
 DB_PORT=3306
 DB_USER=root
-DB_PASSWORD=tu_contraseña_aqui
+DB_PASSWORD=root
 DB_NAME=heza
 LOAD_SAMPLE_DATA=true
 

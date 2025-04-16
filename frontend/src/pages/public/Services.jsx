@@ -93,7 +93,7 @@ const Services = () => {
               
               <div className="d-none d-lg-block">
                 <div className="feature-highlight bg-primary-gradient rounded-4 p-4 text-white shadow-lg">
-                  <h4 className="mb-3 text-center">¿Por qué elegirnos?</h4>
+                  <h4 className="mb-3 text-center text-white">¿Por qué elegirnos?</h4>
                   <div className="row mb-3">
                         {[
                           "Más de 30 años de experiencia",
