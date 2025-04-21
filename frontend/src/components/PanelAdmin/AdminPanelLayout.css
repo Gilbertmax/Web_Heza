@@ -1,0 +1,287 @@
+/* Admin Panel Layout */
+.admin-panel-layout .admin-navbar {
+  background-color: #ffffff;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 100vh;
+  width: 250px;
+  padding: 1rem;
+  overflow-y: auto;
+  z-index: 40;
+  transition: transform 0.3s ease;
+}
+
+.admin-navbar.hidden {
+  transform: translateX(-100%);
+}
+
+.admin-navbar .section-badge {
+  background-color: rgba(99, 102, 241, 0.1);
+  color: #6366f1;
+  padding: 0.25rem 0.75rem;
+  border-radius: 0.5rem;
+  font-weight: 600;
+  font-size: 0.875rem;
+}
+
+.nav-link {
+  display: flex;
+  align-items: center;
+  padding: 0.75rem;
+  font-size: 0.875rem;
+  font-weight: 500;
+  border-radius: 0.5rem;
+  transition: background-color 0.3s ease;
+  color: #374151;
+}
+
+.nav-link:hover {
+  background-color: #f3f4f6;
+}
+
+.nav-link svg {
+  margin-right: 0.5rem;
+}
+
+/* Main Content */
+.admin-panel-layout .admin-main {
+  margin-left: 0px;
+  width: calc(100% - 280px);
+  padding: 1rem; 
+  min-height: 100vh;
+  background-color: #f8f9fa;
+  position: relative;
+  z-index: 30;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+/* Container for content */
+.admin-content {
+  width: 100%;
+  max-width: 1400px;
+}
+
+/* Header */
+.admin-header {
+  background-color: #1f2937;
+  border-radius: 1.5rem;
+  padding: 2rem;
+  margin-bottom: 2rem;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  width: 100%;
+}
+
+.admin-header .display-4 {
+  font-size: 2.5rem;
+  background: linear-gradient(90deg, #6366f1, #8b5cf6);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.admin-header .text-gray-color {
+  color: #9ca3af;
+}
+
+.admin-header .btn-gradient-primary {
+  background: linear-gradient(to right, #6366f1, #8b5cf6);
+  color: white;
+  border: none;
+}
+
+.admin-header .btn-outline-light {
+  border: 1px solid #d1d5db;
+  color: #ffffff;
+}
+
+/* AdminClientes */
+.admin-client-card {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.75rem;
+  background-color: #f9fafb;
+  border-radius: 0.75rem;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.admin-client-card:hover {
+  background-color: #f3f4f6;
+}
+
+.admin-client-info {
+  overflow: hidden;
+}
+
+.admin-client-info span:first-child {
+  font-weight: 600;
+  color: #6366f1;
+  display: block;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.admin-client-info span:last-child {
+  font-size: 0.875rem;
+  color: #6b7280;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.section-badge {
+  padding: 0.25rem 0.75rem;
+  border-radius: 0.5rem;
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-align: center;
+}
+
+.bg-primary {
+  background-color: #6366f1;
+}
+
+.bg-warning {
+  background-color: #f59e0b;
+}
+
+/* StatCard */
+.stat-card {
+  position: relative;
+  display: flex;
+  align-items: center;
+  padding: 1.25rem;
+  background: rgba(255, 255, 255, 0.8);
+  backdrop-filter: blur(6px);
+  border-radius: 1rem;
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.08);
+  border: 1px solid #e5e7eb;
+  transition: all 0.3s ease;
+}
+
+.stat-card:hover {
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+  transform: translateY(-4px);
+}
+
+.stat-card .gradient-bar {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 6px;
+  height: 100%;
+  background: linear-gradient(to bottom, #6366f1, #8b5cf6);
+  border-top-left-radius: 1rem;
+  border-bottom-left-radius: 1rem;
+}
+
+.stat-card-icon {
+  flex-shrink: 0;
+  background: linear-gradient(to bottom right, #6366f1, #8b5cf6);
+  color: #ffffff;
+  border-radius: 0.75rem;
+  padding: 0.5rem;
+  margin-right: 1rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 48px;
+  height: 48px;
+}
+
+.stat-card-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  min-width: 0;
+}
+
+.stat-card-content .title {
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: #6b7280;
+  margin-bottom: 0.25rem;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.stat-card-content .value {
+  font-size: 2rem;
+  font-weight: 700;
+  color: #1f2937;
+  transition: color 0.3s;
+}
+
+.stat-card:hover .value {
+  color: #6366f1;
+}
+
+/* DetailItem */
+.detail-item dt {
+  font-weight: 500;
+  color: #6b7280;
+}
+
+.detail-item dd {
+  font-weight: 600;
+  color: #374151;
+  margin-bottom: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.detail-item dd span.text-muted {
+  color: #9ca3af;
+}
+
+/* Responsive Design */
+@media (max-width: 992px) {
+  .admin-navbar {
+    transform: translateX(-100%);
+  }
+
+  .admin-navbar.active {
+    transform: translateX(0);
+  }
+
+  .admin-main {
+    margin-left: 0;
+    width: 100%;
+    padding: 1rem;
+  }
+
+  .admin-content {
+    padding: 1rem;
+  }
+}
+
+@media (max-width: 576px) {
+  .admin-header .display-4 {
+    font-size: 2rem;
+  }
+
+  .admin-client-card {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .stat-card {
+    flex-direction: column;
+    text-align: center;
+  }
+
+  .stat-card-icon {
+    margin-bottom: 1rem;
+  }
+}
+
+/* Agregar la clase padre .admin-panel-layout a TODAS las reglas CSS existentes */
