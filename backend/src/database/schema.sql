@@ -149,8 +149,8 @@ CREATE TABLE galeria_eventos (
 );
 
 -- Tabla de solicitudes de acceso
-CREATE TABLE solicitudes_acceso (
-  id INT AUTO_INCREMENT PRIMARY KEY,
+CREATE TABLE IF NOT EXISTS solicitudes_acceso (
+   id INT AUTO_INCREMENT PRIMARY KEY,
   nombre VARCHAR(100) NOT NULL,
   email VARCHAR(100) NOT NULL,
   telefono VARCHAR(20),

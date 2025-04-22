@@ -69,4 +69,18 @@ const registrarCliente = async (req, res) => {
   }
 };
 
-export { registrarCliente };
+
+const obtenerClientes = async (req, res) => {
+  try {
+    const connection = await pool.getConnection();
+    const [clientes] = await connection.query('SELECT * FROM clientes');
+    connection.release();
+    res.json(clientes);
+  } catch (error) {
+    console.error('Error al obtener clientes:', error);
+    res.status(500).json({ error: 'Error al obtener clientes' });
+  }
+};
+
+
+export { registrarCliente, obtenerClientes };
