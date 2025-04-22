@@ -43,26 +43,21 @@ const AdminLoading = ({ showLogin = false, fullScreen = true }) => {
       setLoading(false);
     }
   };
-  
-  // Update the handleResetPassword function in AdminLoading.jsx
-  
+
   const handleResetPassword = async (e) => {
     e.preventDefault();
     setError('');
     setLoading(true);
     
     try {
-      // Make sure we're using the correct email format
       let fullEmail = resetEmailPrefix;
       
-      // If it doesn't contain @, assume it's a username and append the domain
       if (!resetEmailPrefix.includes('@')) {
         fullEmail = `${resetEmailPrefix}@heza.com.mx`;
       }
       
       console.log('Requesting password reset for:', fullEmail);
       
-      // Make sure the API endpoint is correct
       const response = await axios.post('/api/auth/request-password-reset', { 
         email: fullEmail 
       });
@@ -72,7 +67,6 @@ const AdminLoading = ({ showLogin = false, fullScreen = true }) => {
     } catch (err) {
       console.error('Password reset error:', err);
       
-      // Improved error handling
       if (err.code === 'ECONNREFUSED' || err.message.includes('Network Error')) {
         setError('No se pudo conectar con el servidor. Por favor, asegúrate de que el servidor backend esté en ejecución.');
       } else {
