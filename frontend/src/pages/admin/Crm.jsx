@@ -1,6 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { UserPlus } from 'react-feather';
 import { Modal, Button } from 'react-bootstrap';
+import * as XLSX from 'xlsx';
+import { saveAs } from 'file-saver';
+
 
 // Aquí van todos tus prospectos...
 const prospectos = [
@@ -87,7 +90,15 @@ const CMR = () => {
     const [showModal, setShowModal] = useState(false);
     const [clientes, setClientes] = useState([]);
     const [fraseMotivacional, setFraseMotivacional] = useState('');
-  
+    const exportarExcel = () => {
+      const hoja = XLSX.utils.json_to_sheet(prospectos);
+      const libro = XLSX.utils.book_new();
+      XLSX.utils.book_append_sheet(libro, hoja, "Prospectos");
+    
+      const excelBuffer = XLSX.write(libro, { bookType: "xlsx", type: "array" });
+      const archivo = new Blob([excelBuffer], { type: "application/octet-stream" });
+      saveAs(archivo, "prospectos.xlsx");
+    };
     useEffect(() => {
       const guardados = JSON.parse(localStorage.getItem('clientes')) || [];
       setClientes(guardados);
@@ -158,7 +169,7 @@ const CMR = () => {
                                     id={`clienteCheck-${index}`}
                                     checked={clientes.includes(prospecto.rfc)}
                                     onChange={() => handleCheckboxClick(prospecto.rfc)}
-                                    />
+                                    /> ya es cliente?
                                 </div>
                               )}
                               {clientes.includes(prospecto.rfc) && (
@@ -220,6 +231,12 @@ const CMR = () => {
                     </div>
                 </div>
                 </div>
+                <button 
+                    className="btn btn-primary btn-lg px-5"
+                    style={{ backgroundColor: '#263D4F', borderColor: '#263D4F', borderRadius: '1.5rem' }}
+                    onClick={exportarExcel}
+                  >Exportar Datos
+                </button>
             </div>
         </div>
       </div>
