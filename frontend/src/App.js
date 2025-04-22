@@ -7,10 +7,12 @@ import Loading from './components/Loading/Loading';
 // import ChatBot from './components/ChatBot/ChatBot'; 
 import ResetPassword from './components/adminLoading/ResetPassword';
 import AdminLoading from './components/adminLoading/AdminLoading';
+import AdminRegister from './components/adminLoading/AdminRegister';
 import Noticias from './pages/public/Noticias';
 import Eventos from './pages/public/Eventos';
 import EventoDetalle from './pages/public/EventoDetalle';
 import ProtectedRoute from './components/ProtectedRoute';
+import AdminPanelLayout from './components/PanelAdmin/AdminPanelLayout.jsx';
 
 // Componentes públicos
 const Home = lazy(() => import('./pages/public/Home'));
@@ -87,46 +89,24 @@ function App() {
           </Route>
           */}
 
-          {/* Administración */}
-          <Route path="/admin/dashboard" element={
-            <ProtectedRoute>
-              <DashboardAdmin isAdmin={true} />
-            </ProtectedRoute>
-          } />
-          <Route path="/admin/noticias" element={
-            <ProtectedRoute>
-              <NoticiasAdmin />
-            </ProtectedRoute>
-          } />
-          <Route path="/admin/eventos" element={
-            <ProtectedRoute>
-              <EventosAdmin />
-            </ProtectedRoute>
-          } />
-          <Route path="/admin/configuracion" element={
-            <ProtectedRoute>
-              <ConfiguracionAdmin />
-            </ProtectedRoute>
-          } />
-          <Route path="/admin/usuarios" element={
-            <ProtectedRoute>
-              <UsuariosAdmin />
-            </ProtectedRoute>
-          } />
-          <Route path="/admin/clientes" element={
-            <ProtectedRoute>
-              <ClienteAdmin />
-            </ProtectedRoute>
-          } />
-          <Route path="/admin/Notificacion" element={
-            <ProtectedRoute>
-              <NotificacionAdmin />
-            </ProtectedRoute>
-          } />
+          {/* Administración con Layout Persistente */}
+          <Route path="/admin" element={<ProtectedRoute><AdminPanelLayout /></ProtectedRoute>}>
+            <Route path="dashboard" element={<DashboardAdmin isAdmin={true} />} />
+            <Route path="noticias" element={<NoticiasAdmin />} />
+            <Route path="eventos" element={<EventosAdmin />} />
+            <Route path="configuracion" element={<ConfiguracionAdmin />} />
+            <Route path="usuarios" element={<UsuariosAdmin />} />
+            <Route path="clientes" element={<ClienteAdmin />} />
+            {/* <Route path="clientes/:id" element={<DetalleClienteAdmin />} /> */}
+            <Route path="Notificacion" element={<NotificacionAdmin />} />
+            {/* Redirección por defecto si se accede a /admin */}
+            <Route index element={<DashboardAdmin isAdmin={true} />} /> 
+          </Route>
 
           {/* Autenticación */}
           <Route path="/admin/login" element={<AdminLoading showLogin fullScreen />} />
           <Route path="/admin/reset-password/:token" element={<ResetPassword />} />
+          <Route path="/admin/registro" element={<AdminRegister />} />
           <Route path="/acceso" element={<Loading showLogin fullScreen />} />
         </Routes>
       </Suspense>

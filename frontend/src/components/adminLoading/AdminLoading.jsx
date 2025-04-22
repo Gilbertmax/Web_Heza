@@ -157,6 +157,13 @@ const AdminLoading = ({ showLogin = false, fullScreen = true }) => {
                 <button
                   type="button"
                   className="btn btn-link"
+                  onClick={() => navigate('/admin/registro')}
+                >
+                  Registrarse
+                </button>
+                <button
+                  type="button"
+                  className="btn btn-link"
                   onClick={() => setShowResetForm(true)}
                 >
                   ¿Olvidaste tu contraseña?
