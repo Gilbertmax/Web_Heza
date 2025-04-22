@@ -13,7 +13,8 @@ import {
   User,
   PieChart,
   UserPlus,
-  Bell
+  Bell,
+  Crosshair
 } from 'react-feather';
 import Loading from '../../components/Loading/Loading.jsx'; 
 const AdminClientes = () => (
@@ -94,6 +95,7 @@ const Dashboard = ({ isAdmin = false }) => {
               { to: "/admin/eventos", icon: Calendar, label: "Eventos" },
             ] : []),
             { to: "/admin/documentos", icon: Bell, label: "Notificaciones" },
+            { to: "/admin/Crm", icon: Crosshair, label: "Tablon" },
             { to: "/admin/configuracion", icon: Settings, label: "Configuración" },
             
           ].map((item, index) => (

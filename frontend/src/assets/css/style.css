@@ -11379,4 +11379,12 @@ section {
 .custom-link:hover .arrow-icon {
   color: #263D4F; /* Color al hacer hover */
 }
+.icono-wsp-hover {
+  transition: color 0.3s ease;
+  color: #263D4F; 
+}
+
+.icono-wsp-hover:hover {
+  color: #fff; 
+}
 

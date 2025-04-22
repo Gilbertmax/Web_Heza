@@ -45,6 +45,7 @@ const ConfiguracionAdmin = lazy(() => import('./pages/admin/ConfiguracionAdmin')
 const UsuariosAdmin = lazy(()=> import('./pages/admin/UsuariosAdmin'));
 const ClienteAdmin = lazy(()=> import('./pages/admin/ClientesAdmin'));
 const DocumentAdmin =lazy(()=> import('./pages/admin/DocumentAdmin'));
+const Crm =lazy(()=> import('./pages/admin/Crm'));
 
 function App() {
   return (
@@ -92,6 +93,7 @@ function App() {
           <Route path="/admin/usuarios" element={<UsuariosAdmin/>} />
           <Route path="/admin/clientes" element={<ClienteAdmin/>} />
           <Route path="/admin/documentos" element={<DocumentAdmin/>} />
+          <Route path="/admin/crm" element={<Crm/>} />
           
 
           
