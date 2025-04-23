@@ -11388,3 +11388,49 @@ section {
   color: #fff; 
 }
 
+.table-TT {
+  background-color: var(--dark-color);
+  border-color: #495e6b; /* Si aplica a toda la fila */
+}
+
+.table-TT th {
+  color: var(--primary);
+  background-color: var(--dark-color);
+  border-color: #495e6b; 
+}
+
+.footer-TT {
+  background-color: var(--dark-color);
+  color: var(--primary);
+  color: white;
+  border-color: #495e6b;
+}
+
+.row-TT td{
+  color: var(--primary);
+  border-color: #495e6b;
+}
+
+.row-TT td.status {
+  color: var(--dark-color) !important; /* Color azul para el estatus */
+}
+
+.no-gap-footer .table {
+  border-bottom: none !important;
+  border-color: #495e6b;
+}
+
+.no-gap-footer .card-footer {
+  border-top: none !important;
+  border-color: #495e6b;
+}
+/* Borde entre thead y tbody en color dorado (o dark-color) */
+.table.table-bordered thead th {
+  border-bottom: 2px solid var(--dark-color) !important; /* Borde dorado entre thead y tbody */
+}
+
+/* Colapsar bordes de la tabla */
+.table.table-bordered {
+  border-collapse: collapse; /* Colapsa los bordes */
+}
+

@@ -11,6 +11,7 @@ import Noticias from './pages/public/Noticias';
 import Eventos from './pages/public/Eventos';
 import EventoDetalle from './pages/public/EventoDetalle';
 
+
 // Componentes públicos
 const Home = lazy(() => import('./pages/public/Home'));
 const About = lazy(() => import('./pages/public/About'));
@@ -46,6 +47,9 @@ const UsuariosAdmin = lazy(()=> import('./pages/admin/UsuariosAdmin'));
 const ClienteAdmin = lazy(()=> import('./pages/admin/ClientesAdmin'));
 const DocumentAdmin =lazy(()=> import('./pages/admin/DocumentAdmin'));
 const Crm =lazy(()=> import('./pages/admin/Crm'));
+
+//Usuarios
+const TaskTack = lazy(()=> import('./pages/Usuarios/TaskTrack'));
 
 function App() {
   return (
@@ -95,6 +99,8 @@ function App() {
           <Route path="/admin/documentos" element={<DocumentAdmin/>} />
           <Route path="/admin/crm" element={<Crm/>} />
           
+          {/*Usuarios*/}
+          <Route path="/Usuarios/TaskTrack" element={<TaskTack/>}/>
 
           
           {/* Autenticación */}

@@ -4,6 +4,7 @@
   "private": true,
   "proxy": "http://localhost:5000",
   "dependencies": {
+    "@fortawesome/fontawesome-free": "^6.7.2",
     "@fortawesome/fontawesome-svg-core": "^6.7.2",
     "@fortawesome/free-brands-svg-icons": "^6.7.2",
     "@fortawesome/free-solid-svg-icons": "^6.7.2",
@@ -16,6 +17,7 @@
     "@uiw/react-md-editor": "^4.0.5",
     "axios": "^1.8.4",
     "bootstrap": "^5.3.3",
+    "date-fns": "^4.1.0",
     "file-saver": "^2.0.5",
     "react": "^19.0.0",
     "react-bootstrap": "^2.10.9",
