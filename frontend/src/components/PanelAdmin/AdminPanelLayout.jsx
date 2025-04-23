@@ -13,7 +13,8 @@ import {
   User,
   Bell,
   RefreshCw,
-  LogOut
+  LogOut,
+  Navigation
 } from 'react-feather';
 
 const AdminClientes = ({ recentClients = [], onViewClient }) => (
@@ -160,6 +161,7 @@ const AdminPanelLayout = () => {
             { to: "/admin/usuarios", icon: User, label: "Usuarios" },
             { to: "/admin/clientes", icon: Users, label: "Clientes" },
             { to: "/admin/noticias", icon: BookOpen, label: "Noticias" },
+            { to: "/admin/crm", icon: Navigation, label: "Tablon" },
             { to: "/admin/eventos", icon: Calendar, label: "Eventos" },
             { to: "/admin/Notificacion", icon: Bell, label: "Notificaciones" },
             { to: "/admin/configuracion", icon: Settings, label: "Configuración" },

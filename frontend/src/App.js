@@ -48,6 +48,7 @@ const ConfiguracionAdmin = lazy(() => import('./pages/admin/ConfiguracionAdmin')
 const UsuariosAdmin = lazy(()=> import('./pages/admin/UsuariosAdmin'));
 const ClienteAdmin = lazy(()=> import('./pages/admin/ClientesAdmin'));
 const NotificacionAdmin =lazy(()=> import('./pages/admin/NotificacionAdmin'));
+const Crm =lazy(()=> import('./pages/admin/Crm'));
 
 function App() {
   return (
@@ -97,6 +98,8 @@ function App() {
             <Route path="configuracion" element={<ConfiguracionAdmin />} />
             <Route path="usuarios" element={<UsuariosAdmin />} />
             <Route path="clientes" element={<ClienteAdmin />} />
+            <Route path="tablon" element={<Crm/>}/>
+            
             {/* <Route path="clientes/:id" element={<DetalleClienteAdmin />} /> */}
             <Route path="Notificacion" element={<NotificacionAdmin />} />
             {/* Redirección por defecto si se accede a /admin */}
