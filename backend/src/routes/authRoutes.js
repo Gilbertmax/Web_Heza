@@ -26,5 +26,6 @@ router.post('/request-user-access', requestUserAccess);
 router.get('/profile', verifyToken, getProfile); 
 router.put('/profile', verifyToken, updateProfile); 
 router.post('/change-password', verifyToken, changePassword); 
+router.get('/admin/login',adminLogin);
 
 export default router;
