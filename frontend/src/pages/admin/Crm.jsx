@@ -4,7 +4,6 @@ import { Modal, Button } from 'react-bootstrap';
 import * as XLSX from 'xlsx';
 import { saveAs } from 'file-saver';
 
-
 // Aquí van todos tus prospectos...
 const prospectos = [
   {
@@ -35,7 +34,7 @@ const prospectos = [
     industria: 'Ganadera',
     contacto: 'Moctezuma Chavez Mocte@gmail.com',
     numero: '3320165210',
-    regimenFiscal: null,
+    regimenFiscal: 'n/d',
     Pp: 'true',
     PC: 'false',
     Pt: 'false'
@@ -76,47 +75,60 @@ const prospectos = [
 ];
 
 const frasesMotivacionales = [
-    "Cada nuevo cliente es el reflejo de su esfuerzo y dedicación. ¡Sigamos alcanzando nuevas metas juntos!",
-    "Gracias a su trabajo incansable, hoy transformamos un prospecto en un cliente. ¡Esto es solo el comienzo!",
-    "Cada cliente conquistado es una victoria de equipo. ¡Sigamos demostrando lo que somos capaces de hacer!",
-    "Su compromiso y profesionalismo hacen posible que sigamos creciendo. ¡Este es el fruto de su esfuerzo!",
-    "El éxito de cada nuevo cliente es el resultado del trabajo en equipo. ¡Vamos por muchos más!"
+  "Cada nuevo cliente es el reflejo de su esfuerzo y dedicación. ¡Sigamos alcanzando nuevas metas juntos!",
+  "Gracias a su trabajo incansable, hoy transformamos un prospecto en un cliente. ¡Esto es solo el comienzo!",
+  "Cada cliente conquistado es una victoria de equipo. ¡Sigamos demostrando lo que somos capaces de hacer!",
+  "Su compromiso y profesionalismo hacen posible que sigamos creciendo. ¡Este es el fruto de su esfuerzo!",
+  "El éxito de cada nuevo cliente es el resultado del trabajo en equipo. ¡Vamos por muchos más!"
 ];
 
 const totalProspectos = prospectos.filter(p => p.Pp === 'true').length;
-const tiempoPromedioCierre = '1 días'; 
+const tiempoPromedioCierre = '1 días';
 
 const CMR = () => {
-    const [showModal, setShowModal] = useState(false);
-    const [clientes, setClientes] = useState([]);
-    const [fraseMotivacional, setFraseMotivacional] = useState('');
-    const exportarExcel = () => {
-      const hoja = XLSX.utils.json_to_sheet(prospectos);
-      const libro = XLSX.utils.book_new();
-      XLSX.utils.book_append_sheet(libro, hoja, "Prospectos");
+  const [showModal, setShowModal] = useState(false);
+  const [clientes, setClientes] = useState([]);
+  const [fraseMotivacional, setFraseMotivacional] = useState('');
+
+  // Función para exportar prospectos a Excel
+  const exportarExcel = () => {
+    const hoja = XLSX.utils.json_to_sheet(prospectos);
+    const libro = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(libro, hoja, "Prospectos");
+
+    const excelBuffer = XLSX.write(libro, { bookType: "xlsx", type: "array" });
+    const archivo = new Blob([excelBuffer], { type: "application/octet-stream" });
+    saveAs(archivo, "prospectos.xlsx");
+  };
+
+  // Cargar clientes desde localStorage
+  useEffect(() => {
+    const guardados = localStorage.getItem('clientes');
     
-      const excelBuffer = XLSX.write(libro, { bookType: "xlsx", type: "array" });
-      const archivo = new Blob([excelBuffer], { type: "application/octet-stream" });
-      saveAs(archivo, "prospectos.xlsx");
-    };
-    useEffect(() => {
-      const guardados = JSON.parse(localStorage.getItem('clientes')) || [];
-      setClientes(guardados);
-    }, []);
+    // Verificar si guardados es un string y no está vacío o nulo
+    const clientes = guardados && guardados !== "undefined" ? JSON.parse(guardados) : [];
+    setClientes(clientes);
+  }, []);
   
-    const handleCheckboxClick = (rfc) => {
-      let actualizados;      
-      setClientes(actualizados);
-      localStorage.setItem('clientes', JSON.stringify(actualizados));
-  
-      const randomFrase = frasesMotivacionales[Math.floor(Math.random() * frasesMotivacionales.length)];
-      setFraseMotivacional(randomFrase);
-      setShowModal(true);
-    };
-  
-    const handleClose = () => setShowModal(false);
-  
-  
+
+
+  // Manejo de click en el checkbox
+  const handleCheckboxClick = (rfc) => {
+    let actualizados = [...clientes];
+    if (actualizados.includes(rfc)) {
+      actualizados = actualizados.filter(cliente => cliente !== rfc); // Eliminar de clientes si ya existe
+    } else {
+      actualizados.push(rfc); // Agregar si no existe
+    }
+    setClientes(actualizados);
+    localStorage.setItem('clientes', JSON.stringify(actualizados));
+
+    const randomFrase = frasesMotivacionales[Math.floor(Math.random() * frasesMotivacionales.length)];
+    setFraseMotivacional(randomFrase);
+    setShowModal(true);
+  };
+
+  const handleClose = () => setShowModal(false);
 
   return (
     <div className="container-fluid py-5">
@@ -153,8 +165,8 @@ const CMR = () => {
                           <p><strong className="form-text">¿Tiene Propuesta de trabajo?</strong> {prospecto.Pt === 'true' ? 'Sí' : 'No'}</p>
                           {prospecto.Pp === 'true' && (
                             <>
-                              <a
-                                href={`https://wa.me/521${prospecto.numero}`}
+                              <a 
+                                 href={`https://wa.me/521${prospecto.numero}`}
                                 target="_blank"
                                 rel="noopener noreferrer"
                                 className="mt-3 d-flex justify-content-center"
@@ -164,12 +176,12 @@ const CMR = () => {
                               {!clientes.includes(prospecto.rfc) && (
                                 <div className="form-check mt-3">
                                     <input
-                                    className="form-check-input"
-                                    type="checkbox"
-                                    id={`clienteCheck-${index}`}
-                                    checked={clientes.includes(prospecto.rfc)}
-                                    onChange={() => handleCheckboxClick(prospecto.rfc)}
-                                    /> ya es cliente?
+                                        className="form-check-input"
+                                        type="checkbox"
+                                        id={`clienteCheck-${index}`}
+                                        checked={clientes.includes(prospecto.rfc)}
+                                        onChange={() => handleCheckboxClick(prospecto.rfc)}
+                                      /> ya es cliente?
                                 </div>
                               )}
                               {clientes.includes(prospecto.rfc) && (
@@ -224,10 +236,10 @@ const CMR = () => {
                     <p className="mb- 0 display-6 fw-bold text-primary">{clientes.length}</p>
                     </div>
                 </div>
-                <div className="col-lg-4 mb-4 mb-lg-0">
+                <div className="col-lg-4 mb-4 mb-lg-0 ">
                     <div className="innovation-alert bg-primary-soft rounded-4 p-3 mt-4 specialty-card">
-                    <h6 className="mb-2 me-4">Tiempo promedio cierre</h6>
-                    <p className="mb-0 display-6 fw-bold text-primary">{tiempoPromedioCierre}</p>
+                    <h5 className="h5 mb-2 me-4">Tiempo promedio de cierre </h5>
+                    <p className="mb-2 display-6 fw-bold text-primary">{tiempoPromedioCierre}</p>
                     </div>
                 </div>
                 </div>
