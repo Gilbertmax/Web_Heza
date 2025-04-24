@@ -16,14 +16,16 @@ DROP TABLE IF EXISTS categorias_documentos;
 DROP TABLE IF EXISTS users;
 
 -- Tabla de usuarios
+-- Tabla de usuarios actualizada
 CREATE TABLE users (
   id INT AUTO_INCREMENT PRIMARY KEY,
   username VARCHAR(100) NOT NULL UNIQUE,
-  nombre VARCHAR(100) NOT NULL,
+  nombre VARCHAR(100) ,  -- ← sin el Campo obligatorio
   email VARCHAR(100) NOT NULL UNIQUE,
   password VARCHAR(100) NOT NULL,
   telefono VARCHAR(20),
   rol ENUM('admin', 'cliente', 'empleado') NOT NULL DEFAULT 'cliente',
+  sucursal VARCHAR(100),  -- ← Campo que faltaba
   activo TINYINT(1) DEFAULT 1,
   fecha_registro TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   ultima_conexion TIMESTAMP NULL,
@@ -31,6 +33,7 @@ CREATE TABLE users (
   reset_token_expiry DATETIME,
   original_email VARCHAR(255)
 );
+
 
 -- Tabla de categorías de documentos
 CREATE TABLE categorias_documentos (
