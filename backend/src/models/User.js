@@ -9,16 +9,13 @@ class User {
         let firstHash = await bcrypt.hash(userData.password, 10);
         userData.password = await bcrypt.hash(firstHash, 12);
       }
-      
       if (userData.email) {
         userData.original_email = userData.email;
       }
-      
       const [result] = await connection.query(
         'INSERT INTO users SET ?', 
         userData
       );
-      
       if (userData.rol === 'cliente' && clienteData) {
         const clienteDataToInsert = {
           id: result.insertId,
@@ -32,10 +29,8 @@ class User {
           numero_empleados: clienteData.numero_empleados || null,
           ventas_anuales: clienteData.ventas_anuales || null
         };
-        
         await connection.query('INSERT INTO clientes SET ?', clienteDataToInsert);
       }
-      
       if (userData.rol === 'empleado' && userData.puesto) {
         const empleadoData = {
           id: result.insertId,
@@ -43,10 +38,8 @@ class User {
           departamento: userData.departamento || null,
           fecha_contratacion: userData.fecha_contratacion || new Date()
         };
-        
         await connection.query('INSERT INTO empleados SET ?', empleadoData);
       }
-      
       return result.insertId;
     } finally {
       connection.release();
