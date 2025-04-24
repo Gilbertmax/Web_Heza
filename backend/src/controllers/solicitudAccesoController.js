@@ -83,7 +83,7 @@ export const aprobarSolicitud = async (req, res) => {
       const clienteData = {
         empresa: solicitud.empresa,
         rfc: solicitud.rfc,
-        sucursal: solicitud.sucursal
+        sede_id: solicitud.sede_id
       };
       
       await User.create(userData, clienteData);

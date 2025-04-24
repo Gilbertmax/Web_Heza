@@ -16,6 +16,8 @@ export const register = async (req, res) => {
       return res.status(400).json({ error: 'El correo electrónico ya está registrado' });
     }
     
+    const hashedPassword = await bcrypt.hash(userData.password, 10);
+    userData.password = hashedPassword;
     const userId = await User.create(userData);
     
     const user = await User.findById(userId);
@@ -290,9 +292,9 @@ export const resetPassword = async (req, res) => {
 
 export const requestClientAccess = async (req, res) => {
   try {
-    const { nombre, empresa, telefono, email, rfc, password, sucursal } = req.body;
+    const { nombre, empresa, telefono, email, rfc, password, sede_id } = req.body;
     
-    if (!nombre || !empresa || !telefono || !email || !rfc || !password || !sucursal) {
+    if (!nombre || !empresa || !telefono || !email || !rfc || !password || !sede_id) {
       return res.status(400).json({ error: 'Todos los campos son requeridos' });
     }
     
@@ -323,8 +325,8 @@ export const requestClientAccess = async (req, res) => {
       const hashedPassword = await bcrypt.hash(password, 10);
       
       await connection.query(
-        'INSERT INTO solicitudes_acceso (tipo, nombre, empresa, telefono, email, rfc, password, sucursal) VALUES (?, ?, ?, ?, ?, ?, ?, ?)',
-        ['client', nombre, empresa, telefono, email, rfc, hashedPassword, sucursal]
+        'INSERT INTO solicitudes_acceso (tipo, nombre, empresa, telefono, email, rfc, password, sede_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?)',
+        ['client', nombre, empresa, telefono, email, rfc, hashedPassword, sede_id]
       );
       
       // Enviar notificación por email al administrador
@@ -342,7 +344,7 @@ export const requestClientAccess = async (req, res) => {
             <li><strong>Teléfono:</strong> ${telefono}</li>
             <li><strong>Email:</strong> ${email}</li>
             <li><strong>RFC:</strong> ${rfc}</li>
-            <li><strong>Sucursal:</strong> ${sucursal}</li>
+            <li><strong>Sede:</strong> ${sede_id}</li>
           </ul>
           <p>Por favor, revisa esta solicitud en el panel de administración.</p>
         `

@@ -11,7 +11,7 @@ const AdminRegister = () => {
   const [confirmPassword, setConfirmPassword] = useState('');
   const [telefono, setTelefono] = useState('');
   const [rol] = useState('admin');
-  const [sucursal, setSucursal] = useState('gdl');
+  const [sede_id, setSedeId] = useState('gdl');
   const [error, setError] = useState('');
   const [success, setSuccess] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -57,7 +57,7 @@ const AdminRegister = () => {
         password,
         telefono,
         rol,
-        sucursal
+        sede_id
       });
 
       setSuccess(true);
@@ -105,6 +105,22 @@ const AdminRegister = () => {
         {error && <div className="alert alert-danger">{error}</div>}
 
         <form onSubmit={handleSubmit}>
+
+        <div className="admin-form-group">
+          <label>Correo Institucional</label>
+          <div className="d-flex gap-2">
+              <input
+                type="text"
+                className="form-control"
+                value={username}
+                onChange={(e) => setUsername(e.target.value)}
+                placeholder="Correo Heza"
+                required
+              />
+              <div className="input-group-text">@heza.com.mx</div>
+            </div>
+          </div>
+
           <div className="admin-form-group">
             <label htmlFor="username">Nombre de Usuario</label>
             <input
@@ -173,26 +189,11 @@ const AdminRegister = () => {
           </div>
 
           <div className="admin-form-group">
-            <label>Correo Institucional</label>
-            <div className="d-flex gap-2">
-              <input
-                type="text"
-                className="form-control"
-                value={username}
-                onChange={(e) => setUsername(e.target.value)}
-                placeholder="Nombre de usuario"
-                required
-              />
-              <div className="input-group-text">@heza.com.mx</div>
-            </div>
-          </div>
-
-          <div className="admin-form-group">
             <label>Sucursal</label>
             <select
               className="form-control"
-              value={sucursal}
-              onChange={(e) => setSucursal(e.target.value)}
+              value={sede_id}
+              onChange={(e) => setSedeId(e.target.value)}
               required
             >
               <option value="gdl">Guadalajara</option>
