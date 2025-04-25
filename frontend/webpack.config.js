@@ -2,7 +2,7 @@ const path = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 
 module.exports = {
-  // ... other webpack config
+  // ... otras configuraciones si las tienes
   resolve: {
     fallback: {
       "http": require.resolve("stream-http"),
@@ -10,6 +10,15 @@ module.exports = {
       "zlib": require.resolve("browserify-zlib"),
       "stream": require.resolve("stream-browserify"),
       "crypto": require.resolve("crypto-browserify"),
+    }
+  },
+  devServer: {
+    proxy: {
+      '/api': {
+        target: 'http://localhost:5000', // Ajusta el puerto si tu backend usa otro
+        changeOrigin: true,
+        secure: false,
+      }
     }
   }
 };

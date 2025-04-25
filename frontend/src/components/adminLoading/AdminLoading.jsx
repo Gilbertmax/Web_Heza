@@ -29,7 +29,8 @@ const AdminLoading = ({ showLogin = false, fullScreen = true }) => {
         email: username,
         password: password 
       });
-      
+      console.log('Log de prueba1', response.axios);
+      console.log('Log de prueba2', response);
       console.log('Login successful, response:', response.data);
       
       localStorage.setItem('adminToken', response.data.token);

