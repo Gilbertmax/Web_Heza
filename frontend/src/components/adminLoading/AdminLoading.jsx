@@ -29,17 +29,18 @@ const AdminLoading = ({ showLogin = false, fullScreen = true }) => {
         email: username,
         password: password 
       });
-      console.log('Log de prueba1', response.axios);
-      console.log('Log de prueba2', response);
+      
       console.log('Login successful, response:', response.data);
       
+      // Guardar el token y los datos del usuario en localStorage
       localStorage.setItem('adminToken', response.data.token);
-      localStorage.setItem('adminUser', JSON.stringify(response.data.user));
+      localStorage.setItem('adminUser', JSON.stringify(response.data.admin));
       
+      // Redirigir al dashboard del admin
       navigate('/admin/dashboard');
     } catch (err) {
       console.error('Login error:', err.response?.data || err.message);
-      setError(err.response?.data?.error || 'Error al iniciar sesión. Verifica tus credenciales.');
+      setError(err.response?.data?.message || 'Error al iniciar sesión. Verifica tus credenciales.');
     } finally {
       setLoading(false);
     }

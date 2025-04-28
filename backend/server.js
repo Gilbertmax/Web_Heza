@@ -11,6 +11,7 @@ import fs from 'fs';
 import newsRoutes from './src/routes/newsRoutes.js';
 import eventRoutes from './src/routes/eventRoutes.js';
 
+
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 

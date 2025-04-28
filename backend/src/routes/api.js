@@ -5,14 +5,12 @@ import { fileURLToPath } from 'url';
 import fs from 'fs';
 import authRoutes from './authRoutes.js';
 import solicitudAccesoRoutes from './solicitudAccesoRoutes.js';
-
 import * as authController from '../controllers/authController.js';
 import * as clientController from '../controllers/clientController.js';
 import * as documentController from '../controllers/documentController.js';
 import * as eventController from '../controllers/eventController.js';
 import * as apiController from '../controllers/apiController.js';
 import * as dashboardController from '../controllers/dashboardController.js';
-
 import { verifyToken, isAdmin, isClient, isAdminOrClient } from '../middleware/auth.js';
 
 const router = express.Router();
