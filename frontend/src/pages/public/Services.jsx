@@ -93,17 +93,17 @@ const Services = () => {
               
               <div className="d-none d-lg-block">
                 <div className="feature-highlight bg-primary-gradient rounded-4 p-4 text-white shadow-lg">
-                  <h4 className="mb-3 text-center">¿Por qué elegirnos?</h4>
+                  <h4 className="mb-3 text-center text-white">¿Por qué elegirnos?</h4>
                   <div className="row mb-3">
                         {[
                           "Más de 30 años de experiencia",
                           "Equipo multidisciplinario",
                           "Capacitaciones Constantes"
                         ].map((item, index) => (
-                          <div className="col-lg-8 mb-8 mb-lg-1" key={index}>
+                          <div className="col-lg-9 mb-9 mb-lg-1 text-center" key={index}>
                             <div className="contact-card hover-lift">
                               <div className="d-flex align-items-center p-1">
-                                <i className="fas fa-map-marker-alt fa-3x text-primary mr-4"></i>
+                                <i className="fas fa-map-marker-alt fa-3x text-primary mr-1"></i>
                                 <div>
                                   <span className="text-white mb-1">{item}</span>
                                 </div>
