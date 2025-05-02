@@ -8,32 +8,34 @@ import pool from '../config/db.js';
 export const register = async (req, res) => {
   try {
     const userData = {
-    ...req.body,
-    username: req.body.email.split('@')[0]
-  };
-    
+      ...req.body,
+      username: req.body.email.split('@')[0]
+    };
+
     const existingUser = await User.findByEmail(userData.email);
     if (existingUser) {
       return res.status(400).json({ error: 'El correo electrónico ya está registrado' });
     }
-    
+
+    // ✅ Hashear la contraseña antes de guardar
     const hashedPassword = await bcrypt.hash(userData.password, 10);
     userData.password = hashedPassword;
+
     const userId = await User.create(userData);
-    
     const user = await User.findById(userId);
+
     if (!user) {
       return res.status(500).json({ error: 'Error al crear el usuario' });
     }
-    
+
     delete user.password;
-    
     res.status(201).json({ user });
   } catch (error) {
     console.error('Error en registro:', error);
     res.status(500).json({ error: 'Error al registrar usuario' });
   }
 };
+
 
 export const login = async (req, res) => {
   try {
@@ -80,7 +82,6 @@ export const adminLogin = async (req, res) => {
   try {
     const { email, password } = req.body;
 
-
     // Buscar el admin en la tabla users
     const [rows] = await pool.query(
       "SELECT * FROM users WHERE email = ? AND rol = 'admin'",
@@ -98,7 +99,7 @@ export const adminLogin = async (req, res) => {
       return res.status(403).json({ message: "Cuenta desactivada. Contacta al administrador." });
     }
 
-    // Comparar contraseña
+    // Comparar contraseña correctamente
     const passwordMatch = await bcrypt.compare(password, admin.password);
 
     if (!passwordMatch) {
@@ -112,7 +113,7 @@ export const adminLogin = async (req, res) => {
       { expiresIn: "1h" }
     );
 
-    // Opcionalmente podrías actualizar la última conexión
+    // Actualizar última conexión
     await pool.query("UPDATE users SET ultima_conexion = NOW() WHERE id = ?", [admin.id]);
 
     res.json({
@@ -132,6 +133,7 @@ export const adminLogin = async (req, res) => {
     res.status(500).json({ error: "Error al iniciar sesión como administrador" });
   }
 };
+
 
 export const getProfile = async (req, res) => {
   try {

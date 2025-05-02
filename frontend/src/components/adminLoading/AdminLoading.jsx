@@ -18,33 +18,32 @@ const AdminLoading = ({ showLogin = false, fullScreen = true }) => {
   const navigate = useNavigate();
 
   const handleLogin = async (e) => {
-    e.preventDefault();
-    setError('');
-    setLoading(true);
-    
-    try {
-      console.log('Attempting login with:', { email: username, password: password.length + ' chars' });
-      
-      const response = await axios.post('/api/auth/admin/login', { 
-        email: username,
-        password: password 
-      });
-      
-      console.log('Login successful, response:', response.data);
-      
-      // Guardar el token y los datos del usuario en localStorage
-      localStorage.setItem('adminToken', response.data.token);
-      localStorage.setItem('adminUser', JSON.stringify(response.data.admin));
-      
-      // Redirigir al dashboard del admin
-      navigate('/admin/dashboard');
-    } catch (err) {
-      console.error('Login error:', err.response?.data || err.message);
-      setError(err.response?.data?.message || 'Error al iniciar sesión. Verifica tus credenciales.');
-    } finally {
-      setLoading(false);
+  e.preventDefault();
+  setError('');
+  setLoading(true);
+
+  try {
+    const response = await axios.post('/api/auth/admin/login', {
+      email: `${username}@heza.com.mx`,
+      password: password,
+    });
+
+    const { token, admin } = response.data;
+
+    if (admin.rol !== 'admin') {
+      throw new Error('No tienes permisos de administrador.');
     }
-  };
+
+    localStorage.setItem('adminToken', token);
+    localStorage.setItem('adminUser', JSON.stringify(admin));
+    navigate('/admin/dashboard');
+  } catch (err) {
+    console.error('Login error:', err.response?.data || err.message);
+    setError(err.response?.data?.message || 'Error al iniciar sesión. Verifica tus credenciales.');
+  } finally {
+    setLoading(false);
+  }
+};
 
   const handleResetPassword = async (e) => {
     e.preventDefault();
