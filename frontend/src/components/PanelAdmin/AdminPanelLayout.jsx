@@ -211,7 +211,7 @@ const AdminPanelLayout = () => {
                 <div className="d-flex gap-3 justify-content-center">
                   <button
                     onClick={handleRefresh}
-                    className="btn btn-gradient-primary btn-lg d-flex align-items-center"
+                    className="btn btn-gradient-primary btn-lg d-flex align-items-center border-radius: 999px  flex-wrap: wrap justify-content: center "
                     disabled={refreshing}
                   >
                     <RefreshCw size={20} className={`me-2 ${refreshing ? 'animate-spin' : ''}`} />
@@ -219,7 +219,7 @@ const AdminPanelLayout = () => {
                   </button>
                   <button
                     onClick={handleLogout}
-                    className="btn btn-outline-light btn-lg d-flex align-items-center"
+                    className="btn btn-outline-light btn-lg d-flex align-items-center border-radius: 999px  flex-wrap: wrap  justify-content: center"
                   >
                     <LogOut size={20} className="me-2" />
                     Salir

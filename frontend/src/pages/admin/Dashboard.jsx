@@ -155,10 +155,10 @@ const Dashboard = ({ isAdmin = false }) => {
 
   
   const renderAdminPanelContent = () => (
-    <div className="container-fluid px-2">
+    <div className="container-fluid px-2 mb-5 ">
       {/* Stat Cards */}
       <section className="row g-4 mb-5">
-        <div className="col-md-6 col-lg-3">
+        <div className="col-md-6 col-lg-3 ">
           <div className="bg-white rounded-4 p-5 shadow-sm h-100 d-flex flex-column align-items-center justify-content-center text-center transition-all hover-shadow-lg">
             <div className="d-flex align-items-center justify-content-center mb-4" style={{ width: '70px', height: '70px', borderRadius: '50%', background: 'linear-gradient(135deg, #4e73df, #224abe)', boxShadow: '0 4px 10px rgba(0,0,0,0.1)' }}>
               <Users size={36} color="#fff" />
@@ -168,7 +168,7 @@ const Dashboard = ({ isAdmin = false }) => {
           </div>
         </div>
 
-        <div className="col-md-6 col-lg-3">
+        <div className="col-md-6 col-lg-3 mb">
           <div className="bg-white rounded-4 p-5 shadow-sm h-100 d-flex flex-column align-items-center justify-content-center text-center transition-all hover-shadow-lg">
             <div className="d-flex align-items-center justify-content-center mb-4" style={{ width: '70px', height: '70px', borderRadius: '50%', background: 'linear-gradient(135deg, #858796, #5a5c69)', boxShadow: '0 4px 10px rgba(0,0,0,0.1)' }}>
               <UserPlus size={36} color="#fff" />
