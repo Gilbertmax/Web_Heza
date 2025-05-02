@@ -5,10 +5,6 @@ class User {
   static async create(userData, clienteData = null) {
     const connection = await pool.getConnection();
     try {
-      if (userData.password) {
-        let firstHash = await bcrypt.hash(userData.password, 10);
-        userData.password = await bcrypt.hash(firstHash, 12);
-      }
       if (userData.email) {
         userData.original_email = userData.email;
       }
