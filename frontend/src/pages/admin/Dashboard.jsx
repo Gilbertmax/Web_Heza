@@ -155,7 +155,7 @@ const Dashboard = ({ isAdmin = false }) => {
 
   
   const renderAdminPanelContent = () => (
-    <div className="container-fluid px-2 mb-5 ">
+    <div className="container-fluid px-2 mb-5 mt-4 ">
       {/* Stat Cards */}
       <section className="row g-4 mb-5">
         <div className="col-md-6 col-lg-3 ">

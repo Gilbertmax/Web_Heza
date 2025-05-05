@@ -197,37 +197,41 @@ const AdminPanelLayout = () => {
           zIndex: 30,
           backgroundColor: '#f8f9fa' 
         }}>
-          <header className="bg-dark-soft rounded-3xl p-6 mb-8 shadow-lg">
-            <div className="row align-items-center text-center">
-              <div className="col-md-8 mb-4 mb-md-0 d-flex flex-column align-items-center justify-content-center">
-                <h1 className="display-4 text-gradient-primary mb-3">
-                  Bienvenido, <span className="text-primary-soft">{userData?.name || 'Administrador'}</span>
-                </h1>
-                <p className="lead text-gray-color mb-0">
-                  Panel de control - Resumen operativo
-                </p>
-              </div>
-              <div className="col-md-4 d-flex flex-column align-items-center justify-content-center">
-                <div className="d-flex gap-3 justify-content-center">
-                  <button
-                    onClick={handleRefresh}
-                    className="btn btn-gradient-primary btn-lg d-flex align-items-center border-radius: 999px  flex-wrap: wrap justify-content: center "
-                    disabled={refreshing}
-                  >
-                    <RefreshCw size={20} className={`me-2 ${refreshing ? 'animate-spin' : ''}`} />
-                    Actualizar
-                  </button>
-                  <button
-                    onClick={handleLogout}
-                    className="btn btn-outline-light btn-lg d-flex align-items-center border-radius: 999px  flex-wrap: wrap  justify-content: center"
-                  >
-                    <LogOut size={20} className="me-2" />
-                    Salir
-                  </button>
+            <header className="bg-dark-soft rounded-3xl p-4 mb-8 shadow-lg">
+              <div className="container">
+                <div className="row align-items-center">
+
+                  <div className="col-md-8 mb-4 mb-md-0 d-flex flex-column align-items-center justify-content-center text-center">
+                    <h1 className="display-4 text-gradient-primary mb-3">
+                      Bienvenido, <span className="text-primary-soft">{userData?.name || 'Administrador'}</span>
+                    </h1>
+                    <p className="lead text-gray-color mb-0">
+                      Panel de control - Resumen operativo
+                    </p>
+                  </div>
+
+                  <div className="col-md-4 d-flex flex-column align-items-center justify-content-center">
+                    <div className="d-flex gap-3 justify-content-center flex-wrap">
+                      <button
+                        onClick={handleRefresh}
+                        className="btn btn-gradient-primary btn-lg d-flex align-items-center justify-content-center rounded-pill"
+                        disabled={refreshing}
+                      >
+                        <RefreshCw size={20} className={`me-2 ${refreshing ? 'animate-spin' : ''}`} />
+                        Actualizar
+                      </button>
+                      <button
+                        onClick={handleLogout}
+                        className="btn btn-outline-light btn-lg d-flex align-items-center justify-content-center rounded-pill"
+                      >
+                        <LogOut size={20} className="me-2" />
+                        Salir
+                      </button>
+                    </div>
+                  </div>
                 </div>
               </div>
-            </div>
-          </header>
+            </header>
           <Outlet context={{ userData, refreshing, setRefreshing }} />
         </main>
       </div>

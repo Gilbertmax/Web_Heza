@@ -1,5 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
+import "bootstrap/dist/css/bootstrap.min.css";
+import '@fortawesome/fontawesome-free/css/all.min.css';
 
 const Devoluciones = () => {
   return (
@@ -56,7 +58,7 @@ const Devoluciones = () => {
                 ].map((benefit, index) => (
                   <div key={index} className="col-md-6">
                     <div className="specialty-card p-4 rounded-5 h-100 shadow-sm">
-                      <i className={`fas ${benefit.icon} fa-2x text-primary mb-3 `}></i>
+                      <i className={`fas ${benefit.icon} fa-2x text-primary mb-3 me-3 `}></i>
                       <h4 className="h5 mb-3 me-3">{benefit.title}</h4>
                       <p className="text-muted mb-3">{benefit.text}</p>
                     </div>
