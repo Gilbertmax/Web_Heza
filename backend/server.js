@@ -4,7 +4,7 @@ import dotenv from 'dotenv';
 import path from 'path';
 import { fileURLToPath } from 'url';
 import apiRoutes from './src/routes/api.js';
-import initializeDatabase from './src/database/initDb.js';
+import { initializeDatabase } from './src/database/dbManager.js';
 import authRoutes from './src/routes/authRoutes.js';
 import clientesRoutes from './src/routes/clientesRoutes.js';
 import fs from 'fs';
