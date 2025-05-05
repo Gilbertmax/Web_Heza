@@ -15,14 +15,16 @@ const normalizarFecha = (fecha) => {
   return new Date(f.getFullYear(), f.getMonth(), f.getDate());
 };
 
-const getFechaEntregaEsperada = (clasificacion) => {
-  const fecha = new Date();
-  let day = 15;
-  if (clasificacion === 'HHH') day = 10;
-  else if (clasificacion === 'HH') day = 12;
-  fecha.setDate(day);
-  return normalizarFecha(fecha);
-};
+const getFechaEntregaEsperada = (clasificacion, fechaReal) => {
+    const real = normalizarFecha(fechaReal);
+    const fecha = new Date(real); // usar el mes de la fecha real
+    let day = 15;
+    if (clasificacion === 'HHH') day = 10;
+    else if (clasificacion === 'HH') day = 12;
+    fecha.setDate(day);
+    return normalizarFecha(fecha);
+  };
+  
 
 const calcularEstatus = (fechaPlaneada, fechaReal) => {
     const fPlaneada = normalizarFecha(fechaPlaneada);
@@ -32,20 +34,20 @@ const calcularEstatus = (fechaPlaneada, fechaReal) => {
     if (diferencia <= 0) {
       return {
         
-        icon: <CheckCircle color="#28a745" className="me-2" />
+        icon: <CheckCircle color="#28a745" className="me-2" title="A tiempo"/>
       };
     }
   
     if (diferencia <= 3) {
       return {
         
-        icon: <Clock color="#ffc107" className="me-2" />
+        icon: <Clock color="#ffc107" className="me-2" title="Retraso leve"/>
       };
     }
   
     return {
       
-      icon: <XCircle color="#dc3545" className="me-2" />
+      icon: <XCircle color="#dc3545" className="me-2" title="Retraso grave"/>
     };
   };
   
@@ -110,7 +112,7 @@ const empresas = [
     rfc: 'JOM8920147A',
     industria: 'Farmaceutica',
     clasificacion: 'HHH',
-    fechaReal: "2025-04-09",
+    fechaReal: "2025-04-15",
     tareas: ['2','3']
   },
 ];
@@ -124,7 +126,7 @@ export default function HezaPlanner() {
         </h1>
        <div className="row">
         {empresas.map((empresa) => {
-          const fechaPlaneada = getFechaEntregaEsperada(empresa.clasificacion);
+          const fechaPlaneada = getFechaEntregaEsperada(empresa.clasificacion, empresa.fechaReal);
           const tareasRelacionadas = tareas.filter((t) => empresa.tareas.includes(t.id));
 
           return (
@@ -154,9 +156,7 @@ export default function HezaPlanner() {
                             <td>{tarea.descripcion}</td>
                             <td>{format(fechaPlaneada, "yyyy-MM-dd")}</td>
                             <td>{format(normalizarFecha(empresa.fechaReal), "yyyy-MM-dd")}</td>
-                            <td className="text-center fw-bold">
-                                {estatus.icon}
-                                <span className="text-primary">{estatus.label}</span>
+                            <td className="text-center fw-bold"> {estatus.icon}
                             </td>
                           </tr>
                         );
