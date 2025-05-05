@@ -4,6 +4,8 @@ import fs from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
 
+import { checkDatabaseConnection } from '../database/dbManager.js';
+
 // Cargar variables de entorno desde .env
 // Primero intentamos cargar desde la raíz del proyecto
 let envLoaded = dotenv.config();
@@ -55,7 +57,7 @@ pool.getConnection()
     } else if (err.code === 'ECONNREFUSED') {
       console.log('\nSugerencia: Verifica que el servidor MySQL esté en ejecución y accesible en la dirección y puerto especificados');
     } else if (err.code === 'ER_BAD_DB_ERROR') {
-      console.log(`\nLa base de datos '${dbConfig.database}' no existe. Ejecuta 'npm run migrate' para crearla.`);
+      console.log(`\nLa base de datos '${dbConfig.database}' no existe. Ejecuta 'npm run db:init' o 'npm run db:migrate' para crearla.`);
     }
     
     // En producción, un error de conexión a la base de datos es crítico
@@ -64,5 +66,11 @@ pool.getConnection()
       process.exit(1);
     }
   });
+
+// Nota: Para una gestión más completa de la base de datos, utiliza los scripts en la carpeta database:
+// - Para inicializar la base de datos: npm run db:init
+// - Para verificar la conexión: npm run db:check
+// - Para ejecutar migraciones: npm run db:migrate
+// - Para inspeccionar la estructura: npm run db:inspect
 
 export default pool;
