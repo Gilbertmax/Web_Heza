@@ -89,6 +89,7 @@ const DiagnosticoEmpresarial = () => {
         </div>
 
         {/* Formulario */}
+        <section id="pre-diagnostico">
         <div className="row justify-content-center" data-aos="fade-up">
           <div className="col-lg-15">
             <div className="form-card bg-white rounded-4 shadow-lg p-5">
@@ -171,7 +172,6 @@ const DiagnosticoEmpresarial = () => {
                             <i className="fas fa-arrow-right ms-2"></i>
                           </button>
                         </div>
-
                       </div>
                     </form>
                   </div>
@@ -180,7 +180,8 @@ const DiagnosticoEmpresarial = () => {
             </div>
           </div>
         </div>
-      </div>
+        </section>
+      </div>      
     </div>
   );
 };

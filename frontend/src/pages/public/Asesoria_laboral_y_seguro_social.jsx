@@ -1,6 +1,7 @@
 import React from 'react';
 import img1 from '../../assets/img/AL.jpg';
 import img2 from '../../assets/img/SC.jpg';
+import { Link } from "react-router-dom";
 
 const AsesoriaLaboralYSeguroSocial = () => {
   
@@ -121,9 +122,11 @@ const AsesoriaLaboralYSeguroSocial = () => {
         
         <div className="row mt-5">
           <div className="col-12 text-center">
+            <Link to="/servicios/diagnostico-empresarial#pre-diagnostico" className="btn">
             <button className="btn btn-primary btn-lg px-5">
               Agendar consulta
             </button>
+            </Link>
           </div>
         </div>
       </div>

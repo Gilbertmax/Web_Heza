@@ -1,6 +1,7 @@
 import React from 'react';
 import img1 from '../../assets/img/contabilidad-fiscal.jpeg';
 import img2 from '../../assets/img/CF.jpg';
+import { Link } from "react-router-dom";
 
 const Contabilidad = () => {
   return (
@@ -119,9 +120,11 @@ const Contabilidad = () => {
 
         <div className="row mt-5">
           <div className="col-12 text-center">
+          <Link to="/servicios/diagnostico-empresarial#pre-diagnostico" className="btn">
             <button className="btn btn-primary btn-lg px-5">
               Solicitar auditoría gratuita
             </button>
+          </Link>
           </div>
         </div>
       </div>

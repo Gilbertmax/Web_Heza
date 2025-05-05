@@ -72,7 +72,7 @@ const migrateDatabase = async () => {
     await connection.query(`USE ${dbName}`);
     
     // Leer y ejecutar el archivo SQL de esquema
-    const schemaPath = path.join(__dirname, '../database/schema.sql');
+    const schemaPath = path.join(__dirname, '../database/migracion_unificada.sql');
     const schemaSql = fs.readFileSync(schemaPath, 'utf8');
     
     console.log('Ejecutando script de esquema...');
