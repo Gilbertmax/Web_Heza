@@ -1,5 +1,16 @@
-import axios from 'axios';
+/*import axios from 'axios';
+import React, { useState, useEffect } from 'react';
+import { Modal, Button } from 'react-bootstrap';
+import * as XLSX from 'xlsx';
+import { saveAs } from 'file-saver';
 
+const frasesMotivacionales = [
+    "Cada nuevo cliente es el reflejo de su esfuerzo y dedicación. ¡Sigamos alcanzando nuevas metas juntos!",
+    "Gracias a su trabajo incansable, hoy transformamos un prospecto en un cliente. ¡Esto es solo el comienzo!",
+    "Cada cliente conquistado es una victoria de equipo. ¡Sigamos demostrando lo que somos capaces de hacer!",
+    "Su compromiso y profesionalismo hacen posible que sigamos creciendo. ¡Este es el fruto de su esfuerzo!",
+    "El éxito de cada nuevo cliente es el resultado del trabajo en equipo. ¡Vamos por muchos más!"
+];
 const CMR = () => {
     const [showModal, setShowModal] = useState(false);
     const [clientes, setClientes] = useState([]);
@@ -174,3 +185,4 @@ const CMR = () => {
 };
 
 export default CMR;
+*/
