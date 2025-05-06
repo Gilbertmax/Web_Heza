@@ -2,6 +2,8 @@ import React from 'react';
 import img1 from '../../assets/img/asefis.png';
 import img2 from '../../assets/img/asesoria-fiscal-1.jpeg';
 import { Link } from "react-router-dom";
+import "bootstrap/dist/css/bootstrap.min.css";
+import '@fortawesome/fontawesome-free/css/all.min.css';
 
 const AsesoriaFiscal = () => {
   return (

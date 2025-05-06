@@ -73,6 +73,8 @@ router.post('/contact', apiController.enviarDiagnostico);
 router.get('/dashboard/stats', verifyToken, isAdmin, dashboardController.getDashboardStats);
 router.get('/dashboard/client-stats', verifyToken, isClient, dashboardController.getClientDashboardStats);
 router.get('/dashboard/pending-requests', verifyToken, isAdmin, dashboardController.getPendingRequests);
+router.post('/enviar-diagnostico', apiController.enviarDiagnostico);
+
 
 router.get('/health', (req, res) => {
   res.json({ status: 'ok', message: 'Server is running' });

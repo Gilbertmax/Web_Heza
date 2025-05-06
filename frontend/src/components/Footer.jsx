@@ -101,13 +101,6 @@ const Footer = () => {
           </div>
           <div className="col-md-6 text-center text-md-end">
             <div className="d-inline-flex gap-2">
-              <Link 
-                to="/admin/login"  
-                className="btn btn-outline-primary btn-sm hover-lift"
-              >
-                <i className="fas fa-lock me-2"></i>
-                Administrador
-              </Link>
             </div>
           </div>
         </div>

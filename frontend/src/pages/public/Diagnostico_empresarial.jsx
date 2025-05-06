@@ -1,5 +1,7 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
+import "bootstrap/dist/css/bootstrap.min.css";
+import '@fortawesome/fontawesome-free/css/all.min.css';
 import { useForm } from 'react-hook-form';
 import diagnosticoImg from '../../assets/img/img-diagnostico.png';
 import {FontAwesomeIcon } from '@fortawesome/react-fontawesome';
