@@ -23,10 +23,12 @@ DROP TABLE IF EXISTS eventos;
 DROP TABLE IF EXISTS servicios;
 DROP TABLE IF EXISTS clientes;
 DROP TABLE IF EXISTS categorias_documentos;
+ALTER TABLE galeria_noticias DROP FOREIGN KEY galeria_noticias_ibfk_1;
+DROP TABLE IF EXISTS galeria_noticias;
 DROP TABLE IF EXISTS noticias;
 DROP TABLE IF EXISTS solicitudes_acceso;
-DROP TABLE IF EXISTS sucursales;
 DROP TABLE IF EXISTS users;
+DROP TABLE IF EXISTS sucursales;
 
 -- ========================================================================
 -- CREACIÓN DE TABLAS PRINCIPALES
@@ -213,6 +215,26 @@ CREATE TABLE noticias (
   imagenes TEXT,
   fecha_creacion TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
+-- 1. Primero eliminar (sin alterar claves que no existen)
+DROP TABLE IF EXISTS galeria_noticias;
+
+-- 2. Luego crear la tabla completa
+CREATE TABLE galeria_noticias (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  titulo VARCHAR(255),
+  imagen_url TEXT,
+  fecha DATE,
+  noticia_id INT,
+  -- otros campos si aplica
+  INDEX (noticia_id)
+);
+
+-- 3. Luego agregar la relación si es necesario (por ejemplo con tabla noticias)
+ALTER TABLE galeria_noticias
+  ADD CONSTRAINT galeria_noticias_ibfk_1 FOREIGN KEY (noticia_id)
+  REFERENCES noticias(id)
+  ON DELETE CASCADE;
+
 
 -- ========================================================================
 -- CREACIÓN DE ÍNDICES PARA OPTIMIZACIÓN
@@ -244,8 +266,6 @@ CREATE INDEX idx_noticias_fecha ON noticias(fecha);
 -- ========================================================================
 -- PROCEDIMIENTO PARA VERIFICAR LA ESTRUCTURA DE LA BASE DE DATOS
 -- ========================================================================
-
-DELIMITER //
 
 CREATE PROCEDURE IF NOT EXISTS verificar_estructura()
 BEGIN
@@ -280,9 +300,10 @@ BEGIN
     
     SELECT 'Estructura de la tabla sucursales:' AS 'Información';
     DESCRIBE sucursales;
-END //
+END;
 
-DELIMITER ;
+-- Eliminar referencias a scripts antiguos
+DROP PROCEDURE IF EXISTS verificar_estructura_anterior;
 
 -- ========================================================================
 -- COMENTARIOS FINALES

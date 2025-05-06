@@ -1,5 +1,3 @@
-
-
 import fs from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
@@ -158,39 +156,20 @@ export async function migrateDatabase() {
     if (tables.length > 0) {
       console.log('La base de datos ya está configurada. Verificando tabla solicitudes_acceso...');
       
-      // Verificar si existe la tabla solicitudes_acceso
-      const [solicitudesTable] = await connection.query(`
-        SELECT TABLE_NAME 
-        FROM information_schema.TABLES 
-        WHERE TABLE_SCHEMA = ? AND TABLE_NAME = 'solicitudes_acceso'
-      `, [dbName]);
+      // Ejecutar migración unificada
+      console.log('Ejecutando migración unificada...');
+      const migracionUnificadaPath = path.join(__dirname, 'migracion_unificada.sql');
+      const migracionUnificadaSql = fs.readFileSync(migracionUnificadaPath, 'utf8');
       
-      // Si no existe la tabla solicitudes_acceso, crearla
-      if (solicitudesTable.length === 0) {
-        console.log('Creando tabla solicitudes_acceso...');
-        const solicitudesPath = path.join(__dirname, 'solicitudes_acceso.sql');
-        const solicitudesSql = fs.readFileSync(solicitudesPath, 'utf8');
-        
-        const solicitudesQueries = solicitudesSql
-          .split(';')
-          .filter(query => query.trim() !== '')
-          .map(query => query + ';');
-        
-        for (const query of solicitudesQueries) {
-          await connection.query(query);
-        }
-        
-        console.log('Tabla solicitudes_acceso creada correctamente');
-      } else {
-        console.log('La tabla solicitudes_acceso ya existe');
-      }
+      await connection.query(migracionUnificadaSql);
+      console.log('Migración unificada ejecutada correctamente');
     } else {
       // Leer y ejecutar el archivo SQL de esquema
-      const schemaPath = path.join(__dirname, 'schema.sql');
-      const schemaSql = fs.readFileSync(schemaPath, 'utf8');
+      const migracionPath = path.join(__dirname, 'migracion_unificada.sql');
+      const migracionSql = fs.readFileSync(migracionPath, 'utf8');
       
-      console.log('Ejecutando script de esquema...');
-      await connection.query(schemaSql);
+      console.log('Ejecutando script de migración unificada...');
+      await connection.query(migracionSql);
       console.log('Esquema de base de datos creado correctamente');
       
       // Verificar si se debe cargar datos de ejemplo
