@@ -55,8 +55,8 @@ const About = () => {
                     <i className="fas fa-quote-left fa-2x"></i>
                   </div>
                   <p className="lead text-dark mb-0">
-                    "Nuestra firma se distingue por combinar expertise técnico con compromiso social, 
-                    garantizando siempre la máxima transparencia y ética profesional en cada proceso."
+                    Nuestra firma se distingue por combinar expertise técnico con compromiso social, 
+                    garantizando siempre la máxima transparencia y ética profesional en cada proceso.
                   </p>
                 </div>
 
