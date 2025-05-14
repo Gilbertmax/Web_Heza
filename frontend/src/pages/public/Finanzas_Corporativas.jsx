@@ -1,6 +1,7 @@
 import React from 'react';
 import finanzasImg1 from '../../assets/img/Corporativas-1.jpg';
 import finanzasImg2 from '../../assets/img/Corporativas-2.jpg';
+import { Link } from "react-router-dom";
 
 const FinanzasCorporativas = () => {
  
@@ -120,9 +121,11 @@ const FinanzasCorporativas = () => {
         {/* Botón CTA */}
         <div className="row mt-5">
           <div className="col-12 text-center">
+           <Link to="/servicios/diagnostico-empresarial#pre-diagnostico" className="btn"> 
             <button className="btn btn-primary btn-lg px-5">
               Optimiza tus finanzas
             </button>
+            </Link>
           </div>
         </div>
       </div>

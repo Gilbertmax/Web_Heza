@@ -4,13 +4,13 @@ import Header from './components/Header';
 import Footer from './components/Footer';
 import ScrollToTop from './components/ScrollToTop';
 import Loading from './components/Loading/Loading';
-import ChatBot from './components/ChatBot/ChatBot';
+// import ChatBot from './components/ChatBot/ChatBot'; 
 import ResetPassword from './components/adminLoading/ResetPassword';
 import AdminLoading from './components/adminLoading/AdminLoading';
+import AdminRegister from './components/adminLoading/AdminRegister';
 import Noticias from './pages/public/Noticias';
 import Eventos from './pages/public/Eventos';
 import EventoDetalle from './pages/public/EventoDetalle';
-
 
 // Componentes públicos
 const Home = lazy(() => import('./pages/public/Home'));
@@ -32,11 +32,11 @@ const ProteccionPatrimonial = lazy(() => import('./pages/public/Proteccion_Patri
 const Devoluciones = lazy(() => import('./pages/public/devoluciones'));
 
 // Dashboard Cliente
-const ClienteLayout = lazy(() => import('./pages/adminClientes/Cliente'));
-const DocumentosCliente = lazy(() => import('./pages/adminClientes/DocumentosCliente'));
-const DetalleDocumento = lazy(() => import('./pages/adminClientes/DetalleDocumento'));
-const PerfilCliente = lazy(() => import('./pages/adminClientes/PerfilCliente'));
-const ConfiguracionCliente = lazy(() => import('./pages/adminClientes/ConfiguracionCliente'));
+//const ClienteLayout = lazy(() => import('./pages/adminClientes/Cliente'));
+//const DocumentosCliente = lazy(() => import('./pages/adminClientes/DocumentosCliente'));
+//const DetalleDocumento = lazy(() => import('./pages/adminClientes/DetalleDocumento'));
+//const PerfilCliente = lazy(() => import('./pages/adminClientes/PerfilCliente'));
+//const ConfiguracionCliente = lazy(() => import('./pages/adminClientes/ConfiguracionCliente'));
 
 // Admin
 const DashboardAdmin = lazy(() => import('./pages/admin/Dashboard'));
@@ -46,10 +46,6 @@ const ConfiguracionAdmin = lazy(() => import('./pages/admin/ConfiguracionAdmin')
 const UsuariosAdmin = lazy(()=> import('./pages/admin/UsuariosAdmin'));
 const ClienteAdmin = lazy(()=> import('./pages/admin/ClientesAdmin'));
 const DocumentAdmin =lazy(()=> import('./pages/admin/DocumentAdmin'));
-const Crm =lazy(()=> import('./pages/admin/Crm'));
-
-//Usuarios
-const TaskTack = lazy(()=> import('./pages/Usuarios/TaskTrack'));
 
 function App() {
   return (
@@ -81,6 +77,7 @@ function App() {
           <Route path="/devoluciones" element={<Devoluciones />} />
 
           {/* Dashboard Cliente */}
+          {/*
           <Route path="/clientes/dashboard" element={<ClienteLayout />}>
             <Route index element={<DocumentosCliente />} />
             <Route path="documentos" element={<DocumentosCliente />} />
@@ -88,6 +85,7 @@ function App() {
             <Route path="perfil" element={<PerfilCliente />} />
             <Route path="configuracion" element={<ConfiguracionCliente />} />
           </Route>
+          */}
 
           {/* Administración */}
           <Route path="/admin/dashboard" element={<DashboardAdmin isAdmin={true} />} />
@@ -97,21 +95,18 @@ function App() {
           <Route path="/admin/usuarios" element={<UsuariosAdmin/>} />
           <Route path="/admin/clientes" element={<ClienteAdmin/>} />
           <Route path="/admin/documentos" element={<DocumentAdmin/>} />
-          <Route path="/admin/crm" element={<Crm/>} />
           
-          {/*Usuarios*/}
-          <Route path="/Usuarios/TaskTrack" element={<TaskTack/>}/>
 
           
           {/* Autenticación */}
           <Route path="/admin/login" element={<AdminLoading showLogin fullScreen />} />
           <Route path="/admin/reset-password/:token" element={<ResetPassword />} />
-          <Route path="/admin/acceso" element={<AdminLoading showLogin fullScreen />} />
+          <Route path="/admin/registro" element={<AdminRegister />} />
           <Route path="/acceso" element={<Loading showLogin fullScreen />} />
         </Routes>
       </Suspense>
       <Footer />
-      <ChatBot />
+      {/* <ChatBot /> */} 
     </Router>
   );
 }

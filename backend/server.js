@@ -4,11 +4,13 @@ import dotenv from 'dotenv';
 import path from 'path';
 import { fileURLToPath } from 'url';
 import apiRoutes from './src/routes/api.js';
-import initializeDatabase from './src/database/initDb.js';
+import { initializeDatabase } from './src/database/dbManager.js';
 import authRoutes from './src/routes/authRoutes.js';
+import clientesRoutes from './src/routes/clientesRoutes.js';
 import fs from 'fs';
 import newsRoutes from './src/routes/newsRoutes.js';
 import eventRoutes from './src/routes/eventRoutes.js';
+
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -19,7 +21,7 @@ const app = express();
 const PORT = process.env.PORT || 5000;
 
 app.use(cors({
-  origin: 'http://localhost:3000',
+  origin: [ 'https://test.heza.com.mx', 'http://localhost:3000' ],
   methods: ['GET', 'POST', 'PUT', 'DELETE'],
   credentials: true
 }));
@@ -56,6 +58,7 @@ app.use('/api', apiRoutes);
 app.use('/api/auth', authRoutes);
 app.use('/api/news', newsRoutes);
 app.use('/api/events', eventRoutes);
+app.use('/api/clientes', clientesRoutes);
 
 app.get('/api/debug', (req, res) => {
   res.json({ message: 'API is working correctly' });

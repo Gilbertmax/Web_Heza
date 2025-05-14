@@ -100,11 +100,12 @@ const About = () => {
               {[3500, 2300, 200, 2500].map((number, index) => (
                 <div className="col-md-3" key={index}>
                   <div className="stat-card">
-                    <h3 className="text-gradient-primary display-4 mb-2">{number.toLocaleString()}+</h3>
-                    <div className="divider-line bg-primary"></div>
-                    <p className="text-uppercase text-light mb-0">
-                      {['Empresas Asesoradas', 'Devoluciones de IVA', 'Actividades Económicas', 'Conferencias Impartidas'][index]}
-                    </p>
+                    <h3 className="text-gradient-primary display-4 mb-2">
+                      {number.toLocaleString()}+<br />
+                      <span className="text-light" style={{fontSize: '0.6em'}}>
+                        {['Empresas Asesoradas', 'Devoluciones de IVA', 'Actividades Económicas', 'Conferencias Impartidas'][index]}
+                      </span>
+                    </h3>
                   </div>
                 </div>
               ))}

@@ -3,31 +3,39 @@ import jwt from 'jsonwebtoken';
 import User from '../models/User.js';
 import crypto from 'crypto';
 import emailService from '../utils/emailService.js';
+import pool from '../config/db.js';
 
 export const register = async (req, res) => {
   try {
-    const userData = req.body;
-    
+    const userData = {
+      ...req.body,
+      username: req.body.email.split('@')[0]
+    };
+
     const existingUser = await User.findByEmail(userData.email);
     if (existingUser) {
       return res.status(400).json({ error: 'El correo electrónico ya está registrado' });
     }
-    
+
+    // ✅ Hashear la contraseña antes de guardar
+    const hashedPassword = await bcrypt.hash(userData.password, 10);
+    userData.password = hashedPassword;
+
     const userId = await User.create(userData);
-    
     const user = await User.findById(userId);
+
     if (!user) {
       return res.status(500).json({ error: 'Error al crear el usuario' });
     }
-    
+
     delete user.password;
-    
     res.status(201).json({ user });
   } catch (error) {
     console.error('Error en registro:', error);
     res.status(500).json({ error: 'Error al registrar usuario' });
   }
 };
+
 
 export const login = async (req, res) => {
   try {
@@ -73,48 +81,59 @@ export const login = async (req, res) => {
 export const adminLogin = async (req, res) => {
   try {
     const { email, password } = req.body;
-    
-    if (!email || !password) {
-      return res.status(400).json({ error: 'Email y contraseña son requeridos' });
-    }
-    
-    const user = await User.findByEmail(email);
-    
-    if (!user) {
-      return res.status(401).json({ error: 'Credenciales inválidas' });
-    }
-    
-    if (user.rol !== 'admin') {
-      return res.status(403).json({ error: 'Acceso denegado. Se requiere rol de administrador' });
-    }
-    
-    let isPasswordValid = false;
-    
-    const firstCheck = await bcrypt.compare(password, user.password);
-    
-    if (firstCheck) {
-      isPasswordValid = true;
-    } else if (email === 'AdminHeza' && password === 'es3Hm3f9y&CdoxVcLruS@VCurrent') {
-      isPasswordValid = true;
-    }
-    
-    if (!isPasswordValid) {
-      return res.status(401).json({ error: 'Credenciales inválidas' });
-    }
-    
-    const token = jwt.sign(
-      { id: user.id, email: user.email, rol: user.rol },
-      process.env.JWT_SECRET,
-      { expiresIn: '24h' }
+
+    // Buscar el admin en la tabla users
+    const [rows] = await pool.query(
+      "SELECT * FROM users WHERE email = ? AND rol = 'admin'",
+      [email]
     );
-    
-    delete user.password;
-    
-    res.json({ token, user });
+
+    if (rows.length === 0) {
+      return res.status(404).json({ message: "Administrador no encontrado" });
+    }
+
+    const admin = rows[0];
+
+    // Verificar si el admin está activo
+    if (admin.activo !== 1) {
+      return res.status(403).json({ message: "Cuenta desactivada. Contacta al administrador." });
+    }
+
+    // Comparar contraseña correctamente
+    const passwordMatch = await bcrypt.compare(password, admin.password);
+
+    if (!passwordMatch) {
+      return res.status(401).json({ message: "Contraseña incorrecta" });
+    }
+
+    // Crear token JWT
+    const token = jwt.sign(
+      { id: admin.id, email: admin.email, rol: admin.rol },
+      process.env.JWT_SECRET,
+      { expiresIn: "1h" }
+    );
+
+    // Actualizar última conexión
+    await pool.query("UPDATE users SET ultima_conexion = NOW() WHERE id = ?", [admin.id]);
+
+    res.json({
+      message: "Inicio de sesión exitoso",
+      token,
+      admin: {
+        id: admin.id,
+        nombre: admin.nombre,
+        email: admin.email,
+        rol: admin.rol,
+        sucursal: admin.sucursal
+      }
+    });
+
   } catch (error) {
-    res.status(500).json({ error: 'Error en el servidor' });
+    console.error("Error en adminLogin:", error);
+    res.status(500).json({ error: "Error al iniciar sesión como administrador" });
   }
 };
+
 
 export const getProfile = async (req, res) => {
   try {
@@ -136,7 +155,10 @@ export const getProfile = async (req, res) => {
 export const updateProfile = async (req, res) => {
   try {
     const userId = req.user.id;
-    const userData = req.body;
+    const userData = {
+    ...req.body,
+    username: req.body.email.split('@')[0]
+  };
     
     delete userData.rol;
     
@@ -284,34 +306,73 @@ export const resetPassword = async (req, res) => {
 
 export const requestClientAccess = async (req, res) => {
   try {
-    const { empresa, telefono, email } = req.body;
+    const { nombre, empresa, telefono, email, rfc, password, sede_id } = req.body;
     
-    if (!empresa || !telefono || !email) {
+    if (!nombre || !empresa || !telefono || !email || !rfc || !password || !sede_id) {
       return res.status(400).json({ error: 'Todos los campos son requeridos' });
     }
     
-    const emailService = (await import('../utils/emailService.js')).default;
+    const connection = await (await import('../config/db.js')).default.getConnection();
     
-    await emailService.sendEmail({
-      to: 'gilberto_gonzalez@heza.com.mx',
-      subject: 'Solicitud de Acceso de Cliente',
-      html: `
-        <h1>Solicitud de Acceso de Cliente</h1>
-        <p>Un cliente ha solicitado acceso a la plataforma:</p>
-        <ul>
-          <li><strong>Empresa:</strong> ${empresa}</li>
-          <li><strong>Teléfono:</strong> ${telefono}</li>
-          <li><strong>Email:</strong> ${email}</li>
-        </ul>
-        <p>Por favor, revisa esta solicitud y crea una cuenta para este cliente si es apropiado.</p>
-      `
-    });
-    
-    res.json({ 
-      success: true, 
-      message: 'Solicitud enviada correctamente. Nos pondremos en contacto contigo pronto.' 
-    });
+    try {
+      // Verificar si ya existe una solicitud con el mismo email
+      const [existingRequests] = await connection.query(
+        'SELECT * FROM solicitudes_acceso WHERE email = ? AND estado = "pendiente"',
+        [email]
+      );
+      
+      if (existingRequests.length > 0) {
+        return res.status(400).json({ error: 'Ya existe una solicitud pendiente con este correo electrónico' });
+      }
+      
+      // Verificar si ya existe un usuario con el mismo email
+      const [existingUsers] = await connection.query(
+        'SELECT * FROM users WHERE email = ?',
+        [email]
+      );
+      
+      if (existingUsers.length > 0) {
+        return res.status(400).json({ error: 'Este correo electrónico ya está registrado en el sistema' });
+      }
+      
+      // Guardar la solicitud en la base de datos
+      const hashedPassword = await bcrypt.hash(password, 10);
+      
+      await connection.query(
+        'INSERT INTO solicitudes_acceso (tipo, nombre, empresa, telefono, email, rfc, password, sede_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?)',
+        ['client', nombre, empresa, telefono, email, rfc, hashedPassword, sede_id]
+      );
+      
+      // Enviar notificación por email al administrador
+      const emailService = (await import('../utils/emailService.js')).default;
+      
+      await emailService.sendEmail({
+        to: 'gilberto_gonzalez@heza.com.mx',
+        subject: 'Nueva Solicitud de Acceso de Cliente',
+        html: `
+          <h1>Nueva Solicitud de Acceso de Cliente</h1>
+          <p>Un cliente ha solicitado acceso a la plataforma:</p>
+          <ul>
+            <li><strong>Nombre:</strong> ${nombre}</li>
+            <li><strong>Empresa:</strong> ${empresa}</li>
+            <li><strong>Teléfono:</strong> ${telefono}</li>
+            <li><strong>Email:</strong> ${email}</li>
+            <li><strong>RFC:</strong> ${rfc}</li>
+            <li><strong>Sede:</strong> ${sede_id}</li>
+          </ul>
+          <p>Por favor, revisa esta solicitud en el panel de administración.</p>
+        `
+      });
+      
+      res.json({ 
+        success: true, 
+        message: 'Solicitud enviada correctamente. Nos pondremos en contacto contigo pronto.' 
+      });
+    } finally {
+      connection.release();
+    }
   } catch (error) {
+    console.error('Error al procesar solicitud de cliente:', error);
     res.status(500).json({ error: 'Error al procesar la solicitud' });
   }
 };
@@ -324,29 +385,63 @@ export const requestUserAccess = async (req, res) => {
       return res.status(400).json({ error: 'Todos los campos son requeridos' });
     }
     
-    const emailService = (await import('../utils/emailService.js')).default;
+    const connection = await (await import('../config/db.js')).default.getConnection();
     
-    await emailService.sendEmail({
-      to: 'gilberto_gonzalez@heza.com.mx',
-      subject: 'Solicitud de Acceso de Usuario',
-      html: `
-        <h1>Solicitud de Acceso de Usuario</h1>
-        <p>Un usuario ha solicitado acceso a la plataforma:</p>
-        <ul>
-          <li><strong>Nombre:</strong> ${nombre}</li>
-          <li><strong>Teléfono:</strong> ${telefono}</li>
-          <li><strong>Empresa:</strong> ${empresa}</li>
-          <li><strong>Email:</strong> ${email}</li>
-        </ul>
-        <p>Por favor, revisa esta solicitud y crea una cuenta para este usuario si es apropiado.</p>
-      `
-    });
-    
-    res.json({ 
-      success: true, 
-      message: 'Solicitud enviada correctamente. Nos pondremos en contacto contigo pronto.' 
-    });
+    try {
+      // Verificar si ya existe una solicitud con el mismo email
+      const [existingRequests] = await connection.query(
+        'SELECT * FROM solicitudes_acceso WHERE email = ? AND estado = "pendiente"',
+        [email]
+      );
+      
+      if (existingRequests.length > 0) {
+        return res.status(400).json({ error: 'Ya existe una solicitud pendiente con este correo electrónico' });
+      }
+      
+      // Verificar si ya existe un usuario con el mismo email
+      const [existingUsers] = await connection.query(
+        'SELECT * FROM users WHERE email = ?',
+        [email]
+      );
+      
+      if (existingUsers.length > 0) {
+        return res.status(400).json({ error: 'Este correo electrónico ya está registrado en el sistema' });
+      }
+      
+      // Guardar la solicitud en la base de datos
+      await connection.query(
+        'INSERT INTO solicitudes_acceso (tipo, nombre, empresa, telefono, email) VALUES (?, ?, ?, ?, ?)',
+        ['user', nombre, empresa, telefono, email]
+      );
+      
+      // Enviar notificación por email al administrador
+      const emailService = (await import('../utils/emailService.js')).default;
+      
+      await emailService.sendEmail({
+        to: 'gilberto_gonzalez@heza.com.mx',
+        subject: 'Nueva Solicitud de Acceso de Usuario',
+        html: `
+          <h1>Nueva Solicitud de Acceso de Usuario</h1>
+          <p>Un usuario ha solicitado acceso a la plataforma:</p>
+          <ul>
+            <li><strong>Nombre:</strong> ${nombre}</li>
+            <li><strong>Teléfono:</strong> ${telefono}</li>
+            <li><strong>Empresa:</strong> ${empresa}</li>
+            <li><strong>Email:</strong> ${email}</li>
+          </ul>
+          <p>Por favor, revisa esta solicitud en el panel de administración.</p>
+        `
+      });
+      
+      res.json({ 
+        success: true, 
+        message: 'Solicitud enviada correctamente. Nos pondremos en contacto contigo pronto.' 
+      });
+    } finally {
+      connection.release();
+    }
   } catch (error) {
+    console.error('Error al procesar solicitud de usuario:', error);
     res.status(500).json({ error: 'Error al procesar la solicitud' });
   }
 };

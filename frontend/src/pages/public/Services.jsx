@@ -1,5 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
+import "bootstrap/dist/css/bootstrap.min.css";
+import '@fortawesome/fontawesome-free/css/all.min.css';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { 
   faStethoscope, 
@@ -100,7 +102,7 @@ const Services = () => {
                           "Equipo multidisciplinario",
                           "Capacitaciones Constantes"
                         ].map((item, index) => (
-                          <div className="col-lg-9 mb-9 mb-lg-1 text-center" key={index}>
+                          <div className="col-lg-8 mb-8 mb-lg-1" key={index}>
                             <div className="contact-card hover-lift">
                               <div className="d-flex align-items-center p-1">
                                 <i className="fas fa-map-marker-alt fa-3x text-primary mr-1"></i>

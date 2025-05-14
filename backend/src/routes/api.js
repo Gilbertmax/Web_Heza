@@ -4,13 +4,13 @@ import path from 'path';
 import { fileURLToPath } from 'url';
 import fs from 'fs';
 import authRoutes from './authRoutes.js';
-
+import solicitudAccesoRoutes from './solicitudAccesoRoutes.js';
 import * as authController from '../controllers/authController.js';
 import * as clientController from '../controllers/clientController.js';
 import * as documentController from '../controllers/documentController.js';
 import * as eventController from '../controllers/eventController.js';
 import * as apiController from '../controllers/apiController.js';
-
+import * as dashboardController from '../controllers/dashboardController.js';
 import { verifyToken, isAdmin, isClient, isAdminOrClient } from '../middleware/auth.js';
 
 const router = express.Router();
@@ -43,6 +43,9 @@ router.get('/auth/profile', verifyToken, authController.getProfile);
 router.put('/auth/profile', verifyToken, authController.updateProfile);
 router.post('/auth/change-password', verifyToken, authController.changePassword);
 
+// Rutas de administrador para solicitudes de acceso
+router.use('/admin', solicitudAccesoRoutes);
+
 router.get('/clients', verifyToken, isAdmin, clientController.getAllClients);
 router.get('/clients/:id', verifyToken, isAdminOrClient, clientController.getClientById);
 router.post('/clients', verifyToken, isAdmin, clientController.createClient);
@@ -66,10 +69,18 @@ router.delete('/events/:id', verifyToken, isAdmin, eventController.deleteEvent);
 
 router.post('/contact', apiController.enviarDiagnostico);
 
+// Dashboard endpoints
+router.get('/dashboard/stats', verifyToken, isAdmin, dashboardController.getDashboardStats);
+router.get('/dashboard/client-stats', verifyToken, isClient, dashboardController.getClientDashboardStats);
+router.get('/dashboard/pending-requests', verifyToken, isAdmin, dashboardController.getPendingRequests);
+router.post('/enviar-diagnostico', apiController.enviarDiagnostico);
+
+
 router.get('/health', (req, res) => {
   res.json({ status: 'ok', message: 'Server is running' });
 });
 
 router.use('/auth', authRoutes);
+router.use('/admin', solicitudAccesoRoutes);
 
 export default router;

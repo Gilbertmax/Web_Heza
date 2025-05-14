@@ -1,6 +1,7 @@
 import React from 'react';
 import corporativoImg1 from '../../assets/img/LC.png';
 import corporativoImg2 from '../../assets/img/LC1.jpg';
+import { Link } from "react-router-dom";
 
 const LegalCorporativo = () => {
   
@@ -126,9 +127,11 @@ const LegalCorporativo = () => {
         {/* Botón CTA */}
         <div className="row mt-5">
           <div className="col-12 text-center">
+           <Link to="/servicios/diagnostico-empresarial#pre-diagnostico" className="btn">  
             <button className="btn btn-primary btn-lg px-5">
               Iniciar asesoría
             </button>
+           </Link>
           </div>
         </div>
       </div>

@@ -2,40 +2,31 @@ import pool from '../config/db.js';
 import bcrypt from 'bcrypt';
 
 class User {
-  static async create(userData) {
+  static async create(userData, clienteData = null) {
     const connection = await pool.getConnection();
     try {
-      if (userData.password) {
-        let firstHash = await bcrypt.hash(userData.password, 10);
-        userData.password = await bcrypt.hash(firstHash, 12);
-      }
-      
       if (userData.email) {
         userData.original_email = userData.email;
       }
-      
       const [result] = await connection.query(
         'INSERT INTO users SET ?', 
         userData
       );
-      
-      if (userData.rol === 'cliente' && userData.empresa) {
-        const clienteData = {
+      if (userData.rol === 'cliente' && clienteData) {
+        const clienteDataToInsert = {
           id: result.insertId,
-          empresa: userData.empresa,
-          rfc: userData.rfc || null,
-          direccion: userData.direccion || null,
-          ciudad: userData.ciudad || null,
-          estado: userData.estado || null,
-          codigo_postal: userData.codigo_postal || null,
-          giro: userData.giro || null,
-          numero_empleados: userData.numero_empleados || null,
-          ventas_anuales: userData.ventas_anuales || null
+          empresa: clienteData.empresa || null,
+          rfc: clienteData.rfc || null,
+          direccion: clienteData.direccion || null,
+          ciudad: clienteData.ciudad || null,
+          estado: clienteData.estado || null,
+          codigo_postal: clienteData.codigo_postal || null,
+          giro: clienteData.giro || null,
+          numero_empleados: clienteData.numero_empleados || null,
+          ventas_anuales: clienteData.ventas_anuales || null
         };
-        
-        await connection.query('INSERT INTO clientes SET ?', clienteData);
+        await connection.query('INSERT INTO clientes SET ?', clienteDataToInsert);
       }
-      
       if (userData.rol === 'empleado' && userData.puesto) {
         const empleadoData = {
           id: result.insertId,
@@ -43,10 +34,8 @@ class User {
           departamento: userData.departamento || null,
           fecha_contratacion: userData.fecha_contratacion || new Date()
         };
-        
         await connection.query('INSERT INTO empleados SET ?', empleadoData);
       }
-      
       return result.insertId;
     } finally {
       connection.release();

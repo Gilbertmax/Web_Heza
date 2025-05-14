@@ -18,51 +18,47 @@ const AdminLoading = ({ showLogin = false, fullScreen = true }) => {
   const navigate = useNavigate();
 
   const handleLogin = async (e) => {
-    e.preventDefault();
-    setError('');
-    setLoading(true);
-    
-    try {
-      console.log('Attempting login with:', { email: username, password: password.length + ' chars' });
-      
-      const response = await axios.post('/api/auth/admin/login', { 
-        email: username,
-        password: password 
-      });
-      
-      console.log('Login successful, response:', response.data);
-      
-      localStorage.setItem('adminToken', response.data.token);
-      localStorage.setItem('adminUser', JSON.stringify(response.data.user));
-      
-      navigate('/admin/dashboard');
-    } catch (err) {
-      console.error('Login error:', err.response?.data || err.message);
-      setError(err.response?.data?.error || 'Error al iniciar sesión. Verifica tus credenciales.');
-    } finally {
-      setLoading(false);
+  e.preventDefault();
+  setError('');
+  setLoading(true);
+
+  try {
+    const response = await axios.post('/api/auth/admin/login', {
+      email: `${username}@heza.com.mx`,
+      password: password,
+    });
+
+    const { token, admin } = response.data;
+
+    if (admin.rol !== 'admin') {
+      throw new Error('No tienes permisos de administrador.');
     }
-  };
-  
-  // Update the handleResetPassword function in AdminLoading.jsx
-  
+
+    localStorage.setItem('adminToken', token);
+    localStorage.setItem('adminUser', JSON.stringify(admin));
+    navigate('/admin/dashboard');
+  } catch (err) {
+    console.error('Login error:', err.response?.data || err.message);
+    setError(err.response?.data?.message || 'Error al iniciar sesión. Verifica tus credenciales.');
+  } finally {
+    setLoading(false);
+  }
+};
+
   const handleResetPassword = async (e) => {
     e.preventDefault();
     setError('');
     setLoading(true);
     
     try {
-      // Make sure we're using the correct email format
       let fullEmail = resetEmailPrefix;
       
-      // If it doesn't contain @, assume it's a username and append the domain
       if (!resetEmailPrefix.includes('@')) {
         fullEmail = `${resetEmailPrefix}@heza.com.mx`;
       }
       
       console.log('Requesting password reset for:', fullEmail);
       
-      // Make sure the API endpoint is correct
       const response = await axios.post('/api/auth/request-password-reset', { 
         email: fullEmail 
       });
@@ -72,7 +68,6 @@ const AdminLoading = ({ showLogin = false, fullScreen = true }) => {
     } catch (err) {
       console.error('Password reset error:', err);
       
-      // Improved error handling
       if (err.code === 'ECONNREFUSED' || err.message.includes('Network Error')) {
         setError('No se pudo conectar con el servidor. Por favor, asegúrate de que el servidor backend esté en ejecución.');
       } else {
@@ -154,6 +149,13 @@ const AdminLoading = ({ showLogin = false, fullScreen = true }) => {
               </button>
               
               <div className="text-center">
+                <button
+                  type="button"
+                  className="btn btn-link"
+                  onClick={() => navigate('/admin/registro')}
+                >
+                  Registrarse
+                </button>
                 <button
                   type="button"
                   className="btn btn-link"
