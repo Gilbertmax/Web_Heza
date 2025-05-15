@@ -33,12 +33,12 @@ const ConsultoriaYConsejosConsultivos = lazy(() => import('./pages/public/Consul
 const ProteccionPatrimonial = lazy(() => import('./pages/public/Proteccion_Patrimonial'));
 const Devoluciones = lazy(() => import('./pages/public/devoluciones'));
 
-// Dashboard Cliente
-//const ClienteLayout = lazy(() => import('./pages/adminClientes/Cliente'));
-//const DocumentosCliente = lazy(() => import('./pages/adminClientes/DocumentosCliente'));
-//const DetalleDocumento = lazy(() => import('./pages/adminClientes/DetalleDocumento'));
-//const PerfilCliente = lazy(() => import('./pages/adminClientes/PerfilCliente'));
-//const ConfiguracionCliente = lazy(() => import('./pages/adminClientes/ConfiguracionCliente'));
+ //Dashboard Cliente
+const ClienteLayout = lazy(() => import('./pages/adminClientes/Cliente'));
+const DocumentosCliente = lazy(() => import('./pages/adminClientes/DocumentosCliente'));
+const DetalleDocumento = lazy(() => import('./pages/adminClientes/DetalleDocumento'));
+const PerfilCliente = lazy(() => import('./pages/adminClientes/PerfilCliente'));
+const ConfiguracionCliente = lazy(() => import('./pages/adminClientes/ConfiguracionCliente'));
 
 // Admin
 const DashboardAdmin = lazy(() => import('./pages/admin/Dashboard'));
@@ -80,7 +80,7 @@ function App() {
           <Route path="/devoluciones" element={<Devoluciones />} />
 
           {/* Dashboard Cliente */}
-          {/*
+          {
           <Route path="/clientes/dashboard" element={<ClienteLayout />}>
             <Route index element={<DocumentosCliente />} />
             <Route path="documentos" element={<DocumentosCliente />} />
@@ -88,7 +88,7 @@ function App() {
             <Route path="perfil" element={<PerfilCliente />} />
             <Route path="configuracion" element={<ConfiguracionCliente />} />
           </Route>
-          */}
+          }
 
           {/* Administración con Layout Persistente */}
           <Route path="/admin" element={<ProtectedRoute><AdminPanelLayout /></ProtectedRoute>}>

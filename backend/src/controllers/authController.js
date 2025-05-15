@@ -306,71 +306,54 @@ export const resetPassword = async (req, res) => {
 
 export const requestClientAccess = async (req, res) => {
   try {
-    const { nombre, empresa, telefono, email, rfc, password, sede_id } = req.body;
-    
-    if (!nombre || !empresa || !telefono || !email || !rfc || !password || !sede_id) {
-      return res.status(400).json({ error: 'Todos los campos son requeridos' });
+    const { telefono, empresa, email, tipo = 'client' } = req.body;
+
+    if (!telefono || !empresa || !email) {
+      return res.status(400).json({ error: 'Empresa, teléfono y correo son obligatorios' });
     }
-    
-    const connection = await (await import('../config/db.js')).default.getConnection();
-    
+
+    const connection = await pool.getConnection();
+
     try {
-      // Verificar si ya existe una solicitud con el mismo email
+      // Verificar si ya existe una solicitud pendiente
       const [existingRequests] = await connection.query(
         'SELECT * FROM solicitudes_acceso WHERE email = ? AND estado = "pendiente"',
         [email]
       );
-      
+
       if (existingRequests.length > 0) {
-        return res.status(400).json({ error: 'Ya existe una solicitud pendiente con este correo electrónico' });
+        return res.status(400).json({ error: 'Ya existe una solicitud pendiente para este correo.' });
       }
-      
-      // Verificar si ya existe un usuario con el mismo email
-      const [existingUsers] = await connection.query(
-        'SELECT * FROM users WHERE email = ?',
-        [email]
-      );
-      
-      if (existingUsers.length > 0) {
-        return res.status(400).json({ error: 'Este correo electrónico ya está registrado en el sistema' });
-      }
-      
-      // Guardar la solicitud en la base de datos
-      const hashedPassword = await bcrypt.hash(password, 10);
-      
+
+      // Guardar la solicitud
+      const nombreSeguro = req.body.nombre?.trim() || 'PENDIENTE';
+
       await connection.query(
-        'INSERT INTO solicitudes_acceso (tipo, nombre, empresa, telefono, email, rfc, password, sede_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?)',
-        ['client', nombre, empresa, telefono, email, rfc, hashedPassword, sede_id]
+        'INSERT INTO solicitudes_acceso (tipo, empresa, telefono, email, nombre) VALUES (?, ?, ?, ?, ?)',
+        [tipo, empresa, telefono, email, nombreSeguro]
       );
-      
-      // Enviar notificación por email al administrador
-      const emailService = (await import('../utils/emailService.js')).default;
-      
+
+      // Notificar por email (opcional)
       await emailService.sendEmail({
-        to: 'gilberto_gonzalez@heza.com.mx',
-        subject: 'Nueva Solicitud de Acceso de Cliente',
+        to: 'owen_hurtado@heza.com.mx',
+        subject: 'Nueva Solicitud de Cliente',
         html: `
-          <h1>Nueva Solicitud de Acceso de Cliente</h1>
-          <p>Un cliente ha solicitado acceso a la plataforma:</p>
-          <ul>
-            <li><strong>Nombre:</strong> ${nombre}</li>
-            <li><strong>Empresa:</strong> ${empresa}</li>
-            <li><strong>Teléfono:</strong> ${telefono}</li>
-            <li><strong>Email:</strong> ${email}</li>
-            <li><strong>RFC:</strong> ${rfc}</li>
-            <li><strong>Sede:</strong> ${sede_id}</li>
-          </ul>
-          <p>Por favor, revisa esta solicitud en el panel de administración.</p>
+          <h2>Solicitud de acceso de cliente</h2>
+          <p><strong>Empresa:</strong> ${empresa}</p>
+          <p><strong>Email:</strong> ${email}</p>
+          <p><strong>Teléfono:</strong> ${telefono}</p>
         `
       });
-      
-      res.json({ 
-        success: true, 
-        message: 'Solicitud enviada correctamente. Nos pondremos en contacto contigo pronto.' 
+
+      res.json({
+        success: true,
+        message: 'Solicitud enviada correctamente. Nos pondremos en contacto contigo pronto.'
       });
+
     } finally {
       connection.release();
     }
+
   } catch (error) {
     console.error('Error al procesar solicitud de cliente:', error);
     res.status(500).json({ error: 'Error al procesar la solicitud' });

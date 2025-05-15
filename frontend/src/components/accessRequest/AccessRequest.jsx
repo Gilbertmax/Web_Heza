@@ -1,8 +1,11 @@
+
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import './AccessRequest.css';
+import { useLocation } from 'react-router-dom';
 
 const AccessRequest = () => {
+  const location = useLocation();
   const [requestType, setRequestType] = useState('');
   const [formData, setFormData] = useState({
     nombre: '',
@@ -17,18 +20,21 @@ const AccessRequest = () => {
   const [errors, setErrors] = useState({});
   const [success, setSuccess] = useState('');
   const [loading, setLoading] = useState(false);
-  
+
   useEffect(() => {
+    if (location.state?.tipo) {
+      setRequestType(location.state.tipo);
+    }
     document.title = 'HEZA - Solicitud de Acceso';
-  }, []);
-  
+  }, [location.state]);
+
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData({
       ...formData,
       [name]: value
     });
-    
+
     if (errors[name]) {
       setErrors({
         ...errors,
@@ -36,7 +42,7 @@ const AccessRequest = () => {
       });
     }
   };
-  
+
   const validatePassword = () => {
     if (formData.password !== formData.confirmPassword) {
       setErrors(prev => ({
@@ -45,7 +51,7 @@ const AccessRequest = () => {
       }));
       return false;
     }
-    
+
     if (formData.password.length < 8) {
       setErrors(prev => ({
         ...prev,
@@ -53,50 +59,46 @@ const AccessRequest = () => {
       }));
       return false;
     }
-    
+
     return true;
   };
-  
+
   const validateForm = () => {
     const newErrors = {};
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    
-    if (!formData.nombre.trim()) {
-      newErrors.nombre = 'El nombre es obligatorio';
-    }
-    
-    if (!formData.empresa.trim()) {
-      newErrors.empresa = 'El nombre de la empresa es obligatorio';
-    }
-    
+
     if (!formData.email.trim()) {
       newErrors.email = 'El correo electrónico es obligatorio';
     } else if (!emailRegex.test(formData.email)) {
       newErrors.email = 'Formato de correo electrónico inválido';
     }
-    
+
+    if (!formData.empresa.trim()) {
+      newErrors.empresa = 'El nombre de la empresa es obligatorio';
+    }
+
     if (!formData.telefono.trim()) {
       newErrors.telefono = 'El teléfono es obligatorio';
     }
-    
-    if (requestType === 'client') {
-      if (!formData.rfc.trim()) {
-        newErrors.rfc = 'El RFC es obligatorio';
+
+    if (requestType === 'user') {
+      if (!formData.nombre.trim()) {
+        newErrors.nombre = 'El nombre es obligatorio';
       }
-      
-      if (!formData.sucursal) {
-        newErrors.sucursal = 'Debe seleccionar una sucursal';
-      }
-      
+
       if (!formData.password) {
         newErrors.password = 'La contraseña es obligatoria';
+      } else if (formData.password.length < 8) {
+        newErrors.password = 'La contraseña debe tener al menos 8 caracteres';
       }
-      
+
       if (!formData.confirmPassword) {
         newErrors.confirmPassword = 'Debe confirmar la contraseña';
+      } else if (formData.password !== formData.confirmPassword) {
+        newErrors.confirmPassword = 'Las contraseñas no coinciden';
       }
     }
-    
+
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
@@ -105,33 +107,34 @@ const AccessRequest = () => {
     e.preventDefault();
     setErrors({});
     setSuccess('');
-    
-    if (!validateForm()) {
-      return;
-    }
-    
-    if (requestType === 'client' && !validatePassword()) {
-      return;
-    }
-    
+
+    if (!validateForm()) return;
+    if (requestType === 'user' && !validatePassword()) return;
+
     setLoading(true);
-    
+
     try {
-      const endpoint = requestType === 'client' 
-        ? '/api/auth/request-client-access' 
+      const endpoint = requestType === 'client'
+        ? '/api/auth/request-client-access'
         : '/api/auth/request-user-access';
-      
-      const dataToSend = { ...formData };
-      if (requestType !== 'client') {
-        delete dataToSend.rfc;
-        delete dataToSend.password;
-        delete dataToSend.confirmPassword;
-        delete dataToSend.sucursal;
+
+      const dataToSend = {
+        email: formData.email.trim(),
+        telefono: formData.telefono.trim(),
+        empresa: formData.empresa.trim(),
+        tipo: requestType
+      };
+
+      if (requestType === 'user') {
+        if (formData.nombre.trim()) dataToSend.nombre = formData.nombre.trim();
+        if (formData.password) dataToSend.password = formData.password;
       }
-      delete dataToSend.confirmPassword;
-      
-      const response = await axios.post(endpoint, dataToSend);
-      setSuccess(response.data.message || 'Solicitud enviada correctamente. Te contactaremos pronto.');
+
+      const response = await axios.post(endpoint, dataToSend, {
+        headers: { 'Content-Type': 'application/json' }
+      });
+
+      setSuccess(response.data.message || 'Solicitud enviada correctamente.');
       setFormData({
         nombre: '',
         empresa: '',
@@ -142,21 +145,25 @@ const AccessRequest = () => {
         confirmPassword: '',
         sucursal: ''
       });
-      
+
       setTimeout(() => {
         setRequestType('');
       }, 5000);
     } catch (err) {
+      console.error("❌ Error en envío:", err);
       if (err.response?.data?.errors) {
         setErrors(err.response.data.errors);
       } else {
-        setErrors({ general: err.response?.data?.error || 'Error al enviar la solicitud. Intenta nuevamente.' });
+        setErrors({
+          general:
+            err.response?.data?.error || 'Error al enviar la solicitud. Intenta nuevamente.'
+        });
       }
     } finally {
       setLoading(false);
     }
   };
-  
+ 
   return (
     <div className="access-request-container">
       <div className="access-request-form">
